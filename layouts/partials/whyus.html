@@ -1,0 +1,17 @@
+<section class="whyus" id="whyus">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">{{ .Params.whyus.eyebrow }}</p>
+      <h2>{{ .Params.whyus.title }}</h2>
+    </div>
+
+    <ul class="whyus-grid">
+      {{ range hugo.Data.whyus }}
+      <li class="whyus-card">
+        <h3 class="whyus-card__title">{{ .title }}</h3>
+        <p class="whyus-card__desc">{{ .desc }}</p>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</section>

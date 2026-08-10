@@ -1,0 +1,33 @@
+<section class="hero" id="hero">
+  <div class="wrap hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow">{{ .Params.hero.eyebrow }}</p>
+      <h1 class="hero__headline">{{ .Params.hero.headline }}</h1>
+      <p class="hero__sub">{{ .Params.hero.sub }}</p>
+      <div class="hero__cta">
+        <a class="btn btn--brass" href="#contact">{{ .Params.hero.cta_primary }}</a>
+        <a class="btn btn--outline" href="#services">{{ .Params.hero.cta_secondary }}</a>
+      </div>
+    </div>
+
+    <div class="hero__demo" id="hero-demo" role="img" aria-label="검색창에 인터피아드를 입력하면 검색 결과 1위로 인터피아드가 노출되는 모습을 보여주는 그래픽">
+      <div class="search-box">
+        <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="search-box__text" id="search-typed"></span><span class="search-box__cursor" id="search-cursor"></span>
+      </div>
+
+      <ol class="rank-list" id="rank-list" data-query="{{ .Params.hero.search_query }}">
+        {{ range $i, $item := .Params.hero.rank_items }}
+        <li class="rank-item{{ if $item.brand }} rank-item--brand{{ end }}" data-brand="{{ $item.brand }}">
+          <span class="rank-item__num">{{ add $i 1 }}</span>
+          <span class="rank-item__name">{{ $item.name }}</span>
+          {{ if $item.brand }}<span class="rank-item__badge">우리 회사</span>{{ end }}
+        </li>
+        {{ end }}
+      </ol>
+    </div>
+  </div>
+</section>
