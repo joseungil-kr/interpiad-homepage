@@ -12,7 +12,7 @@
   --slate: #5B6472;
   --white: #ffffff;
 
-  --font-display: "Noto Serif KR", serif;
+  --font-display: "PretendardVariable", "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
   --font-body: "PretendardVariable", "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
 
   --wrap-w: 1120px;
