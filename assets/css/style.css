@@ -179,11 +179,12 @@ h1, h2, h3 {
 }
 
 .site-logo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--ink);
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+}
+.site-logo__img {
+  height: 32px;
+  width: auto;
 }
 
 .nav-toggle {
@@ -747,9 +748,10 @@ h1, h2, h3 {
   font-size: 0.88rem;
 }
 .site-footer__brand {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--paper);
+  height: 22px;
+  width: auto;
+  /* logo.png is a solid black wordmark; invert so it reads white on the dark footer */
+  filter: invert(1);
 }
 
 /* ==========================================================================
