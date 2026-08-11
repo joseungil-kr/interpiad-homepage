@@ -1,0 +1,17 @@
+# 상단 풀블리드 히어로 슬라이더 — 2장
+# 이미지 파일은 /static/images/hero/ 에 넣어주세요 (예: slide-01.jpg, slide-02.jpg)
+# 실제 사진으로 교체할 때는 image 값과 문구만 바꾸면 됩니다.
+- image: "images/hero/slide-01.jpg"
+  alt: "인터피아드 온라인 마케팅 팀이 검색 결과 데이터를 분석하는 모습"
+  eyebrow: "온라인 마케팅 전문기업 · 2002년부터"
+  title: "검색 결과 1위, 우연이 아니라 전략입니다"
+  sub: "블로그, 웹문서, 카페, 플레이스까지 — 고객이 찾는 순간 인터피아드가 먼저 보이게 만듭니다."
+  cta_label: "무료 상담 신청"
+  cta_href: "#contact"
+- image: "images/hero/slide-02.jpg"
+  alt: "네이버 검색 결과 상단에 노출된 브랜드 화면"
+  eyebrow: "20년 노하우, 흔들리지 않는 결과"
+  title: "유행이 아니라 검증된 데이터로 상위노출을 만듭니다"
+  sub: "블로그 상위노출부터 플레이스 관리까지, 채널별 전문 인력이 직접 운영합니다."
+  cta_label: "서비스 살펴보기"
+  cta_href: "#services"

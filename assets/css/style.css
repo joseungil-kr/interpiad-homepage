@@ -241,6 +241,116 @@ h1, h2, h3 {
 .site-nav a:not(.btn):hover::after { right: 0; }
 
 /* ==========================================================================
+   Hero Slider
+   ========================================================================== */
+
+.hero-slider {
+  position: relative;
+  width: 100%;
+  background: var(--ink);
+}
+
+.hero-slider .splide__slide {
+  height: 65vh;
+  min-height: 460px;
+  max-height: 760px;
+}
+
+.hero-slide {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-slide__media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-slide__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-slide__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 33, 61, 0.15) 0%, rgba(20, 33, 61, 0.72) 100%);
+}
+
+.hero-slide__content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 64px;
+  max-width: 720px;
+  word-break: keep-all;
+}
+
+.hero-slide__eyebrow {
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--brass-light);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.hero-slide__title {
+  color: var(--paper);
+  font-size: clamp(1.8rem, 1.2rem + 2.4vw, 2.9rem);
+  margin-bottom: 16px;
+}
+
+.hero-slide__sub {
+  color: rgba(247, 245, 241, 0.82);
+  font-size: 1.05rem;
+  max-width: 46ch;
+  margin-bottom: 24px;
+}
+
+.hero-slide__cta { align-self: flex-start; }
+
+/* fade-in-up on the active slide's text; resets automatically when the
+   is-active class is removed, since the animation rule stops matching */
+@keyframes heroSlideFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-slide__content > * { opacity: 0; }
+
+.splide__slide.is-active .hero-slide__eyebrow { animation: heroSlideFadeIn 0.7s var(--ease) 0.15s forwards; }
+.splide__slide.is-active .hero-slide__title { animation: heroSlideFadeIn 0.7s var(--ease) 0.3s forwards; }
+.splide__slide.is-active .hero-slide__sub { animation: heroSlideFadeIn 0.7s var(--ease) 0.45s forwards; }
+.splide__slide.is-active .hero-slide__cta { animation: heroSlideFadeIn 0.7s var(--ease) 0.6s forwards; }
+
+/* Splide control theming */
+.hero-slider .splide__arrow {
+  background: rgba(20, 33, 61, 0.35);
+  opacity: 1;
+}
+.hero-slider .splide__arrow:hover {
+  background: var(--brass);
+}
+.hero-slider .splide__arrow svg { fill: var(--paper); }
+
+.hero-slider .splide__pagination {
+  bottom: 20px;
+}
+.hero-slider .splide__pagination__page {
+  background: rgba(247, 245, 241, 0.5);
+  opacity: 1;
+}
+.hero-slider .splide__pagination__page.is-active {
+  background: var(--brass);
+  transform: scale(1.2);
+}
+
+/* ==========================================================================
    Hero
    ========================================================================== */
 
@@ -651,6 +761,13 @@ h1, h2, h3 {
     transition: none !important;
   }
   .search-box__cursor { animation: none; opacity: 0; }
+  .splide__slide.is-active .hero-slide__eyebrow,
+  .splide__slide.is-active .hero-slide__title,
+  .splide__slide.is-active .hero-slide__sub,
+  .splide__slide.is-active .hero-slide__cta {
+    animation: none;
+  }
+  .hero-slide__content > * { opacity: 1; transform: none; }
 }
 
 /* ==========================================================================
@@ -667,6 +784,13 @@ h1, h2, h3 {
 
 @media (max-width: 720px) {
   :root { --header-h: 64px; }
+
+  .hero-slider .splide__slide {
+    height: 60vh;
+    min-height: 380px;
+  }
+  .hero-slide__content { padding-bottom: 40px; }
+  .hero-slider .splide__arrow { display: none; }
 
   .nav-toggle { display: flex; }
 

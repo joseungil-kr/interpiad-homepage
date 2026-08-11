@@ -10,6 +10,7 @@
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js" defer></script>
   {{ with resources.Get "js/main.js" }}
     {{ $js := . | js.Build (dict "minify" (not hugo.IsDevelopment)) }}
     <script src="{{ $js.RelPermalink }}" defer></script>

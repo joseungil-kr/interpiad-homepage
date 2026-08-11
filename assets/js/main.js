@@ -135,6 +135,29 @@ function initHero() {
   }
 }
 
+function initHeroSlider() {
+  var el = document.getElementById("hero-splide");
+  if (!el || typeof Splide === "undefined") return;
+
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var splide = new Splide(el, {
+    type: "fade",
+    rewind: true,
+    speed: 800,
+    interval: 6000,
+    autoplay: !reduceMotion,
+    pauseOnHover: false,
+    pauseOnFocus: false,
+    arrows: true,
+    pagination: true,
+    drag: false,
+    waitForTransition: false
+  });
+
+  splide.mount();
+}
+
 function initContactForm() {
   var form = document.getElementById("contact-form");
   if (!form) return;
@@ -168,6 +191,7 @@ function initContactForm() {
 document.addEventListener("DOMContentLoaded", function () {
   initHeader();
   initNavToggle();
+  initHeroSlider();
   initHero();
   initContactForm();
 });
