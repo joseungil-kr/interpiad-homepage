@@ -13,12 +13,22 @@
 
     <nav class="site-nav" id="site-nav">
       <ul>
-        <li><a href="#about">회사소개</a></li>
-        <li><a href="#services">서비스</a></li>
-        <li><a href="#whyus">강점</a></li>
-        <li><a href="#contact">문의하기</a></li>
+        <li><a href="{{ "/" | relURL }}#about">회사소개</a></li>
+        <li>
+          <details class="nav-dropdown">
+            <summary>서비스</summary>
+            <ul class="nav-dropdown__menu">
+              <li><a href="{{ "services/" | relURL }}">서비스 전체 보기</a></li>
+              {{ range (where site.RegularPages "Section" "services").ByWeight }}
+              <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+              {{ end }}
+            </ul>
+          </details>
+        </li>
+        <li><a href="{{ "/" | relURL }}#whyus">강점</a></li>
+        <li><a href="{{ "/" | relURL }}#contact">문의하기</a></li>
       </ul>
-      <a class="btn btn--brass site-nav__cta" href="#contact">상담 문의</a>
+      <a class="btn btn--brass site-nav__cta" href="{{ "/" | relURL }}#contact">상담 문의</a>
     </nav>
   </div>
 </header>

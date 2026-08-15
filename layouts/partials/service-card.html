@@ -1,0 +1,9 @@
+{{ $s := .page }}
+<li class="service-card reveal" style="--reveal-delay: {{ .delay | default "0s" }}">
+  <a class="service-card__link" href="{{ $s.RelPermalink }}">
+    <div class="service-card__icon">{{ partial "icon.html" $s.Params.icon }}</div>
+    <h3 class="service-card__title">{{ $s.Title }}</h3>
+    <p class="service-card__desc">{{ $s.Params.summary }}</p>
+    <span class="service-card__more">자세히 보기 →</span>
+  </a>
+</li>

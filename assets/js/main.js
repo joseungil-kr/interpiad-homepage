@@ -27,6 +27,29 @@ function initNavToggle() {
   });
 }
 
+function initNavDropdowns() {
+  var dropdowns = document.querySelectorAll(".nav-dropdown");
+  if (!dropdowns.length) return;
+
+  document.addEventListener("click", function (e) {
+    dropdowns.forEach(function (d) {
+      if (d.open && !d.contains(e.target)) d.removeAttribute("open");
+    });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      dropdowns.forEach(function (d) { d.removeAttribute("open"); });
+    }
+  });
+
+  dropdowns.forEach(function (d) {
+    d.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () { d.removeAttribute("open"); });
+    });
+  });
+}
+
 function typeText(el, text, speed, onDone) {
   var i = 0;
   el.textContent = "";
@@ -135,39 +158,75 @@ function initHero() {
   }
 }
 
-function initContactForm() {
-  var form = document.getElementById("contact-form");
-  if (!form) return;
-  var note = document.getElementById("contact-form-note");
+function animateCount(el, target, duration) {
+  var start = performance.now();
+  var tick = function (now) {
+    var progress = Math.min((now - start) / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target).toLocaleString("ko-KR");
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    if (!form.reportValidity()) return;
+function initReveal() {
+  var items = document.querySelectorAll(".reveal");
+  if (!items.length) return;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    var data = new FormData(form);
-    var name = data.get("name");
-    var phone = data.get("phone");
-    var interest = data.get("interest");
-    var message = data.get("message");
-    var to = form.dataset.to;
+  var reveal = function (el) {
+    el.classList.add("is-visible");
+    el.querySelectorAll("[data-count-to]").forEach(function (counter) {
+      var target = parseInt(counter.dataset.countTo, 10);
+      if (isNaN(target)) return;
+      if (reduceMotion) {
+        counter.textContent = target.toLocaleString("ko-KR");
+      } else {
+        animateCount(counter, target, 1100);
+      }
+    });
+  };
 
-    var subject = "[상담 문의] " + name + "님";
-    var body =
-      "이름: " + name + "\n" +
-      "연락처: " + phone + "\n" +
-      "관심 서비스: " + interest + "\n\n" +
-      "문의내용:\n" + message;
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    items.forEach(reveal);
+    return;
+  }
 
-    var mailto = "mailto:" + to + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+  var io = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          reveal(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+  );
+  items.forEach(function (el) { io.observe(el); });
+}
 
-    if (note) note.textContent = "메일 작성 화면으로 이동합니다.";
-    window.location.href = mailto;
-  });
+function initContactLinks() {
+  var tel = document.querySelector(".js-tel");
+  if (tel) {
+    var phone = tel.dataset.p3 + "-" + tel.dataset.p2 + "-" + tel.dataset.p1;
+    tel.textContent = phone;
+    tel.href = "tel:" + phone.replace(/-/g, "");
+  }
+
+  var mail = document.querySelector(".js-mail");
+  if (mail) {
+    var email = mail.dataset.u + "@" + mail.dataset.d;
+    mail.textContent = email;
+    mail.href = "mailto:" + email;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   initHeader();
   initNavToggle();
+  initNavDropdowns();
   initHero();
-  initContactForm();
+  initReveal();
+  initContactLinks();
 });

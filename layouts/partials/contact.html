@@ -1,49 +1,33 @@
+{{ $emailParts := strings.Split .Site.Params.email "@" }}
+{{ $phoneParts := strings.Split .Site.Params.phone "-" }}
 <section class="contact" id="contact">
-  <div class="wrap contact__inner">
-    <div class="contact__intro">
+  <div class="wrap">
+    <div class="section-head contact__head reveal">
       <p class="eyebrow">{{ .Params.contact.eyebrow }}</p>
       <h2>{{ .Params.contact.title }}</h2>
       <p class="section-head__sub">{{ .Params.contact.sub }}</p>
-
-      <!-- TODO: 도메인 구매 후 이메일 실제 값으로 교체 필요 -->
-      <dl class="contact-info">
-        <div class="contact-info__row">
-          <dt>이메일</dt>
-          <dd>{{ .Site.Params.email }}</dd>
-        </div>
-        <div class="contact-info__row">
-          <dt>주소</dt>
-          <dd>{{ .Site.Params.address }}</dd>
-        </div>
-      </dl>
     </div>
 
-    <!-- TODO: 폼 제출은 현재 메일 클라이언트 연결(mailto)로 동작합니다.
-         실제 운영 시 Cloudflare Pages Forms 등 백엔드 연동 필요 -->
-    <form class="contact-form" id="contact-form" data-to="{{ .Site.Params.email }}">
-      <div class="form-row">
-        <label for="cf-name">이름</label>
-        <input type="text" id="cf-name" name="name" autocomplete="name" required>
+    <div class="contact-cards">
+      <div class="contact-card reveal">
+        <div class="contact-card__icon">{{ partial "icon.html" "phone" }}</div>
+        <p class="contact-card__label">전화 문의</p>
+        <a class="contact-card__value js-tel" href="#"
+          data-p1="{{ index $phoneParts 2 }}" data-p2="{{ index $phoneParts 1 }}" data-p3="{{ index $phoneParts 0 }}">전화 걸기</a>
       </div>
-      <div class="form-row">
-        <label for="cf-phone">연락처</label>
-        <input type="tel" id="cf-phone" name="phone" autocomplete="tel" required>
+      <div class="contact-card reveal" style="--reveal-delay: 0.1s">
+        <div class="contact-card__icon">{{ partial "icon.html" "mail" }}</div>
+        <p class="contact-card__label">이메일 문의</p>
+        <a class="contact-card__value js-mail" href="#"
+          data-u="{{ index $emailParts 0 }}" data-d="{{ index $emailParts 1 }}">메일 보내기</a>
       </div>
-      <div class="form-row">
-        <label for="cf-interest">관심 서비스</label>
-        <select id="cf-interest" name="interest" required>
-          <option value="" disabled selected>선택해주세요</option>
-          {{ range .Params.contact.interests }}
-          <option value="{{ . }}">{{ . }}</option>
-          {{ end }}
-        </select>
+    </div>
+
+    <dl class="contact-info reveal" style="--reveal-delay: 0.16s">
+      <div class="contact-info__row">
+        <dt>주소</dt>
+        <dd>{{ .Site.Params.address }}</dd>
       </div>
-      <div class="form-row">
-        <label for="cf-message">문의내용</label>
-        <textarea id="cf-message" name="message" rows="4" required></textarea>
-      </div>
-      <button type="submit" class="btn btn--brass contact-form__submit">상담 신청하기</button>
-      <p class="contact-form__note" id="contact-form-note" role="status" aria-live="polite"></p>
-    </form>
+    </dl>
   </div>
 </section>

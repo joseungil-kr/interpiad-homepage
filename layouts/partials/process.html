@@ -1,16 +1,16 @@
 <section class="process" id="process">
   <div class="wrap">
-    <div class="section-head section-head--light">
+    <div class="section-head section-head--light reveal">
       <p class="eyebrow eyebrow--light">{{ .Params.process.eyebrow }}</p>
       <h2>{{ .Params.process.title }}</h2>
     </div>
 
     <ol class="process-list">
-      {{ range hugo.Data.process }}
-      <li class="process-item">
-        <span class="process-item__num">{{ .num }}</span>
-        <h3 class="process-item__title">{{ .title }}</h3>
-        <p class="process-item__desc">{{ .desc }}</p>
+      {{ range $i, $p := hugo.Data.process }}
+      <li class="process-item reveal" style="--reveal-delay: {{ printf "%.2f" (mul $i 0.08) }}s">
+        <span class="process-item__num">{{ $p.num }}</span>
+        <h3 class="process-item__title">{{ $p.title }}</h3>
+        <p class="process-item__desc">{{ $p.desc }}</p>
       </li>
       {{ end }}
     </ol>

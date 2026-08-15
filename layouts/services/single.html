@@ -1,0 +1,35 @@
+{{ define "main" }}
+<article class="service-detail">
+  <div class="wrap service-detail__inner">
+    <nav class="breadcrumb" aria-label="현재 위치">
+      <a href="{{ "services/" | relURL }}">서비스</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ .Title }}</span>
+    </nav>
+
+    <div class="service-detail__icon">{{ partial "icon.html" .Params.icon }}</div>
+    <h1>{{ .Title }}</h1>
+    <p class="service-detail__summary">{{ .Params.summary }}</p>
+
+    {{ $imgPath := printf "images/services/%s.png" .Params.icon }}
+    {{ if os.FileExists (printf "static/%s" $imgPath) }}
+    <figure class="service-detail__media">
+      <img src="{{ $imgPath | relURL }}" alt="{{ .Title }} 이미지" loading="lazy" width="960" height="540">
+    </figure>
+    {{ else }}
+    <div class="service-detail__media service-detail__media--empty" aria-hidden="true">
+      {{ partial "icon.html" .Params.icon }}
+    </div>
+    {{ end }}
+
+    <div class="service-detail__body reveal">
+      {{ .Content }}
+    </div>
+
+    <div class="service-detail__cta">
+      <a class="btn btn--brass" href="{{ "/" | relURL }}#contact">상담 문의</a>
+      <a class="btn btn--outline" href="{{ "services/" | relURL }}">다른 서비스 보기</a>
+    </div>
+  </div>
+</article>
+{{ end }}

@@ -1,18 +1,14 @@
 <section class="services" id="services">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <p class="eyebrow">{{ .Params.services.eyebrow }}</p>
       <h2>{{ .Params.services.title }}</h2>
       <p class="section-head__sub">{{ .Params.services.sub }}</p>
     </div>
 
     <ul class="service-grid">
-      {{ range hugo.Data.services }}
-      <li class="service-card">
-        <div class="service-card__icon">{{ partial "icon.html" .icon }}</div>
-        <h3 class="service-card__title">{{ .title }}</h3>
-        <p class="service-card__desc">{{ .desc }}</p>
-      </li>
+      {{ range $i, $s := (where site.RegularPages "Section" "services").ByWeight }}
+      {{ partial "service-card.html" (dict "page" $s "delay" (printf "%.2fs" (mul (mod $i 4) 0.08))) }}
       {{ end }}
     </ul>
   </div>

@@ -1,0 +1,20 @@
+<section class="stats" aria-label="회사 규모 및 연혁 요약">
+  <div class="wrap stats__grid">
+    <div class="stat reveal">
+      <span class="stat__num">2002</span>
+      <span class="stat__label">설립</span>
+    </div>
+    <div class="stat reveal" style="--reveal-delay: 0.08s">
+      <span class="stat__num" data-count-to="{{ sub now.Year 2002 }}">0</span><span class="stat__suffix">년</span>
+      <span class="stat__label">온라인 마케팅 외길</span>
+    </div>
+    <div class="stat reveal" style="--reveal-delay: 0.16s">
+      <span class="stat__num" data-count-to="{{ len (where site.RegularPages "Section" "services") }}">0</span><span class="stat__suffix">개</span>
+      <span class="stat__label">서비스 채널</span>
+    </div>
+    <div class="stat reveal" style="--reveal-delay: 0.24s">
+      <span class="stat__num" data-count-to="{{ len hugo.Data.process }}">0</span><span class="stat__suffix">단계</span>
+      <span class="stat__label">체계적 프로세스</span>
+    </div>
+  </div>
+</section>
