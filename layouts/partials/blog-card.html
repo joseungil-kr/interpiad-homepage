@@ -1,0 +1,19 @@
+{{ $p := .page }}
+{{ $imgPath := printf "images/blog/%s.jpg" $p.File.BaseFileName }}
+<li class="blog-card reveal" style="--reveal-delay: {{ .delay | default "0s" }}">
+  <a class="blog-card__link" href="{{ $p.RelPermalink }}">
+    {{ if os.FileExists (printf "static/%s" $imgPath) }}
+    <div class="blog-card__media">
+      <img src="{{ $imgPath | relURL }}" alt="" loading="lazy" width="480" height="270">
+    </div>
+    {{ else }}
+    <div class="blog-card__media blog-card__media--empty" aria-hidden="true"></div>
+    {{ end }}
+    <div class="blog-card__body">
+      {{ with (index $p.Params.categories 0) }}<span class="tag-badge">{{ . }}</span>{{ end }}
+      <h3 class="blog-card__title">{{ $p.Title }}</h3>
+      <p class="blog-card__desc">{{ $p.Params.summary }}</p>
+      <time class="blog-card__date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006.01.02" }}</time>
+    </div>
+  </a>
+</li>

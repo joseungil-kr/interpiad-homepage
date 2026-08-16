@@ -1,0 +1,22 @@
+{{ define "main" }}
+<section class="services-hero">
+  <div class="wrap section-head">
+    <p class="eyebrow">카테고리</p>
+    <h1>{{ .Title }}</h1>
+  </div>
+</section>
+
+<section class="services-list">
+  <div class="wrap">
+    {{ if .Pages }}
+    <ul class="blog-grid">
+      {{ range $i, $p := .Pages.ByWeight }}
+      {{ partial "blog-card.html" (dict "page" $p "delay" (printf "%.2fs" (mul (mod $i 3) 0.08))) }}
+      {{ end }}
+    </ul>
+    {{ else }}
+    <p class="section-head__sub">아직 등록된 글이 없습니다.</p>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

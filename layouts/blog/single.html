@@ -2,24 +2,26 @@
 <article class="service-detail">
   <div class="wrap service-detail__inner">
     <nav class="breadcrumb" aria-label="현재 위치">
-      <a href="{{ "services/" | relURL }}">서비스</a>
+      <a href="{{ "blog/" | relURL }}">블로그</a>
       <span aria-hidden="true">/</span>
       <span aria-current="page">{{ .Title }}</span>
     </nav>
 
-    <div class="service-detail__icon">{{ partial "icon.html" .Params.icon }}</div>
+    {{ range .GetTerms "categories" }}
+    <a class="tag-badge tag-badge--link" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{ end }}
     <h1>{{ .Title }}</h1>
-    <p class="service-detail__summary">{{ .Params.summary }}</p>
+    <p class="service-detail__summary">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006.01.02" }}</time>
+    </p>
 
-    {{ $imgPath := printf "images/services/%s.png" .Params.icon }}
+    {{ $imgPath := printf "images/blog/%s.jpg" .File.BaseFileName }}
     {{ if os.FileExists (printf "static/%s" $imgPath) }}
     <figure class="media-frame">
       <img src="{{ $imgPath | relURL }}" alt="{{ .Title }} 이미지" loading="lazy" width="960" height="540">
     </figure>
     {{ else }}
-    <div class="media-frame media-frame--empty" aria-hidden="true">
-      {{ partial "icon.html" .Params.icon }}
-    </div>
+    <div class="media-frame media-frame--empty" aria-hidden="true"></div>
     {{ end }}
 
     <div class="prose reveal">
@@ -28,7 +30,7 @@
 
     <div class="service-detail__cta">
       <a class="btn btn--brass" href="{{ "/" | relURL }}#contact">상담 문의</a>
-      <a class="btn btn--outline" href="{{ "services/" | relURL }}">다른 서비스 보기</a>
+      <a class="btn btn--outline" href="{{ "blog/" | relURL }}">다른 글 보기</a>
     </div>
   </div>
 </article>
