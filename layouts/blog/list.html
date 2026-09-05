@@ -4,6 +4,15 @@
     <p class="eyebrow">{{ .Params.eyebrow | default .Title }}</p>
     <h1>{{ .Title }}</h1>
     {{ with .Params.intro }}<p class="section-head__sub">{{ . }}</p>{{ end }}
+
+    <nav class="category-nav" aria-label="블로그 카테고리 목록" style="margin-top: 1.5rem;">
+      <ul class="tag-list" style="justify-content: center; display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0;">
+        <li><a class="tag-badge tag-badge--link" href="{{ "categories/" | relURL }}">전체 카테고리</a></li>
+        {{ range $name, $taxonomy := site.Taxonomies.categories }}
+        <li><a class="tag-badge tag-badge--link" href="{{ $taxonomy.Page.RelPermalink }}">{{ $taxonomy.Page.Title }} ({{ $taxonomy.Count }})</a></li>
+        {{ end }}
+      </ul>
+    </nav>
   </div>
 </section>
 

@@ -28,7 +28,32 @@
       {{ .Content }}
     </div>
 
-    <div class="service-detail__cta">
+    {{ $related := where (where site.RegularPages "Section" "blog") "Permalink" "ne" .Permalink }}
+    {{ with (index .Params.categories 0) }}
+      {{ $cat := . }}
+      {{ $catPages := slice }}
+      {{ range $related }}
+        {{ if in .Params.categories $cat }}
+          {{ $catPages = $catPages | append . }}
+        {{ end }}
+      {{ end }}
+      {{ if gt (len $catPages) 0 }}
+        {{ $related = $catPages }}
+      {{ end }}
+    {{ end }}
+
+    {{ with first 3 $related }}
+    <section class="related-posts" style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--color-border, #e5e5e5);">
+      <h2 style="font-size: 1.35rem; margin-bottom: 1.5rem;">함께 읽으면 좋은 글</h2>
+      <ul class="blog-grid">
+        {{ range $i, $p := . }}
+        {{ partial "blog-card.html" (dict "page" $p "delay" (printf "%.2fs" (mul $i 0.08))) }}
+        {{ end }}
+      </ul>
+    </section>
+    {{ end }}
+
+    <div class="service-detail__cta" style="margin-top: 2.5rem;">
       <a class="btn btn--brass" href="{{ "/" | relURL }}#contact">상담 문의</a>
       <a class="btn btn--outline" href="{{ "blog/" | relURL }}">다른 글 보기</a>
     </div>

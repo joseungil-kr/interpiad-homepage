@@ -26,3 +26,56 @@
   {{ $css := . | css.Build (dict "minify" (not hugo.IsDevelopment)) }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{ end }}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["LocalBusiness", "ProfessionalService"],
+      "@id": "{{ "https://interpiad.com/#organization" }}",
+      "name": "인터피아드",
+      "url": "https://interpiad.com/",
+      "logo": "{{ "images/logo/logo.png" | absURL }}",
+      "image": "{{ "images/logo/logo.png" | absURL }}",
+      "description": "{{ .Site.Params.description }}",
+      "telephone": "{{ .Site.Params.phone }}",
+      "email": "{{ .Site.Params.email }}",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "반석로 54 2층",
+        "addressLocality": "안산시 상록구",
+        "addressRegion": "경기도",
+        "addressCountry": "KR"
+      },
+      "foundingDate": "2002",
+      "priceRange": "$$"
+    }
+    {{- if and .IsPage (eq .Section "blog") }},
+    {
+      "@type": "BlogPosting",
+      "@id": "{{ .Permalink }}#article",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "{{ "https://interpiad.com/#website" }}",
+        "name": "인터피아드",
+        "url": "https://interpiad.com/"
+      },
+      "headline": {{ .Title | jsonify }},
+      "description": {{ ($desc | plainify) | jsonify }},
+      "url": "{{ .Permalink }}",
+      "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+      "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+      {{ $postImg := printf "images/blog/%s.jpg" .File.BaseFileName }}
+      {{ if os.FileExists (printf "static/%s" $postImg) }}
+      "image": "{{ $postImg | absURL }}",
+      {{ end }}
+      "publisher": {
+        "@id": "{{ "https://interpiad.com/#organization" }}"
+      },
+      "inLanguage": "ko-KR"
+    }
+    {{- end }}
+  ]
+}
+</script>
