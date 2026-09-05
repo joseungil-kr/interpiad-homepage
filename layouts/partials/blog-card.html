@@ -4,7 +4,7 @@
   <a class="blog-card__link" href="{{ $p.RelPermalink }}">
     {{ if os.FileExists (printf "static/%s" $imgPath) }}
     <div class="blog-card__media">
-      <img src="{{ $imgPath | relURL }}" alt="" loading="lazy" width="480" height="270">
+      <img src="{{ $imgPath | relURL }}" alt="{{ $p.Title }} 썸네일" loading="lazy" width="480" height="270">
     </div>
     {{ else }}
     <div class="blog-card__media blog-card__media--empty" aria-hidden="true"></div>
