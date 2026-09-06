@@ -1,0 +1,34 @@
+﻿name: IndexNow Daily & Push Submission
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    # 매일 한국시간 오전 9시(UTC 00:00)에 자동 실행하여 날짜 도래한 신규 글 제출
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Hugo Site
+        run: hugo --minify
+
+      - name: Submit URLs to IndexNow
+        run: node scripts/indexnow-submit.js
