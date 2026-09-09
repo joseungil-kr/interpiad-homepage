@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 function walk(dir) {
@@ -26,7 +26,7 @@ pageUrls.forEach(p => { inLinks[p.url] = 0; });
 
 pageUrls.forEach(source => {
   const content = fs.readFileSync(source.file, 'utf8');
-  const hrefs = [...content.matchAll(/href=["'](.*?)["']/g)].map(m => m[1]);
+  const hrefs = [...content.matchAll(/href=["']?([^"'\s>]+)["']?/g)].map(m => m[1]);
   hrefs.forEach(rawH => {
     let h = rawH;
     if (h.startsWith('https://interpiad.com/')) {
