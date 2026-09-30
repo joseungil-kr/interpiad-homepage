@@ -16,3 +16,5 @@ buildFuture = true
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
+    [markup.goldmark.extensions]
+      strikethrough = false
