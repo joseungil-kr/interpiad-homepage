@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ .Title }}</title>
+<title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} | 인터피아드{{ end }}</title>
 {{- $desc := .Params.description | default .Params.summary | default .Params.intro -}}
 {{- if not $desc -}}
   {{- if .IsHome -}}
@@ -16,10 +16,26 @@
 <meta name="description" content="{{ $desc | plainify }}">
 <link rel="canonical" href="{{ .Permalink }}">
 <meta name="naver-site-verification" content="b94045537826b965cbc8fcd50c30954a2c8c07d9" />
+
+{{- $ogImage := "images/logo/logo.png" | absURL -}}
+{{- if and .IsPage (eq .Section "blog") -}}
+  {{- $postImg := printf "images/blog/%s.jpg" .File.BaseFileName -}}
+  {{- if os.FileExists (printf "static/%s" $postImg) -}}
+    {{- $ogImage = $postImg | absURL -}}
+  {{- end -}}
+{{- else if .Params.hero.bg_image -}}
+  {{- $ogImage = .Params.hero.bg_image | absURL -}}
+{{- end -}}
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:title" content="{{ .Title }}">
 <meta property="og:description" content="{{ $desc | plainify }}">
 <meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ $ogImage }}">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ .Title }}">
+<meta name="twitter:description" content="{{ $desc | plainify }}">
+<meta name="twitter:image" content="{{ $ogImage }}">
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
