@@ -7,8 +7,10 @@
     {{- $desc = .Site.Params.description -}}
   {{- else if eq .Section "categories" -}}
     {{- $desc = printf "%s 분야의 온라인 마케팅 인사이트 및 실전 노하우를 소개합니다." .Title -}}
+  {{- else if .IsNode -}}
+    {{- $desc = printf "%s - 인터피아드의 전문적인 마케팅 인사이트와 서비스를 확인해보세요." .Title -}}
   {{- else -}}
-    {{- $desc = .Summary | default .Site.Params.description -}}
+    {{- $desc = .Summary | default (printf "%s - 인터피아드" .Title) -}}
   {{- end -}}
 {{- end -}}
 <meta name="description" content="{{ $desc | plainify }}">
