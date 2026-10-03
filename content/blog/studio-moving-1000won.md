@@ -2,7 +2,7 @@
 title: "원룸 이사·용달 홈페이지 제작, 타 지역 이탈 없이 동네만 타기팅"
 categories: ["웹 마케팅"]
 summary: "월 1,000원으로 동네 검색 1위를 장악하는 홈페이지 제작 솔루션을 소개합니다."
-date: 2026-10-03
+date: 2026-09-28
 weight: 93
 ---
 <div id="aeo-direct-answer">

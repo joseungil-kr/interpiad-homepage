@@ -2,7 +2,7 @@
 title: "언수도 녹임·해빙 출장 홈페이지 제작, 겨울철 검색어 선점"
 categories: ["웹 마케팅"]
 summary: "월 1,000원으로 동네 검색 1위를 장악하는 홈페이지 제작 솔루션을 소개합니다."
-date: 2026-10-03
+date: 2026-10-02
 weight: 92
 ---
 <div id="aeo-direct-answer">

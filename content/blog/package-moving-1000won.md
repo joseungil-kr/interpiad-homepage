@@ -2,7 +2,7 @@
 title: "포장이사·반포장이사 홈페이지, 시 전체 독립 도메인 세팅법"
 categories: ["웹 마케팅"]
 summary: "월 1,000원으로 동네 검색 1위를 장악하는 홈페이지 제작 솔루션을 소개합니다."
-date: 2026-10-03
+date: 2026-09-29
 weight: 94
 ---
 <div id="aeo-direct-answer">
