@@ -60,6 +60,7 @@
     </div>
   </section>
 
+  {{ with $p.featured }}
   <section class="lec-sec lec-featured" aria-labelledby="lec-feat-title">
     <div class="wrap">
       <p class="eyebrow eyebrow--light">{{ $p.featured.label }}</p>
@@ -76,6 +77,7 @@
       </div>
     </div>
   </section>
+  {{ end }}
 
   <section class="lec-sec" aria-labelledby="lec-career-title">
     <div class="wrap">

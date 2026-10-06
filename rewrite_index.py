@@ -1,4 +1,7 @@
----
+import os
+import yaml
+
+content = """---
 title: "조승일 강사 | AI·온라인마케팅·검색상위노출 교육 | 인터피아드"
 description: "2002년부터 온라인마케팅 실무와 교육을 진행해 온 인터피아드 조승일 대표의 강의경력과 교육 분야를 소개합니다. AI 활용 마케팅, 네이버 검색노출, 스마트플레이스, 홈페이지·쇼핑몰, 웹문서 SEO, AEO·GEO 교육."
 og_title: "조승일 강사 - 온라인마케팅·검색노출·AI 활용 교육"
@@ -165,3 +168,9 @@ cta:
   title: "기관·기업·소상공인 교육을 준비하고 계신가요?"
   desc: "교육 대상과 목적을 알려주시면 온라인마케팅, 검색노출, AI 활용 등 필요한 주제를 중심으로 강의 구성을 협의해 드립니다."
 ---
+"""
+
+with open('content/lecture/_index.md', 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print("Updated _index.md")
