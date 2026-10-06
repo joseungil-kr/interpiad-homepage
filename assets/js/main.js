@@ -222,6 +222,19 @@ function initContactLinks() {
   }
 }
 
+function initCertDialogs() {
+  var openers = document.querySelectorAll(".js-cert-open");
+  if (!openers.length) return;
+  openers.forEach(function (btn) {
+    var dlg = document.getElementById(btn.dataset.target);
+    if (!dlg || typeof dlg.showModal !== "function") return;
+    btn.addEventListener("click", function () { dlg.showModal(); });
+    dlg.addEventListener("click", function (e) {
+      if (e.target === dlg) dlg.close();
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initHeader();
   initNavToggle();
@@ -229,4 +242,5 @@ document.addEventListener("DOMContentLoaded", function () {
   initHero();
   initReveal();
   initContactLinks();
+  initCertDialogs();
 });

@@ -1,0 +1,239 @@
+{{ define "main" }}
+{{- $p := .Params -}}
+{{- $contact := printf "%s#contact" ("/" | relURL) -}}
+<article class="lec">
+
+  <section class="lec-hero">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="현재 위치">
+        <a href="{{ "/" | relURL }}">홈</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">강의·교육</span>
+      </nav>
+      <p class="eyebrow">{{ $p.hero.eyebrow }}</p>
+      <h1 class="lec-hero__title">
+        <span class="lec-hero__name">{{ $p.hero.name }}</span>
+        <span class="lec-hero__sub">{{ $p.hero.h1_sub }}</span>
+      </h1>
+      <p class="lec-hero__desc">{{ $p.hero.desc }}</p>
+      <p class="lec-hero__note">{{ $p.hero.sub }}</p>
+      <div class="lec-hero__cta">
+        <a class="btn btn--brass" href="#fields">주요 강의분야 보기</a>
+        <a class="btn btn--outline" href="{{ $contact }}">강의·출강 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="lec-sec lec-intro" aria-labelledby="lec-intro-title">
+    <div class="wrap lec-narrow">
+      <h2 id="lec-intro-title">{{ $p.intro.title }}</h2>
+      {{ range $p.intro.paragraphs }}<p>{{ . }}</p>{{ end }}
+    </div>
+  </section>
+
+  <section class="lec-sec lec-sec--alt" id="fields" aria-labelledby="lec-fields-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">CURRENT FIELDS</p>
+        <h2 id="lec-fields-title">현재 주요 강의 분야</h2>
+      </div>
+      <ul class="lec-grid">
+        {{ range $p.fields }}
+        <li class="lec-card">
+          <span class="lec-card__num">{{ .num }}</span>
+          <h3 class="lec-card__title">{{ .title }}</h3>
+          <p class="lec-card__desc">{{ .desc }}</p>
+          {{ with .link }}<a class="lec-card__more" href="{{ . | relURL }}">관련 교육 콘텐츠 보기 <span aria-hidden="true">→</span></a>{{ end }}
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+  </section>
+
+  <section class="lec-sec" aria-labelledby="lec-aud-title">
+    <div class="wrap lec-narrow">
+      <h2 id="lec-aud-title">{{ $p.audience.title }}</h2>
+      <ul class="lec-chips">
+        {{ range $p.audience.items }}<li>{{ . }}</li>{{ end }}
+      </ul>
+      <p class="lec-note">{{ $p.audience.note }}</p>
+    </div>
+  </section>
+
+  <section class="lec-sec lec-featured" aria-labelledby="lec-feat-title">
+    <div class="wrap">
+      <p class="eyebrow eyebrow--light">{{ $p.featured.label }}</p>
+      <h2 id="lec-feat-title">{{ $p.featured.title }}</h2>
+      <dl class="lec-dl">
+        {{ range $p.featured.rows }}
+        <div class="lec-dl__row"><dt>{{ .k }}</dt><dd>{{ .v }}</dd></div>
+        {{ end }}
+      </dl>
+      <p class="lec-featured__note">{{ $p.featured.note }}</p>
+      <div class="lec-featured__cta">
+        <a class="btn btn--brass" href="{{ $p.featured.notice_url }}" target="_blank" rel="noopener noreferrer">공식 세미나 안내 보기 <span aria-hidden="true">↗</span><span class="sr-only">(새 창)</span></a>
+        <a class="btn lec-btn-light" href="{{ $p.featured.conference_url }}" target="_blank" rel="noopener noreferrer">K-PRINT 컨퍼런스 보기 <span aria-hidden="true">↗</span><span class="sr-only">(새 창)</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="lec-sec" aria-labelledby="lec-career-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">LECTURE CAREER</p>
+        <h2 id="lec-career-title">{{ $p.career.title }}</h2>
+      </div>
+      <div class="lec-career">
+        {{ range $p.career.groups }}
+        <div class="lec-career__group">
+          <h3>{{ .title }}</h3>
+          <ul>{{ range .items }}<li>{{ . }}</li>{{ end }}</ul>
+        </div>
+        {{ end }}
+      </div>
+      <p class="lec-note">{{ $p.career.note }}</p>
+    </div>
+  </section>
+
+  <section class="lec-sec lec-sec--alt" aria-labelledby="lec-tl-title">
+    <div class="wrap lec-narrow">
+      <div class="section-head">
+        <p class="eyebrow">TIMELINE</p>
+        <h2 id="lec-tl-title">{{ $p.timeline.title }}</h2>
+        <p class="section-head__sub">{{ $p.timeline.sub }}</p>
+      </div>
+      <ol class="lec-timeline">
+        {{ range $p.timeline.items }}
+        <li>
+          <span class="lec-timeline__period">{{ .period }}</span>
+          <span class="lec-timeline__org">{{ .org }}</span>
+          {{ with .role }}<span class="lec-timeline__role">{{ . }}</span>{{ end }}
+        </li>
+        {{ end }}
+      </ol>
+      <p class="lec-edu">{{ $p.timeline.education }}</p>
+    </div>
+  </section>
+
+  <section class="lec-sec" aria-labelledby="lec-cert-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">CERTIFICATION</p>
+        <h2 id="lec-cert-title">{{ $p.certs.title }}</h2>
+      </div>
+      <div class="lec-certs">
+        {{ range $p.certs.items }}
+        {{- $img := .image -}}
+        {{- $has := os.FileExists (printf "static/%s" $img) -}}
+        <figure class="lec-cert">
+          {{ if $has }}
+          <button type="button" class="lec-cert__thumb js-cert-open" data-target="cert-{{ .id }}" aria-haspopup="dialog">
+            <img src="{{ $img | relURL }}" alt="{{ .alt }}" loading="lazy" decoding="async">
+            <span class="lec-cert__zoom">클릭하여 확대</span>
+          </button>
+          <dialog class="lec-dialog" id="cert-{{ .id }}" aria-label="{{ .name }} 확대 보기">
+            <form method="dialog"><button class="lec-dialog__close" aria-label="닫기">닫기 ✕</button></form>
+            <img src="{{ $img | relURL }}" alt="{{ .alt }}" decoding="async">
+          </dialog>
+          {{ end }}
+          <figcaption>
+            <h3>{{ .name }}</h3>
+            <ul>{{ range .lines }}<li>{{ . }}</li>{{ end }}</ul>
+          </figcaption>
+        </figure>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+
+  <section class="lec-sec lec-sec--alt" aria-labelledby="lec-flow-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">EXPERTISE FLOW</p>
+        <h2 id="lec-flow-title">{{ $p.flow.title }}</h2>
+        <p class="section-head__sub">{{ $p.flow.desc }}</p>
+      </div>
+      <ol class="lec-flow">
+        {{ range $p.flow.steps }}<li>{{ . }}</li>{{ end }}
+      </ol>
+    </div>
+  </section>
+
+  <section class="lec-sec" aria-labelledby="lec-rel-title">
+    <div class="wrap lec-narrow">
+      <h2 id="lec-rel-title">{{ $p.related.title }}</h2>
+      <ul class="lec-links">
+        {{ range $p.related.items }}
+        {{- $pg := site.GetPage (printf "/%s" (strings.TrimSuffix "/" .link)) -}}
+        <li><a href="{{ .link | relURL }}">{{ if $pg }}{{ $pg.Title }}{{ else }}{{ .title }}{{ end }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+  </section>
+
+  <section class="lec-sec lec-sec--alt" aria-labelledby="lec-ver-title">
+    <div class="wrap lec-narrow">
+      <h2 id="lec-ver-title">{{ $p.verify.title }}</h2>
+      <ul class="lec-verify">
+        {{ range $p.verify.items }}
+        <li>
+          <a href="{{ .url }}" target="_blank" rel="noopener noreferrer">{{ .title }} <span aria-hidden="true">↗</span><span class="sr-only">(외부 링크, 새 창)</span></a>
+          <p>{{ .desc }}</p>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+  </section>
+
+  <section class="lec-sec lec-cta" aria-labelledby="lec-cta-title">
+    <div class="wrap lec-narrow">
+      <h2 id="lec-cta-title">{{ $p.cta.title }}</h2>
+      <p>{{ $p.cta.desc }}</p>
+      <a class="btn btn--brass" href="{{ $contact }}">강의·출강 문의</a>
+    </div>
+  </section>
+
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "{{ .Permalink }}#profilepage",
+      "url": "{{ .Permalink }}",
+      "name": {{ .Title | jsonify }},
+      "inLanguage": "ko-KR",
+      "mainEntity": { "@id": "{{ .Permalink }}#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "{{ .Permalink }}#person",
+      "name": "조승일",
+      "jobTitle": "온라인마케팅 강사 / 인터피아드 대표",
+      "url": "{{ .Permalink }}",
+      "worksFor": { "@id": "https://interpiad.com/#organization" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "경기대학교" },
+      "knowsAbout": [
+        "Online Marketing",
+        "Search Engine Optimization",
+        "Naver Place Marketing",
+        "Web Marketing",
+        "E-commerce",
+        "Generative AI",
+        "AEO",
+        "GEO"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "홈", "item": "https://interpiad.com/" },
+        { "@type": "ListItem", "position": 2, "name": "강의·교육", "item": "{{ .Permalink }}" }
+      ]
+    }
+  ]
+}
+</script>
+{{ end }}

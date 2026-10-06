@@ -26,6 +26,7 @@
           </details>
         </li>
         <li><a href="{{ "blog/" | relURL }}">블로그</a></li>
+        <li><a href="{{ "lecture/" | relURL }}"{{ if eq .Section "lecture" }} aria-current="page"{{ end }}>강의·교육</a></li>
         <li><a href="{{ "/" | relURL }}#whyus">강점</a></li>
         <li><a href="{{ "/" | relURL }}#contact">문의하기</a></li>
       </ul>
