@@ -111,22 +111,22 @@ timeline:
     org: 인터피아드 대표
     role: 온라인 마케팅 홈페이지 제작, 검색노출 교육·컨설팅
   - period: 2006~2007
-    org: GNB투자자문
+    org: GNB DESIGN
     role: 웹디자인
   - period: 2007~2008
     org: 비즈브릿지
     role: 콘텐츠개발
   - period: 2010~2012
-    org: 경기 쇼핑몰CEO협의회 부회장
+    org: 경기 쇼핑몰CEO협의회 총무이사
     role: ''
   - period: 2012~2017
     org: 미경코리아 이사
     role: 마케팅 총무
   - period: 2018~2019
-    org: 리벤코리아 이사
+    org: 리셀유코리아 이사
     role: 마케팅 총무
   - period: 2024~현재
-    org: 꽃이야기 대표
+    org: 꽃이랑 대표
     role: 실제 온라인·검색 창업 운영 경험
   education: '학력: 경기대학교 재료공학과 졸업'
 certs:
@@ -192,12 +192,6 @@ related:
     link: blog/web-build-conversion-training/
   - title: 홈페이지 제작 서비스
     link: services/web-build/
-verify:
-  title: 외부에서 확인할 수 있는 강의 활동
-  items:
-  - title: 과거 공개 강의경력 자료
-    desc: 과거 공개 콘텐츠에 기록된 강의이력 자료입니다. 기관의 공식 증명자료가 아닌 과거 공개자료입니다.
-    url: https://onfun.tistory.com/573
 cta:
   title: 기관·기업·소상공인 교육을 준비하고 계신가요?
   desc: 교육 대상과 목적을 알려주시면 온라인마케팅, 검색노출, AI 활용 등 필요한 주제를 중심으로 강의 구성을 협의해 드립니다.
