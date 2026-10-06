@@ -127,18 +127,13 @@
         {{ range $p.certs.items }}
         {{- $img := .image -}}
         {{- $has := os.FileExists (printf "static/%s" $img) -}}
-        <figure class="lec-cert">
+                <figure class="lec-cert" style="display: flex; align-items: center; gap: 24px;">
           {{ if $has }}
-          <button type="button" class="lec-cert__thumb js-cert-open" data-target="cert-{{ .id }}" aria-haspopup="dialog">
-            <img src="{{ $img | relURL }}" alt="{{ .alt }}" loading="lazy" decoding="async">
-            <span class="lec-cert__zoom">클릭하여 확대</span>
-          </button>
-          <dialog class="lec-dialog" id="cert-{{ .id }}" aria-label="{{ .name }} 확대 보기">
-            <form method="dialog"><button class="lec-dialog__close" aria-label="닫기">닫기 ✕</button></form>
-            <img src="{{ $img | relURL }}" alt="{{ .alt }}" decoding="async">
-          </dialog>
+          <div class="lec-cert__thumb" style="width: 80px; height: 80px; flex-shrink: 0; background: transparent; border: none; padding: 0;">
+            <img src="{{ $img | relURL }}" alt="{{ .alt }}" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
           {{ end }}
-          <figcaption>
+          <figcaption style="margin-top: 0;">
             <h3>{{ .name }}</h3>
             <ul>{{ range .lines }}<li>{{ . }}</li>{{ end }}</ul>
           </figcaption>
