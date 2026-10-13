@@ -22,7 +22,7 @@ if ($major -lt 20) { throw "Node.js >=20 required" }
 
 New-Item -ItemType Directory -Force -Path $InstallRoot, $workspace | Out-Null
 if (-not (Test-Path (Join-Path $source ".git"))) {
-  if (Test-Path $source) { throw "Non-git directory exists at $source: aborting." }
+  if (Test-Path $source) { throw "Non-git directory exists at ${source}: aborting." }
   & git clone --no-checkout $upstream $source
   CheckExit "Git clone"
 }
