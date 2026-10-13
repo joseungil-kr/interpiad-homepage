@@ -1,0 +1,22 @@
+[Unit]
+Description=Interpiad AI Pixel Office (private loopback service for %i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/interpiad-ai-office/pixel-office
+Environment=HOME=/home/%i
+Environment=PORT=4747
+Environment=HOST=127.0.0.1
+Environment=PIXEL_OFFICE_ALLOW_REMOTE=0
+ExecStart=/usr/bin/env node bin/pixel-office.js start --global --no-open
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
