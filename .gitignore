@@ -2,3 +2,6 @@
 /resources/
 .hugo_build.lock
 .claude/
+
+# Local Telegram credentials; use environment variables where possible.
+/scripts/telegram_config.json
