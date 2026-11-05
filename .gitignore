@@ -5,3 +5,6 @@
 
 # Local Telegram credentials; use environment variables where possible.
 /scripts/telegram_config.json
+
+__pycache__/
+*.pyc
