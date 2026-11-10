@@ -48,11 +48,22 @@ for (const [slug, mode] of [['manual-invoice','invoice'],['simple-receipt','rece
  check(`${mode} free offer`,schema.find(e=>e['@type']==='WebApplication').offers.price==='0');
  check(`${mode} FAQ parity`,JSON.stringify(schema.find(e=>e['@type']==='FAQPage').mainEntity.map(e=>e.name))===JSON.stringify(Array.from(d.querySelectorAll('.guide-faq summary')).map(e=>e.textContent)));
  check(`${mode} no storage`,w.localStorage.length===0&&w.sessionStorage.length===0);
+ check(`${mode} FAQ answers match visible copy`,JSON.stringify(schema.find(e=>e['@type']==='FAQPage').mainEntity.map(e=>e.acceptedAnswer.text))===JSON.stringify(Array.from(d.querySelectorAll('.guide-faq details p')).map(e=>e.textContent)));
+ check(`${mode} friendly save guidance`,d.body.textContent.includes('창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.'));
+ check(`${mode} tax document distinction`,d.body.textContent.includes('홈택스 등 별도 발급 서비스'));
+ check(`${mode} no repeated vague disclaimers`,!['기준으로 안내','상담 항목','모든 세무 증빙 요건','세법상 요건','세금 신고가 이루어지지는'].some(text=>d.body.textContent.includes(text)));
+ check(`${mode} free forms footer`,el('.form-footer a[href="/tools/"]').textContent==='무료업무서식');
  const blank=new JSDOM(html,{url:`https://interpiad.com/tools/${slug}/?blank=1`,runScripts:'outside-only'});
  blank.window.eval(fs.readFileSync('static/tools/forms/forms.js','utf8'));
  check(`${mode} blank date`,blank.window.document.querySelector('[data-field="writtenDate"]').value==='');
  check(`${mode} blank totals`,blank.window.document.querySelector('[data-calc="supply"]').textContent==='');
  for(const file of ['public/sitemap.xml','public/index.xml','public/tools/index.xml'])check(`${slug} ${file}`,fs.readFileSync(file,'utf8').includes(`https://interpiad.com/tools/${slug}/`));
  dom.window.close();blank.window.close();
+}
+for(const file of ['public/index.html','public/tools/index.html']){
+ const dom=new JSDOM(fs.readFileSync(file,'utf8'));
+ const link=dom.window.document.querySelector('.site-footer a[href="/tools/"]');
+ check(`${file} footer free forms link`,link&&link.textContent==='무료업무서식');
+ dom.window.close();
 }
 console.log(JSON.stringify({passed,scope:'Local built HTML, schema, feed inclusion and form DOM logic; not browser layout or PDF rendering.'}));

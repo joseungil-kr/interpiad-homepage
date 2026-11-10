@@ -1043,6 +1043,15 @@ h1, h2, h3 {
   gap: 8px 20px;
   font-size: 0.88rem;
 }
+.site-footer__links a {
+  color: var(--paper, #f7f5f1);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  display: inline-block;
+  padding: 8px 0;
+}
+.site-footer__links a:hover { text-decoration-thickness: 2px; }
+.site-footer__links a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 .site-footer__brand {
   height: 22px;
   width: auto;

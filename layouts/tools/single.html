@@ -38,19 +38,19 @@
  <nav class="toolbar-nav" aria-label="서식 작업">
   {{ if eq .Params.form "invoice" }}<a href="/tools/simple-receipt/">간이영수증 작성</a>{{ else }}<a href="/tools/manual-invoice/">거래명세표 작성</a>{{ end }}
   <a id="blank-pdf" href="{{ .RelPermalink }}?blank=1&amp;print=1" target="_blank" rel="noopener noreferrer">빈 양식 인쇄·PDF</a>
-  <button id="clear-form" type="button" class="minor">전체 초기화</button>
+  <button id="clear-form" type="button" class="minor">작성 내용 지우기</button>
   <button id="print-form" type="button" class="primary">출력하기 / PDF 저장</button>
  </nav>
 </header>
-<p class="print-hint">A4 · <b>{{ if eq .Params.form "receipt" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. 입력 내용은 서버로 전송하거나 저장하지 않습니다.<br>작은 화면에서는 양식을 좌우로 밀어 확인하세요. 작성 중에는 새로고침하지 마세요.</p>
+<p class="print-hint">A4 · <b>{{ if eq .Params.form "receipt" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. <br>휴대폰에서는 양식을 좌우로 밀면 전체를 볼 수 있습니다. 입력 내용은 현재 화면에만 남으니, 창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.</p>
 <main id="print-root" tabindex="-1" aria-label="{{ .Params.shortTitle }} 2부 입력 및 인쇄 양식"></main>
 <div id="feedback" role="status" aria-live="polite"></div>
-<noscript><p>서식 입력과 계산에는 자바스크립트가 필요합니다. 브라우저에서 자바스크립트를 켜 주세요. 아래의 이용 안내와 상담 연락처는 그대로 확인할 수 있습니다.</p></noscript>
+<noscript><p>양식을 표시하려면 브라우저 설정에서 자바스크립트를 켜 주세요. 이용 방법과 문의 연락처는 아래에서 확인할 수 있습니다.</p></noscript>
 <section class="seo-guide" aria-labelledby="guide-title"><div class="guide-inner">
   <p class="guide-eyebrow">인터피아드 무료 업무 서식</p>
   <h2 id="guide-title">{{ .Params.guideTitle }}</h2>
   {{ .Content }}
 </div></section>
-<footer class="form-footer">© 인터피아드 · <a href="/tools/">무료 업무 서식 모음</a> · <a href="/">인터피아드 홈</a></footer>
+<footer class="form-footer">© 인터피아드 · <a href="/tools/">무료업무서식</a> · <a href="/">인터피아드 홈</a></footer>
 </body>
 </html>

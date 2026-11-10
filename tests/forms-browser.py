@@ -105,6 +105,18 @@ with sync_playwright() as p:
         check(f'tools: no overflow at {width}px', tools_page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
         check(f'tools: image visible at {width}px', hero.is_visible() and hero.bounding_box()['width'] > 200)
         tools_page.screenshot(path=str(OUT / f'tools-{width}.png'), full_page=True)
+    for path in ['/', '/tools/']:
+        for width in [1440, 390]:
+            tools_page.set_viewport_size({'width': width, 'height': 1000})
+            tools_page.goto(BASE + path)
+            footer_link = tools_page.locator('.site-footer a[href="/tools/"]')
+            check(f'{path}: footer link text at {width}px', footer_link.inner_text() == '무료업무서식')
+            footer_link.scroll_into_view_if_needed()
+            check(f'{path}: footer visible at {width}px', footer_link.is_visible())
+            check(f'{path}: no footer overflow at {width}px', tools_page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
+            tools_page.screenshot(path=str(OUT / f'footer-{path.strip("/") or "home"}-{width}.png'))
+            footer_link.click()
+            check(f'{path}: footer opens free forms at {width}px', tools_page.url.rstrip('/') == BASE + '/tools')
     tools_page.close()
 
     browser.close()

@@ -130,9 +130,9 @@ function synchronize(){
  document.body.classList.toggle('form-invalid',hasInputError);
  const values={supply,tax,previous,paid,grand,balance};
  for(const key of totalFields)setCalculated(key,values[key]);
- if(invalid.length)feedback.textContent=invalid.map(el=>el.getAttribute('aria-label')).join(', ')+': 0 이상 정수로 입력하세요. 잘못된 값은 계산에 반영되지 않으며 수정 전에는 출력할 수 없습니다.';
- else if(overflow)feedback.textContent='계산 가능한 금액 범위를 초과했습니다. 수량과 금액을 줄인 뒤 출력하세요.';
- else if(!receipt&&paid>grand)feedback.textContent='입금액이 청구합계를 초과합니다. 입력값을 확인하세요.';
+ if(invalid.length)feedback.textContent=invalid.map(el=>el.getAttribute('aria-label')).join(', ')+': 소수점 없이 0 이상의 숫자(정수)로 적어 주세요. 이 칸을 고치면 금액이 계산되고 인쇄할 수 있습니다.';
+ else if(overflow)feedback.textContent='계산할 수 있는 금액 범위를 초과했습니다. 수량과 단가에 숫자를 더 적지 않았는지 확인해 주세요.';
+ else if(!receipt&&paid>grand)feedback.textContent='입금액이 청구합계를 초과했습니다. 받은 금액을 맞게 적었는지 한 번 확인해 주세요.';
  else feedback.textContent='';
 }
 root.addEventListener('input',synchronize);
@@ -162,7 +162,7 @@ document.getElementById('print-form').addEventListener('click',()=>{
 });
 window.addEventListener('beforeprint',synchronize);
 document.getElementById('clear-form').addEventListener('click',()=>{
- if(!window.confirm('모든 입력 내용을 초기화할까요?'))return;
+ if(!window.confirm('작성한 내용을 모두 지울까요? 보관하려면 취소한 뒤 PDF로 먼저 저장해 주세요.'))return;
  root.querySelectorAll('.slip[data-copy="supplier"] input,.slip[data-copy="supplier"] textarea').forEach(i=>{i.value=''});
  const vat=root.querySelector('#vat-toggle');
  if(vat){
@@ -179,4 +179,3 @@ if(blankMode&&new URLSearchParams(location.search).get('print')==='1'){
   setTimeout(()=>window.print(),350);
  },{once:true});
 }
-
