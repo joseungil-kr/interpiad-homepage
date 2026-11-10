@@ -1,8 +1,10 @@
+import {koreanWonText} from './korean-money.mjs';
 // Independent client-only editable forms. No network access, cookies, storage or ERP mutation.
 const mode=document.body.dataset.form==='receipt'?'receipt':'invoice';
 const receipt=mode==='receipt';
+const verticalInvoice=document.body.dataset.form==='invoice-vertical';
 const blankMode=new URLSearchParams(location.search).get('blank')==='1';
-const count=15;
+const count=verticalInvoice?10:15;
 const root=document.getElementById('print-root');
 const feedback=document.getElementById('feedback');
 const currency=new Intl.NumberFormat('ko-KR');
@@ -34,6 +36,23 @@ function headline(copy){
  (copy==='supplier'?'공급자 보관용':'공급받는자 보관용')+'</span></div>';
 }
 function parties(editable){
+ if(verticalInvoice){
+  return '<div class="vertical-party-details">'+
+   '<div class="vertical-date-row"><strong>거래일자</strong>'+field('writtenDate','작성일',editable)+'</div>'+
+   '<table class="vertical-party-table" aria-label="공급받는자 및 공급자 정보"><colgroup>'+
+   '<col class="vertical-party-side"><col class="vertical-party-field"><col class="vertical-party-data">'+
+   '<col class="vertical-party-side"><col class="vertical-party-field"><col class="vertical-party-data">'+
+   '</colgroup><tbody>'+
+   '<tr><th class="vertical-side-label" rowspan="4" scope="rowgroup">공급받는자</th><th scope="row">상호</th><td>'+field('buyer','공급받는자 상호',editable)+'</td>'+
+   '<th class="vertical-side-label" rowspan="4" scope="rowgroup">공급자</th><th scope="row">상호</th><td>'+field('supplier','공급자 상호',editable)+'</td></tr>'+
+   '<tr><th scope="row">등록번호</th><td>'+field('buyerNo','공급받는자 등록번호',editable)+'</td>'+
+   '<th scope="row">등록번호</th><td>'+field('supplierNo','공급자 등록번호',editable)+'</td></tr>'+
+   '<tr><th scope="row">소재지</th><td>'+field('buyerAddress','공급받는자 소재지',editable)+'</td>'+
+   '<th scope="row">소재지</th><td>'+field('supplierAddress','공급자 소재지',editable)+'</td></tr>'+
+   '<tr><th scope="row">연락처</th><td>'+field('buyerPhone','공급받는자 연락처',editable)+'</td>'+
+   '<th scope="row">연락처</th><td>'+field('supplierPhone','공급자 연락처',editable)+'</td></tr>'+
+   '</tbody></table></div>';
+ }
  return '<table class="parties"><colgroup><col class="p-label"><col class="p-data"><col class="p-label"><col class="p-data"></colgroup><tbody>'+
  '<tr><th>작성일</th><td colspan="3">'+field('writtenDate','작성일',editable)+'</td></tr>'+
  '<tr class="party-supplier party-supplier-start"><th>'+(receipt?'공급자(상호)':'공급자')+'</th><td>'+field('supplier','공급자 상호',editable)+'</td><th>등록번호</th><td>'+field('supplierNo','공급자 사업자번호',editable)+'</td></tr>'+
@@ -60,7 +79,10 @@ function itemsTable(editable){
  rows.map(i=>unitRow(i,editable)).join('')+'</tbody></table>';
 }
 function preface(){
- return '<div class="amount-line"><span'+(receipt?'':' data-tax-caption')+'>'+(receipt?'영수 합계금액':'합계금액(부가세별도)')+'</span><strong>₩ '+output(receipt?'grand':'invoiceTotal')+'</strong><span>원정</span></div>';
+ if(!receipt){
+  return '<div class="amount-line invoice-korean-line'+(verticalInvoice?' vertical-amount-line':'')+'"><span data-tax-caption>합계금액(부가세별도)</span><strong class="amount-korean" data-amount-korean></strong></div>';
+ }
+ return '<div class="amount-line"><span>영수 합계금액</span><strong>₩ '+output('grand')+'</strong><span>원정</span></div>';
 }
 function summary(editable){
  if(receipt){
@@ -82,15 +104,36 @@ function copy(type){
   '<div class="notice">'+(receipt?'공급자 서명 또는 날인: __________________':'추가 메모: ')+(receipt?'':field('memo','메모',editable))+'</div>'+
   '<div class="bottom-row"><span>'+(receipt?'위와 같이 영수함':'위와 같이 거래함')+'</span><span>인수자: __________________</span></div></article>';
 }
-root.innerHTML='<section class="print-sheet '+mode+'" aria-label="'+(receipt?'A4 세로':'A4 가로')+' 2부 인쇄 양식">'+
+root.innerHTML='<section class="print-sheet '+mode+(verticalInvoice?' invoice-vertical':'')+'" aria-label="'+(receipt||verticalInvoice?'A4 세로':'A4 가로')+' 2부 인쇄 양식">'+
  '<span class="cut-marker" aria-hidden="true"><span class="cut-label">✂ 절취선</span></span>'+
  '<div class="slips">'+copy('supplier')+copy('recipient')+'</div></section>';
 function read(key){
  const field=root.querySelector('.slip[data-copy="supplier"] [data-field="'+key+'"]');
  return field?field.value:'';
 }
-function setCalculated(key,value){
- root.querySelectorAll('[data-calc="'+key+'"]').forEach(el=>{el.textContent=blankMode?'':won(value)});
+function setCalculated(key,value,empty=false){
+ root.querySelectorAll('[data-calc="'+key+'"]').forEach(el=>{el.textContent=blankMode||empty?'':won(value)});
+}
+// Format only unit prices as integers with thousands separators; keep the insertion caret stable.
+function formatUnitPriceInput(el){
+ const raw=el.value;
+ // Preserve invalid input for the existing validation instead of changing its meaning.
+ if(!/^[0-9,\s]*$/.test(raw))return;
+ const cursor=el.selectionStart??raw.length;
+ const digitsBefore=raw.slice(0,cursor).replace(/\D/g,'').length;
+ const digits=raw.replace(/\D/g,'');
+ const grouped=digits.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+ if(grouped===raw)return;
+ el.value=grouped;
+ if(document.activeElement===el){
+  let at=0,seen=0;
+  while(at<grouped.length&&seen<digitsBefore){
+   if(grouped[at]!==',')seen++;
+   at++;
+  }
+  if(grouped[at]===',')at++;
+  el.setSelectionRange(at,at);
+ }
 }
 function synchronize(){
  const invalid=[...root.querySelectorAll('[data-copy="supplier"] input[inputmode="numeric"]')].filter(el=>{
@@ -108,18 +151,22 @@ function synchronize(){
  }
  let supply=0,tax=0;
  for(const i of rows){
-  const qty=cleanNumber(read('item-'+i+'-qty'));
-  const price=cleanNumber(read('item-'+i+'-price'));
+  const qtyText=read('item-'+i+'-qty');
+  const priceText=read('item-'+i+'-price');
+  const complete=qtyText.trim()!==''&&priceText.trim()!=='';
+  const qty=cleanNumber(qtyText);
+  const price=cleanNumber(priceText);
   const amount=qty*price;
   const lineTax=receipt||read('vatMode')!=='tax'?0:Math.round(amount*.1);
   supply+=amount;tax+=lineTax;
-  setCalculated('item-'+i+'-amount',amount);
-  if(!receipt)setCalculated('item-'+i+'-tax',lineTax);
+  setCalculated('item-'+i+'-amount',amount,!complete);
+  if(!receipt)setCalculated('item-'+i+'-tax',lineTax,!complete);
  }
  if(!receipt){
   const enabled=read('vatMode')==='tax';
   root.querySelectorAll('[data-tax-caption]').forEach(el=>{el.textContent=enabled?'합계금액(부가세포함)':'합계금액(부가세별도)'});
   setCalculated('invoiceTotal',supply+tax);
+  root.querySelectorAll('[data-amount-korean]').forEach(el=>{el.textContent=blankMode?'':koreanWonText(supply+tax)});
  }
  const previous=receipt?0:cleanNumber(read('previous'));
  const paid=receipt?0:cleanNumber(read('paid'));
@@ -135,8 +182,16 @@ function synchronize(){
  else if(!receipt&&paid>grand)feedback.textContent='입금액이 청구합계를 초과했습니다. 받은 금액을 맞게 적었는지 한 번 확인해 주세요.';
  else feedback.textContent='';
 }
-root.addEventListener('input',synchronize);
-root.addEventListener('change',synchronize);
+root.addEventListener('input',event=>{
+ if(event.target.matches?.('.slip[data-copy="supplier"] input[data-field^="item-"][data-field$="-price"]')&&!event.isComposing)
+  formatUnitPriceInput(event.target);
+ synchronize();
+});
+root.addEventListener('change',event=>{
+ if(event.target.matches?.('.slip[data-copy="supplier"] input[data-field^="item-"][data-field$="-price"]'))
+  formatUnitPriceInput(event.target);
+ synchronize();
+});
 if(!receipt){
  root.addEventListener('click',event=>{
   const toggle=event.target.closest('#vat-toggle');

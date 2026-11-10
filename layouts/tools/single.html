@@ -22,7 +22,7 @@
   <meta name="twitter:description" content="{{ .Description }}">
   <link rel="stylesheet" href="{{ "tools/forms/forms.css" | relURL }}">
   <link rel="stylesheet" href="{{ "tools/forms/interpiad.css" | relURL }}">
-  <style>@page{size:A4 {{ if eq .Params.form "receipt" }}portrait{{ else }}landscape{{ end }};margin:0}</style>
+  <style>@page{size:A4 {{ if ne .Params.form "invoice" }}portrait{{ else }}landscape{{ end }};margin:0}</style>
   {{ $app := dict "@context" "https://schema.org" "@type" "WebApplication" "@id" (printf "%s#app" .Permalink) "name" .Title "url" .Permalink "description" .Description "inLanguage" "ko-KR" "applicationCategory" "BusinessApplication" "operatingSystem" "Any" "browserRequirements" "JavaScript를 지원하는 최신 브라우저와 인쇄/PDF 저장 기능" "isAccessibleForFree" true "offers" (dict "@type" "Offer" "price" "0" "priceCurrency" "KRW") "provider" (dict "@type" "Organization" "name" "인터피아드" "url" .Site.BaseURL "telephone" .Site.Params.phone "email" .Site.Params.email) "featureList" .Params.features }}
   <script type="application/ld+json">{{ $app | jsonify | safeJS }}</script>
   {{ $questions := slice }}{{ range .Params.faq }}{{ $questions = $questions | append (dict "@type" "Question" "name" .question "acceptedAnswer" (dict "@type" "Answer" "text" .answer)) }}{{ end }}
@@ -36,13 +36,16 @@
 <header class="toolbar">
  <div class="toolbar-info"><p class="eyebrow">설치·회원가입 없이 무료 사용</p><h1>{{ .Title }}</h1><p>{{ .Params.intro }}</p></div>
  <nav class="toolbar-nav" aria-label="서식 작업">
-  {{ if eq .Params.form "invoice" }}<a href="/tools/simple-receipt/">간이영수증 작성</a>{{ else }}<a href="/tools/manual-invoice/">거래명세표 작성</a>{{ end }}
+  <a href="/tools/">무료 서식 3종</a>
+  <a href="/tools/manual-invoice/"{{ if eq .Params.form "invoice" }} aria-current="page"{{ end }}>거래명세표 A4 가로</a>
+  <a href="/tools/manual-invoice-vertical/"{{ if eq .Params.form "invoice-vertical" }} aria-current="page"{{ end }}>거래명세표 A4 세로</a>
+  <a href="/tools/simple-receipt/"{{ if eq .Params.form "receipt" }} aria-current="page"{{ end }}>간이영수증</a>
   <a id="blank-pdf" href="{{ .RelPermalink }}?blank=1&amp;print=1" target="_blank" rel="noopener noreferrer">빈 양식 인쇄·PDF</a>
   <button id="clear-form" type="button" class="minor">작성 내용 지우기</button>
   <button id="print-form" type="button" class="primary">출력하기 / PDF 저장</button>
  </nav>
 </header>
-<p class="print-hint">A4 · <b>{{ if eq .Params.form "receipt" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. <br>휴대폰에서는 양식을 좌우로 밀면 전체를 볼 수 있습니다. 입력 내용은 현재 화면에만 남으니, 창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.</p>
+<p class="print-hint">A4 · <b>{{ if ne .Params.form "invoice" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. <br>휴대폰에서는 양식을 좌우로 밀면 전체를 볼 수 있습니다. 입력 내용은 현재 화면에만 남으니, 창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.</p>
 <main id="print-root" tabindex="-1" aria-label="{{ .Params.shortTitle }} 2부 입력 및 인쇄 양식"></main>
 <div id="feedback" role="status" aria-live="polite"></div>
 <noscript><p>양식을 표시하려면 브라우저 설정에서 자바스크립트를 켜 주세요. 이용 방법과 문의 연락처는 아래에서 확인할 수 있습니다.</p></noscript>

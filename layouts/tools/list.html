@@ -20,7 +20,7 @@
   <div class="tools-grid">
     {{ range .RegularPages.ByWeight }}
     <article class="tools-card">
-      <p class="tools-card-label">{{ if eq .Params.form "invoice" }}거래 내역을 품목별로 정리할 때{{ else if eq .Params.form "receipt" }}물건값을 받은 내역을 적을 때{{ end }}</p>
+      <p class="tools-card-label">{{ if eq .Params.form "invoice-vertical" }}A4 세로 한 장에 위·아래로 보관할 때{{ else if eq .Params.form "invoice" }}거래 내역을 품목별로 정리할 때{{ else if eq .Params.form "receipt" }}물건값을 받은 내역을 적을 때{{ end }}</p>
       <h2><a href="{{ .RelPermalink }}">{{ .Params.shortTitle }}</a></h2>
       <p>{{ .Description }}</p>
       <a class="btn btn--brass" href="{{ .RelPermalink }}">무료 양식 작성하기<span class="sr-only">: {{ .Params.shortTitle }}</span></a>

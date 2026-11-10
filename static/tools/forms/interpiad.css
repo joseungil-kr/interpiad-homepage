@@ -23,3 +23,11 @@
 @media print{.brandbar,.form-footer,.form-skip{display:none!important}}
 @media print{body.form-invalid #print-root{display:none!important}body.form-invalid #feedback{display:block!important;font-size:16px;color:#000;padding:20mm;white-space:normal}}
 @media print{.slip textarea.multiline{background:transparent!important;color:#141c1d!important;outline:none!important}}
+
+/* Keep Interpiad guidance readable while reusing the source form navigation. */
+@media screen{.toolbar-info p,.toolbar-info h1{height:auto;min-height:0;overflow:visible;display:block;white-space:normal}.toolbar-info h1{line-height:1.45}.toolbar-info p{line-height:1.6}.toolbar-info .eyebrow{height:auto;min-height:0}}
+/* Preserve the target's two-line fields in the new compact portrait layout. */
+.invoice-vertical .slip .vertical-party-table textarea.multiline{height:4.8mm;padding:.15mm .5mm;font-size:6.5pt;line-height:1.1;color:var(--copy-ink)}
+.invoice-vertical .slip .item-table textarea.multiline{height:6.2mm;color:var(--copy-ink)}
+.invoice-vertical .slip .vertical-party-table .mirror[data-mirror*="Address"]{font-size:6.5pt;line-height:1.1;white-space:pre-wrap}
+@media print{.invoice-vertical .slip textarea.multiline{color:var(--copy-ink)!important}}

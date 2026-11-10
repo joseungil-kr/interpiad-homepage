@@ -16,7 +16,7 @@ def check(name, condition):
 
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path=os.environ.get('FORM_TEST_CHROMIUM'), args=['--no-sandbox'])
-    for slug, mode in [('manual-invoice', 'invoice'), ('simple-receipt', 'receipt')]:
+    for slug, mode, rows in [('manual-invoice', 'invoice', 15), ('manual-invoice-vertical', 'invoice-vertical', 10), ('simple-receipt', 'receipt', 15)]:
         page = browser.new_page(viewport={'width': 1440, 'height': 1100})
         errors, sent = [], []
         page.on('pageerror', lambda err: errors.append(str(err)))
@@ -26,27 +26,33 @@ with sync_playwright() as p:
         check(f'{mode}: HTTP 200', response.status == 200)
         check(f'{mode}: one h1', page.locator('h1').count() == 1)
         check(f'{mode}: self canonical', page.locator('link[rel=canonical]').get_attribute('href') == f'https://interpiad.com/tools/{slug}/')
-        check(f'{mode}: two copies and 15 rows each', page.locator('.slip').count() == 2 and page.locator('.item-table tbody tr').count() == 30)
-        for key, value in {'supplier': '출력 테스트', 'supplierAddress': '경기 안산시 상록구 반석로 54 2층', 'supplierNo': '000-00-00000', 'buyer': '문서 확인', 'buyerContact': '검수', 'item-0-name': '테스트 품목', 'item-0-qty': '3', 'item-0-price': '10,000'}.items():
+        check(f'{mode}: two copies and {rows} rows each', page.locator('.slip').count() == 2 and page.locator('.item-table tbody tr').count() == rows * 2)
+        for key, value in {'supplier': '출력 테스트', 'supplierAddress': '경기 안산시 상록구 반석로 54 2층', 'supplierNo': '000-00-00000', 'buyer': '문서 확인', ('buyerPhone' if mode == 'invoice-vertical' else 'buyerContact'): '검수', 'item-0-name': '테스트 품목', 'item-0-qty': '3', 'item-0-price': '10,000'}.items():
             page.locator(f'[data-field="{key}"]').fill(value)
-        check(f'{mode}: exact mirroring', page.locator('[data-mirror=supplier]').inner_text() == '출력 테스트' and page.locator('[data-mirror=buyerContact]').inner_text() == '검수')
+        check(f'{mode}: exact mirroring', page.locator('[data-mirror=supplier]').inner_text() == '출력 테스트' and page.locator('[data-mirror=buyerPhone]' if mode == 'invoice-vertical' else '[data-mirror=buyerContact]').inner_text() == '검수')
+        check(f'{mode}: grouped price', page.locator('[data-field=item-0-price]').input_value() == '10,000')
+        check(f'{mode}: empty amount', page.locator('[data-calc=item-1-amount]').first.inner_text() == '')
+        if mode != 'receipt':
+            check(f'{mode}: Korean totals', page.locator('[data-amount-korean]').all_text_contents() == ['삼만원 정 (₩30,000)'] * 2)
+        for other in ['manual-invoice', 'manual-invoice-vertical', 'simple-receipt']:
+            check(f'{mode}: navigation to {other}', page.locator(f'.toolbar-nav a[href="/tools/{other}/"]').count() == 1)
         check(f'{mode}: calculation 30,000', page.locator('[data-calc=supply]').first.inner_text() == '30,000')
-        page.locator('[data-field=item-14-qty]').fill('2')
-        page.locator('[data-field=item-14-name]').fill('마지막 품목')
-        page.locator('[data-field=item-14-price]').fill('500')
+        page.locator(f'[data-field=item-{rows-1}-qty]').fill('2')
+        page.locator(f'[data-field=item-{rows-1}-name]').fill('마지막 품목')
+        page.locator(f'[data-field=item-{rows-1}-price]').fill('500')
         check(f'{mode}: last row included', page.locator('[data-calc=supply]').first.inner_text() == '31,000')
-        if mode == 'invoice':
+        if mode != 'receipt':
             page.locator('#vat-toggle').click()
             page.locator('[data-field=previous]').fill('5000')
             page.locator('[data-field=paid]').fill('10000')
-            check('invoice: tax 3,100', page.locator('[data-calc=tax]').first.inner_text() == '3,100')
-            check('invoice: current total 34,100', page.locator('[data-calc=invoiceTotal]').first.inner_text() == '34,100')
-            check('invoice: balance 29,100', page.locator('[data-calc=balance]').first.inner_text() == '29,100')
+            check(f'{mode}: tax 3,100', page.locator('[data-calc=tax]').first.inner_text() == '3,100')
+            check(f'{mode}: current total 34,100', page.locator('[data-amount-korean]').first.inner_text() == '삼만사천일백원 정 (₩34,100)')
+            check(f'{mode}: balance 29,100', page.locator('[data-calc=balance]').first.inner_text() == '29,100')
             page.locator('[data-field=paid]').fill('50000')
-            check('invoice: overpayment warning', '초과' in page.locator('#feedback').inner_text())
+            check(f'{mode}: overpayment warning', '초과' in page.locator('#feedback').inner_text())
             page.locator('[data-field=paid]').fill('10000')
             page.locator('#vat-toggle').click()
-            check('invoice: toggle off', page.locator('[data-calc=tax]').first.inner_text() == '0')
+            check(f'{mode}: toggle off', page.locator('[data-calc=tax]').first.inner_text() == '0')
         page.locator('[data-field=supplier]').fill('<img src=x onerror=alert(1)>')
         check(f'{mode}: input safely mirrored as text', page.locator('[data-mirror=supplier] img').count() == 0)
         page.locator('[data-field=supplier]').fill('출력 테스트')
@@ -97,8 +103,8 @@ with sync_playwright() as p:
     check('tools: descriptive alternative text', bool(hero.get_attribute('alt')))
     check('tools: image has intrinsic dimensions', hero.get_attribute('width') == '1672' and hero.get_attribute('height') == '941')
     check('tools: image loaded', hero.evaluate('(img) => img.complete && img.naturalWidth === 1672'))
-    check('tools: exactly two existing form cards', tools_page.locator('.tools-card').count() == 2)
-    check('tools: distinct accessible form links', tools_page.locator('.tools-card .btn .sr-only').count() == 2)
+    check('tools: exactly three form cards', tools_page.locator('.tools-card').count() == 3)
+    check('tools: distinct accessible form links', tools_page.locator('.tools-card .btn .sr-only').count() == 3)
     check('tools: hero used for social image', 'business-forms-desk.jpg' in tools_page.locator('meta[property="og:image"]').get_attribute('content'))
     for width in [1440, 768, 390, 320]:
         tools_page.set_viewport_size({'width': width, 'height': 1000})
@@ -124,7 +130,7 @@ with sync_playwright() as p:
 ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
 sitemap = ET.fromstring(urllib.request.urlopen(BASE + '/sitemap.xml').read())
 rss = ET.fromstring(urllib.request.urlopen(BASE + '/index.xml').read())
-for slug in ['manual-invoice', 'simple-receipt']:
+for slug in ['manual-invoice', 'manual-invoice-vertical', 'simple-receipt']:
     url = f'https://interpiad.com/tools/{slug}/'
     check(f'{slug}: in sitemap', url in [e.text for e in sitemap.findall('sm:url/sm:loc', ns)])
     check(f'{slug}: in RSS', url in [e.text for e in rss.findall('channel/item/link')])

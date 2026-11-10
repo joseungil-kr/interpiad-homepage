@@ -3,23 +3,42 @@ const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const { JSDOM } = require('jsdom');
 let passed = 0;
+const formScript=fs.readFileSync('static/tools/forms/korean-money.mjs','utf8').replace(/^export /gm,'')+'\n'+
+ fs.readFileSync('static/tools/forms/forms.js','utf8').replace(/^import .*korean-money\.mjs['"];?\s*$/m,'');
 const check = (label, value) => { assert.ok(value, label); passed++; };
-for (const [slug, mode] of [['manual-invoice','invoice'],['simple-receipt','receipt']]) {
+for (const [slug, mode] of [['manual-invoice','invoice'],['manual-invoice-vertical','invoice-vertical'],['simple-receipt','receipt']]) {
+ const rows=mode==='invoice-vertical'?10:15;
+ const contactKey=mode==='invoice-vertical'?'buyerPhone':'buyerContact';
  const html = fs.readFileSync(`public/tools/${slug}/index.html`,'utf8');
  const dom = new JSDOM(html,{url:`https://interpiad.com/tools/${slug}/`,runScripts:'outside-only'});
  const w=dom.window,d=w.document; w.confirm=()=>true;w.print=()=>{w.printed=true;};
- w.eval(fs.readFileSync('static/tools/forms/forms.js','utf8'));
+ w.eval(formScript);
  const el=s=>d.querySelector(s);
  const fill=(key,value)=>{const e=el(`[data-field="${key}"]`);e.value=value;e.dispatchEvent(new w.Event('input',{bubbles:true}));};
  const calc=k=>el(`[data-calc="${k}"]`).textContent;
  check(`${mode} 2 copies`,d.querySelectorAll('.slip').length===2);
- check(`${mode} 30 rows`,d.querySelectorAll('[data-line]').length===30);
- fill('supplier','출력 테스트');fill('buyerContact','검수');
+ check(`${mode} expected row count`,d.querySelectorAll('[data-line]').length===rows*2);
+ fill('supplier','출력 테스트');fill(contactKey,'검수');
  check(`${mode} company mirror`,el('[data-mirror="supplier"]').textContent==='출력 테스트');
- check(`${mode} contact mirror`,el('[data-mirror="buyerContact"]').textContent==='검수');
+ check(`${mode} contact mirror`,el('[data-mirror="'+contactKey+'"]').textContent==='검수');
+ check(mode+' blank amount cell',calc('item-0-amount')==='');
+ fill('item-0-qty','1');fill('item-0-price','1594500');
+ check(mode+' unit price formatting',el('[data-field="item-0-price"]').value==='1,594,500');
+ check(mode+' formatted price mirror',el('[data-mirror="item-0-price"]').textContent==='1,594,500');
+ if(mode!=='receipt')check(mode+' Korean full amount',d.querySelectorAll('[data-amount-korean]').length===2&&Array.from(d.querySelectorAll('[data-amount-korean]')).every(e=>e.textContent==='일백오십구만사천오백원 정 (₩1,594,500)'));
+ fill('supplierAddress','경기 안산시 상록구 반석로 54 2층');
+ check(mode+' address mirror',el('[data-mirror="supplierAddress"]').textContent==='경기 안산시 상록구 반석로 54 2층');
+ fill('item-'+(rows-1)+'-name','마지막 품목');
+ check(mode+' last item mirror',el('[data-mirror="item-'+(rows-1)+'-name"]').textContent==='마지막 품목');
+ if(mode==='invoice-vertical'){
+  fill('buyerNo','000-00-00000');
+  check('vertical registration mirror',el('[data-mirror="buyerNo"]').textContent==='000-00-00000');
+  check('vertical party tables',d.querySelectorAll('.vertical-party-table').length===2);
+ }
+ for(const other of ['manual-invoice','manual-invoice-vertical','simple-receipt'])check(mode+' nav '+other,!!el('.toolbar-nav a[href="/tools/'+other+'/"]'));
  fill('item-0-qty','3');fill('item-0-price','10,000');
  check(`${mode} numeric format`,calc('supply')==='30,000');
- fill('item-14-qty','2');fill('item-14-price','500');
+ fill('item-'+(rows-1)+'-qty','2');fill('item-'+(rows-1)+'-price','500');
  check(`${mode} last row`,calc('supply')==='31,000');
  fill('item-1-qty','not a number');fill('item-1-price','-500');
  check(`${mode} invalid numbers safe`,calc('supply')==='31,000');
@@ -31,13 +50,16 @@ for (const [slug, mode] of [['manual-invoice','invoice'],['simple-receipt','rece
  fill('item-1-qty','');fill('item-1-price','');
  fill('supplier','<img src=x onerror=alert(1)>');
  check(`${mode} injection-safe`,el('[data-mirror="supplier"]').children.length===0);
- if(mode==='invoice'){
+ if(mode!=='receipt'){
   el('#vat-toggle').click();check('VAT',calc('tax')==='3,100');
   fill('previous','5000');fill('paid','10000');
-  check('invoice total',calc('invoiceTotal')==='34,100');check('claim total',calc('grand')==='39,100');check('balance',calc('balance')==='29,100');
+  check('invoice total',el('[data-amount-korean]').textContent==='삼만사천일백원 정 (₩34,100)');check('claim total',calc('grand')==='39,100');check('balance',calc('balance')==='29,100');
   fill('paid','50000');check('overpayment warning',el('#feedback').textContent.includes('초과'));
   el('#vat-toggle').click();check('VAT off',calc('tax')==='0');
  }
+ w.confirm=()=>false;
+ el('#clear-form').click();check(mode+' cancelled clear retains input',el('[data-field="supplier"]').value!=='');
+ w.confirm=()=>true;
  el('#clear-form').click();check(`${mode} clear input`,el('[data-field="supplier"]').value==='');check(`${mode} clear totals`,calc('supply')==='0');
  el('#print-form').click();check(`${mode} print invoked`,w.printed===true);
  check(`${mode} self canonical`,el('link[rel="canonical"]').href===`https://interpiad.com/tools/${slug}/`);
@@ -54,7 +76,7 @@ for (const [slug, mode] of [['manual-invoice','invoice'],['simple-receipt','rece
  check(`${mode} no repeated vague disclaimers`,!['기준으로 안내','상담 항목','모든 세무 증빙 요건','세법상 요건','세금 신고가 이루어지지는'].some(text=>d.body.textContent.includes(text)));
  check(`${mode} free forms footer`,el('.form-footer a[href="/tools/"]').textContent==='무료업무서식');
  const blank=new JSDOM(html,{url:`https://interpiad.com/tools/${slug}/?blank=1`,runScripts:'outside-only'});
- blank.window.eval(fs.readFileSync('static/tools/forms/forms.js','utf8'));
+ blank.window.eval(formScript);
  check(`${mode} blank date`,blank.window.document.querySelector('[data-field="writtenDate"]').value==='');
  check(`${mode} blank totals`,blank.window.document.querySelector('[data-calc="supply"]').textContent==='');
  for(const file of ['public/sitemap.xml','public/index.xml','public/tools/index.xml'])check(`${slug} ${file}`,fs.readFileSync(file,'utf8').includes(`https://interpiad.com/tools/${slug}/`));
@@ -64,6 +86,10 @@ for(const file of ['public/index.html','public/tools/index.html']){
  const dom=new JSDOM(fs.readFileSync(file,'utf8'));
  const link=dom.window.document.querySelector('.site-footer a[href="/tools/"]');
  check(`${file} footer free forms link`,link&&link.textContent==='무료업무서식');
+ if(file==='public/tools/index.html'){
+  check('tools three cards',dom.window.document.querySelectorAll('.tools-card').length===3);
+  for(const slug of ['manual-invoice','manual-invoice-vertical','simple-receipt'])check('tools card '+slug,!!dom.window.document.querySelector('.tools-card a[href="/tools/'+slug+'/"]'));
+ }
  dom.window.close();
 }
 console.log(JSON.stringify({passed,scope:'Local built HTML, schema, feed inclusion and form DOM logic; not browser layout or PDF rendering.'}));
