@@ -13,5 +13,13 @@
 .form-contact{margin-top:42px;border-top:2px solid #173d3b;padding-top:4px}.form-contact address{font-style:normal;line-height:2;font-size:16px}
 .form-footer{background:#102b31;color:#fff;padding:24px;text-align:center;font-size:13px}.form-footer a{color:inherit}
 .slip input[aria-invalid="true"]{outline:2px solid #b23d30;background:#fff1ed}
+.slip textarea.multiline{display:block;width:100%;max-width:100%;height:5.2mm;resize:none;border:0;padding:.2mm .6mm;font:620 6.8pt/1.1 system-ui,-apple-system,"Malgun Gothic",sans-serif;color:#194b48;background:#e9f5f3;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
+.slip textarea.multiline:focus-visible{outline:1px solid #169b7d;background:#dbf0e9}
+.slip [data-mirror*="Address"],.slip [data-mirror$="-name"]{white-space:pre-wrap;overflow-wrap:anywhere;text-overflow:clip;line-height:1.15}
+.slip .item-table textarea.multiline{height:6.3mm;padding:.4mm .25mm;font-size:6.8pt}
+.receipt .slip .parties textarea.multiline{height:8.5mm;font-size:6.5pt;line-height:1.3}
+.receipt .slip .item-table textarea.multiline{height:8.2mm;font-size:7.1pt;line-height:1.3}
 @media(max-width:650px){.brandbar{align-items:flex-start;padding:14px 16px}.brandbar nav{gap:8px;flex-direction:column}.brandbar nav a{font-size:12px}.toolbar{padding:16px}.toolbar-nav{width:100%;gap:6px}.toolbar-nav a,.toolbar-nav button{flex:1 1 calc(50% - 6px);text-align:center;padding:10px 8px}.print-hint{padding:12px 16px;font-size:12px;text-align:left;line-height:1.7}.business-options{padding:20px 16px}}
 @media print{.brandbar,.form-footer,.form-skip{display:none!important}}
+@media print{body.form-invalid #print-root{display:none!important}body.form-invalid #feedback{display:block!important;font-size:16px;color:#000;padding:20mm;white-space:normal}}
+@media print{.slip textarea.multiline{background:transparent!important;color:#141c1d!important;outline:none!important}}

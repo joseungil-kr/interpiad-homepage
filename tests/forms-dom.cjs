@@ -26,6 +26,8 @@ for (const [slug, mode] of [['manual-invoice','invoice'],['simple-receipt','rece
  check(`${mode} invalid number warning`,el('#feedback').textContent.includes('정수'));
  el('#print-form').click();check(`${mode} invalid number blocks print`,w.printed!==true);
  fill('item-1-qty','1.5');check(`${mode} decimal not silently truncated`,el('[data-field="item-1-qty"]').getAttribute('aria-invalid')==='true');
+ fill('item-1-qty','1e2');fill('item-1-price','100');check(`${mode} exponent excluded from total`,calc('supply')==='31,000');
+ check(`${mode} invalid print state`,d.body.classList.contains('form-invalid'));
  fill('item-1-qty','');fill('item-1-price','');
  fill('supplier','<img src=x onerror=alert(1)>');
  check(`${mode} injection-safe`,el('[data-mirror="supplier"]').children.length===0);

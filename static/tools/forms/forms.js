@@ -8,7 +8,9 @@ const feedback=document.getElementById('feedback');
 const currency=new Intl.NumberFormat('ko-KR');
 const totalFields=['supply','tax','previous','paid','balance','grand'];
 const cleanNumber=v=>{
- const n=Number(String(v??'').replace(/[,\s]/g,''));
+ const text=String(v??'').replace(/[,\s]/g,'');
+ if(!/^\d+$/.test(text))return 0;
+ const n=Number(text);
  return Number.isSafeInteger(n)&&n>0?n:0;
 };
 let hasInputError=false;
@@ -17,6 +19,7 @@ const fieldNames=['writtenDate','slipNumber','supplier','supplierNo','supplierAd
 const rows=Array.from({length:count},(_,index)=>index);
 const input=(key,label,kind='text',placeholder='')=>{
  const max=key.includes('Address')?80:key==='memo'?110:50;
+ if(key.includes('Address')||/^item-\d+-name$/.test(key))return '<textarea class="multiline" aria-label="'+label+'" data-field="'+key+'" rows="2" maxlength="'+max+'" autocomplete="off"></textarea>';
  const attrs=kind==='number'?'type="text" inputmode="numeric" pattern="[0-9,]*"':'type="text"';
  return '<input aria-label="'+label+'" data-field="'+key+'" '+attrs+' maxlength="'+max+'" placeholder="'+placeholder+'" autocomplete="off">';
 };
@@ -124,6 +127,7 @@ function synchronize(){
  const balance=Math.max(0,grand-paid);
  const overflow=[supply,tax,grand,balance].some(n=>!Number.isSafeInteger(n));
  hasInputError=hasInputError||overflow;
+ document.body.classList.toggle('form-invalid',hasInputError);
  const values={supply,tax,previous,paid,grand,balance};
  for(const key of totalFields)setCalculated(key,values[key]);
  if(invalid.length)feedback.textContent=invalid.map(el=>el.getAttribute('aria-label')).join(', ')+': 0 이상 정수로 입력하세요. 잘못된 값은 계산에 반영되지 않으며 수정 전에는 출력할 수 없습니다.';
@@ -156,9 +160,10 @@ document.getElementById('print-form').addEventListener('click',()=>{
  }
  window.print();
 });
+window.addEventListener('beforeprint',synchronize);
 document.getElementById('clear-form').addEventListener('click',()=>{
  if(!window.confirm('모든 입력 내용을 초기화할까요?'))return;
- root.querySelectorAll('.slip[data-copy="supplier"] input').forEach(i=>{i.value=''});
+ root.querySelectorAll('.slip[data-copy="supplier"] input,.slip[data-copy="supplier"] textarea').forEach(i=>{i.value=''});
  const vat=root.querySelector('#vat-toggle');
  if(vat){
   vat.value='none';
