@@ -4,6 +4,7 @@ Never use real company/customer data in these tests.
 """
 import json, os, pathlib, re, urllib.request, xml.etree.ElementTree as ET
 from playwright.sync_api import sync_playwright
+from pypdf import PdfReader
 
 BASE = os.environ.get('FORM_TEST_BASE', 'http://127.0.0.1:8765').rstrip('/')
 OUT = pathlib.Path(os.environ.get('FORM_TEST_OUT', '/tmp/interpiad-forms-qa'))
@@ -14,7 +15,7 @@ def check(name, condition):
     checks.append(name)
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(executable_path='/usr/bin/chromium', args=['--no-sandbox'])
+    browser = p.chromium.launch(executable_path=os.environ.get('FORM_TEST_CHROMIUM'), args=['--no-sandbox'])
     for slug, mode in [('manual-invoice', 'invoice'), ('simple-receipt', 'receipt')]:
         page = browser.new_page(viewport={'width': 1440, 'height': 1100})
         errors, sent = [], []
@@ -26,11 +27,12 @@ with sync_playwright() as p:
         check(f'{mode}: one h1', page.locator('h1').count() == 1)
         check(f'{mode}: self canonical', page.locator('link[rel=canonical]').get_attribute('href') == f'https://interpiad.com/tools/{slug}/')
         check(f'{mode}: two copies and 15 rows each', page.locator('.slip').count() == 2 and page.locator('.item-table tbody tr').count() == 30)
-        for key, value in {'supplier': '출력 테스트', 'supplierNo': '000-00-00000', 'buyer': '문서 확인', 'buyerContact': '검수', 'item-0-name': '테스트 품목', 'item-0-qty': '3', 'item-0-price': '10,000'}.items():
+        for key, value in {'supplier': '출력 테스트', 'supplierAddress': '경기 안산시 상록구 반석로 54 2층', 'supplierNo': '000-00-00000', 'buyer': '문서 확인', 'buyerContact': '검수', 'item-0-name': '테스트 품목', 'item-0-qty': '3', 'item-0-price': '10,000'}.items():
             page.locator(f'[data-field="{key}"]').fill(value)
         check(f'{mode}: exact mirroring', page.locator('[data-mirror=supplier]').inner_text() == '출력 테스트' and page.locator('[data-mirror=buyerContact]').inner_text() == '검수')
         check(f'{mode}: calculation 30,000', page.locator('[data-calc=supply]').first.inner_text() == '30,000')
         page.locator('[data-field=item-14-qty]').fill('2')
+        page.locator('[data-field=item-14-name]').fill('마지막 품목')
         page.locator('[data-field=item-14-price]').fill('500')
         check(f'{mode}: last row included', page.locator('[data-calc=supply]').first.inner_text() == '31,000')
         if mode == 'invoice':
@@ -60,6 +62,15 @@ with sync_playwright() as p:
         page.emulate_media(media='print')
         check(f'{mode}: print hides marketing', page.locator('.seo-guide').is_hidden() and page.locator('.brandbar').is_hidden())
         page.pdf(path=str(OUT / f'{mode}.pdf'), prefer_css_page_size=True, print_background=True)
+        pdf = PdfReader(OUT / f'{mode}.pdf')
+        check(f'{mode}: one-page PDF', len(pdf.pages) == 1)
+        pdftext = pdf.pages[0].extract_text()
+        compact = re.sub(r'\s+', '', pdftext)
+        check(f'{mode}: both copies retain last row', compact.count('마지막품목') == 2)
+        check(f'{mode}: both copies retain complete address', compact.count('경기안산시상록구반석로542층') == 2)
+        check(f'{mode}: footer retained, no marketing in PDF', compact.count('인수자:') == 2 and '기업맞춤형' not in compact)
+        width, height = float(pdf.pages[0].mediabox.width), float(pdf.pages[0].mediabox.height)
+        check(f'{mode}: A4 orientation', (width > height) == (mode == 'invoice') and abs(max(width,height) - 842) < 3)
         page.emulate_media(media='screen')
         with page.expect_popup() as new:
             page.locator('#blank-pdf').click()
