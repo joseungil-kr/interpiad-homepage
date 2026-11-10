@@ -91,6 +91,22 @@ with sync_playwright() as p:
         page.screenshot(path=str(OUT / f'{mode}-mobile.png'), full_page=True)
         check(f'{mode}: no JS errors', not errors)
         page.close()
+    tools_page = browser.new_page(viewport={'width': 1440, 'height': 1000})
+    check('tools: HTTP 200', tools_page.goto(BASE + '/tools/').status == 200)
+    hero = tools_page.locator('.tools-hero-image img')
+    check('tools: descriptive alternative text', bool(hero.get_attribute('alt')))
+    check('tools: image has intrinsic dimensions', hero.get_attribute('width') == '1672' and hero.get_attribute('height') == '941')
+    check('tools: image loaded', hero.evaluate('(img) => img.complete && img.naturalWidth === 1672'))
+    check('tools: exactly two existing form cards', tools_page.locator('.tools-card').count() == 2)
+    check('tools: distinct accessible form links', tools_page.locator('.tools-card .btn .sr-only').count() == 2)
+    check('tools: hero used for social image', 'business-forms-desk.jpg' in tools_page.locator('meta[property="og:image"]').get_attribute('content'))
+    for width in [1440, 768, 390, 320]:
+        tools_page.set_viewport_size({'width': width, 'height': 1000})
+        check(f'tools: no overflow at {width}px', tools_page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
+        check(f'tools: image visible at {width}px', hero.is_visible() and hero.bounding_box()['width'] > 200)
+        tools_page.screenshot(path=str(OUT / f'tools-{width}.png'), full_page=True)
+    tools_page.close()
+
     browser.close()
 
 ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}

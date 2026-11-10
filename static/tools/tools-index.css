@@ -1,0 +1,21 @@
+.tools-section{padding:112px 0 64px}.tools-wrap{max-width:1168px}
+.tools-hero{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-bottom:36px}
+.tools-eyebrow{font-size:13px;font-weight:700;color:var(--brass-deep);letter-spacing:.01em;margin-bottom:14px}
+.tools-hero h1{font-size:clamp(29px,3.2vw,42px);line-height:1.3;word-break:keep-all}
+.tools-lead{margin-top:20px;color:var(--slate);font-size:17px;line-height:1.8;word-break:keep-all}
+.tools-benefits{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tools-benefits li{padding:6px 10px;border:1px solid #ded8cc;border-radius:6px;background:#fffaf1;color:#5e4b2f;font-size:12px;font-weight:650}
+.tools-hero-image{min-width:0}.tools-hero-image picture{display:block;overflow:hidden;border-radius:18px;box-shadow:0 14px 36px rgba(69,47,21,.12)}
+.tools-hero-image img{display:block;width:100%;height:auto;aspect-ratio:1672/941}
+.tools-hero-image figcaption{margin-top:8px;font-size:11px;color:var(--slate);text-align:right}
+.tools-intro{max-width:980px;line-height:1.9}.tools-intro p+p{margin-top:12px}
+.tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:30px 0}
+.tools-card{display:flex;flex-direction:column;align-items:flex-start;padding:28px;border:1px solid #d8d7d1;border-radius:16px;background:#fffdfa;min-width:0}
+.tools-card-label{color:var(--brass-deep);font-size:13px;font-weight:700;margin-bottom:10px}
+.tools-card h2{font-size:24px;line-height:1.4;margin-bottom:12px}
+.tools-card>p:not(.tools-card-label){margin-bottom:20px;line-height:1.8;color:#424b57}
+.tools-card .btn{margin-top:auto}.tools-card a:focus-visible,.tools-consult a:focus-visible{outline:3px solid #56766e;outline-offset:5px}
+.tools-consult{font-size:15px;overflow-wrap:anywhere}.tools-consult a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:760px){.tools-section{padding-top:100px}.tools-hero{grid-template-columns:1fr;gap:24px;margin-bottom:26px}.tools-hero h1{max-width:520px}.tools-lead{font-size:16px;margin-top:14px}.tools-benefits{margin-top:16px}.tools-grid{grid-template-columns:1fr;gap:18px}.tools-card{padding:24px}.tools-intro{font-size:15px}.tools-hero-image figcaption{text-align:left}}
+@media(max-width:380px){.tools-wrap{padding-inline:18px}.tools-hero h1{font-size:28px}.tools-card{padding:20px}.tools-card h2{font-size:22px}}
+@media print{.tools-section{padding:20px 0}.tools-hero-image{max-width:420px}.tools-benefits{display:none}}
