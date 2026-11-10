@@ -99,6 +99,7 @@ for(const file of ['public/index.html','public/tools/index.html']){
  check(`${file} footer free forms link`,link&&link.textContent==='무료업무서식');
  if(file==='public/tools/index.html'){
   check('tools three cards',dom.window.document.querySelectorAll('.tools-card').length===3);
+  check('tools CSS content version prevents stale layout',/tools-index\.css\?v=[0-9a-f]{64}$/.test(dom.window.document.querySelector('link[href*=\"tools-index.css\"]').href));
   const previews=[...dom.window.document.querySelectorAll('.tools-card .tools-preview img')];
   check('tools three distinct previews',previews.length===3&&new Set(previews.map(img=>img.src)).size===3);
   for(const img of previews){

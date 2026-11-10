@@ -1,5 +1,6 @@
 {{ define "main" }}
-<link rel="stylesheet" href="{{ "tools/tools-index.css" | relURL }}">
+{{ $toolsCSSVersion := crypto.SHA256 (readFile "static/tools/tools-index.css") }}
+<link rel="stylesheet" href="{{ "tools/tools-index.css" | relURL }}?v={{ $toolsCSSVersion }}">
 <section class="tools-section"><div class="wrap tools-wrap">
   <header class="tools-hero">
     <div class="tools-hero-copy">

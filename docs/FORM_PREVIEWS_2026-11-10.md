@@ -16,7 +16,7 @@
 
 ## Local verification
 - Hugo extended 0.168.0: 257 pages and 239 static assets, build passed.
-- Extended tests/forms-dom.cjs: 182 assertions passed, including each page's OG/Twitter metadata, real JPEG signatures, thumbnail semantics and links, plus all prior form logic/schema/feed assertions.
+- Extended tests/forms-dom.cjs: 183 assertions passed, including each page's OG/Twitter metadata, real JPEG signatures, thumbnail semantics and links, plus all prior form logic/schema/feed assertions.
 - tests/indexnow-response.cjs: 6 mock response tests passed; this is not an IndexNow submission receipt.
 - node syntax check, Python browser-test syntax compilation, and git diff --check passed.
 - Real Chrome checks at 1440, 768, 390 and 320 pixels: no document overflow; all three images decoded, stayed within their containers, and preserved aspect ratio. All three screenshot originals and social images were visually inspected.
@@ -31,6 +31,10 @@
 - manual-invoice-vertical-preview.jpg: 794 x 1119, 111135 bytes, SHA-256 1a095a8abe1f68755e6a39faf2a2096f04d0a2d0bcfce59821e94b477adc82ab.
 - simple-receipt-og.jpg: 1200 x 630, 47077 bytes, SHA-256 6655d40a58034b7291665ced96301e7e51525b2e6c0a919d7c64e47e5c3bbf74.
 - simple-receipt-preview.jpg: 794 x 1119, 81662 bytes, SHA-256 422b7d5b942afcfecd21a772b329ccb91ee95a11dc4291176377f2fc54271bdd.
+
+## First public inspection and cache correction
+- The first public image/metadata inspection found correct new assets, but a previously opened browser kept the old unversioned tools-index.css and displayed oversized previews. Added a SHA-256 content version to the list stylesheet URL and a regression assertion so existing visitors fetch the updated layout.
+- Python urllib received HTTP 403 from the public endpoint. The normal PowerShell HTTP client and real browser remained accessible; all six public JPEG bytes matched the commit files and returned HTTP 200 / image/jpeg through the working client.
 
 ## Publication verification boundary
 Remote commit, exact-SHA CI results, public HTTP responses and deployed screen must be checked after push. Social-network cache refresh and third-party share dialogs are not implied by correct deployed metadata.
