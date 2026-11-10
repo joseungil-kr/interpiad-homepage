@@ -4,6 +4,13 @@ description: "간이영수증을 회원가입 없이 무료로 작성하세요. 
 date: 2026-11-10T11:50:00+09:00
 weight: 3
 form: "receipt"
+previewImage: "tools/images/simple-receipt-preview.jpg"
+previewWidth: 794
+previewHeight: 1119
+previewAlt: "영수금액과 품목표가 있고 두 부를 좌우로 나눈 A4 세로 간이영수증 빈 양식"
+previewCaption: "A4 세로 · 좌우 2부 · 15품목"
+ogImage: "tools/images/simple-receipt-og.jpg"
+ogImageAlt: "간이영수증: A4 세로 · 좌우 2부 · 15품목, 실제 빈 양식 미리보기"
 shortTitle: "무료 간이영수증 양식"
 guideTitle: "간이영수증을 작성하고 바로 인쇄할 수 있습니다"
 intro: "품목과 수량, 단가를 입력하면 금액을 자동으로 더해 줍니다. 왼쪽에 한 번 입력하면 A4 세로 한 장에 같은 영수증 두 부를 인쇄할 수 있습니다."

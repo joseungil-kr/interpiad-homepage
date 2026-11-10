@@ -20,6 +20,12 @@
   <div class="tools-grid">
     {{ range .RegularPages.ByWeight }}
     <article class="tools-card">
+      <figure class="tools-preview">
+        <a href="{{ .RelPermalink }}" aria-label="{{ .Params.shortTitle }} 실제 양식 보고 작성하기">
+          <img src="{{ .Params.previewImage | relURL }}" width="{{ .Params.previewWidth }}" height="{{ .Params.previewHeight }}" alt="{{ .Params.previewAlt }}" loading="lazy" decoding="async">
+        </a>
+        <figcaption>실제 빈 양식 · {{ .Params.previewCaption }}</figcaption>
+      </figure>
       <p class="tools-card-label">{{ if eq .Params.form "invoice-vertical" }}A4 세로 한 장에 위·아래로 보관할 때{{ else if eq .Params.form "invoice" }}거래 내역을 품목별로 정리할 때{{ else if eq .Params.form "receipt" }}물건값을 받은 내역을 적을 때{{ end }}</p>
       <h2><a href="{{ .RelPermalink }}">{{ .Params.shortTitle }}</a></h2>
       <p>{{ .Description }}</p>

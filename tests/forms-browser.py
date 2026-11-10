@@ -25,6 +25,14 @@ with sync_playwright() as p:
         page.wait_for_selector('.print-sheet')
         check(f'{mode}: HTTP 200', response.status == 200)
         check(f'{mode}: one h1', page.locator('h1').count() == 1)
+        social_url = page.locator('meta[property="og:image"]').get_attribute('content')
+        check(f'{mode}: unique absolute OG URL', social_url == f'https://interpiad.com/tools/images/{slug}-og.jpg')
+        check(f'{mode}: Twitter image parity', page.locator('meta[name="twitter:image"]').get_attribute('content') == social_url)
+        check(f'{mode}: large Twitter card', page.locator('meta[name="twitter:card"]').get_attribute('content') == 'summary_large_image')
+        social_response = page.request.get(f'{BASE}/tools/images/{slug}-og.jpg')
+        check(f'{mode}: social JPEG HTTP and MIME', social_response.status == 200 and social_response.headers['content-type'].split(';')[0] == 'image/jpeg')
+        check(f'{mode}: valid social JPEG', social_response.body().startswith(bytes([255,216,255])))
+
         check(f'{mode}: self canonical', page.locator('link[rel=canonical]').get_attribute('href') == f'https://interpiad.com/tools/{slug}/')
         check(f'{mode}: two copies and {rows} rows each', page.locator('.slip').count() == 2 and page.locator('.item-table tbody tr').count() == rows * 2)
         for key, value in {'supplier': '출력 테스트', 'supplierAddress': '경기 안산시 상록구 반석로 54 2층', 'supplierNo': '000-00-00000', 'buyer': '문서 확인', ('buyerPhone' if mode == 'invoice-vertical' else 'buyerContact'): '검수', 'item-0-name': '테스트 품목', 'item-0-qty': '3', 'item-0-price': '10,000'}.items():
@@ -104,11 +112,21 @@ with sync_playwright() as p:
     check('tools: image has intrinsic dimensions', hero.get_attribute('width') == '1672' and hero.get_attribute('height') == '941')
     check('tools: image loaded', hero.evaluate('(img) => img.complete && img.naturalWidth === 1672'))
     check('tools: exactly three form cards', tools_page.locator('.tools-card').count() == 3)
+    for slug in ['manual-invoice', 'manual-invoice-vertical', 'simple-receipt']:
+        preview = tools_page.locator(f'.tools-preview a[href="/tools/{slug}/"] img')
+        preview.scroll_into_view_if_needed()
+        preview.evaluate('(img) => img.decode()')
+        check(f'tools: {slug} thumbnail loaded', preview.evaluate('(img) => img.complete && img.naturalWidth > 700 && img.naturalHeight > 600'))
+        check(f'tools: {slug} thumbnail accessible', len(preview.get_attribute('alt')) > 15)
+        check(f'tools: {slug} whole form retained', preview.evaluate('(img) => getComputedStyle(img).objectFit === "contain" && Math.abs(img.getBoundingClientRect().width / img.getBoundingClientRect().height - img.naturalWidth / img.naturalHeight) < .01'))
+
     check('tools: distinct accessible form links', tools_page.locator('.tools-card .btn .sr-only').count() == 3)
     check('tools: hero used for social image', 'business-forms-desk.jpg' in tools_page.locator('meta[property="og:image"]').get_attribute('content'))
     for width in [1440, 768, 390, 320]:
         tools_page.set_viewport_size({'width': width, 'height': 1000})
         check(f'tools: no overflow at {width}px', tools_page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
+        check(f'tools: previews fit at {width}px', tools_page.locator('.tools-preview img').evaluate_all('(images) => images.length === 3 && images.every(img => {const r=img.getBoundingClientRect(); const p=img.parentElement.getBoundingClientRect(); return r.width > 100 && r.height > 100 && r.width <= p.width && r.height <= p.height;})'))
+
         check(f'tools: image visible at {width}px', hero.is_visible() and hero.bounding_box()['width'] > 200)
         tools_page.screenshot(path=str(OUT / f'tools-{width}.png'), full_page=True)
     for path in ['/', '/tools/']:

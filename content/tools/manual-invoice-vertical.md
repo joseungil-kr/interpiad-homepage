@@ -4,6 +4,13 @@ description: "회원가입 없이 무료 거래명세표를 작성하세요. 최
 date: 2026-11-10T11:50:00+09:00
 weight: 2
 form: "invoice-vertical"
+previewImage: "tools/images/manual-invoice-vertical-preview.jpg"
+previewWidth: 794
+previewHeight: 1119
+previewAlt: "빨강 공급자용과 파랑 공급받는자용을 위아래로 나눈 A4 세로 거래명세표 빈 양식"
+previewCaption: "A4 세로 · 상하 2부 · 10품목"
+ogImage: "tools/images/manual-invoice-vertical-og.jpg"
+ogImageAlt: "거래명세표 A4 세로: A4 세로 · 상하 2부 · 10품목, 실제 빈 양식 미리보기"
 shortTitle: "거래명세표 A4 세로"
 guideTitle: "한 번 입력하면 거래명세표 두 부가 완성됩니다"
 intro: "위쪽 빨강 공급자용에 입력하면 아래쪽 파랑 공급받는자용도 채워집니다. 최대 10개 품목의 금액을 계산하고, A4 세로 한 장에 두 부를 인쇄할 수 있습니다."

@@ -63,6 +63,17 @@ for (const [slug, mode] of [['manual-invoice','invoice'],['manual-invoice-vertic
  el('#clear-form').click();check(`${mode} clear input`,el('[data-field="supplier"]').value==='');check(`${mode} clear totals`,calc('supply')==='0');
  el('#print-form').click();check(`${mode} print invoked`,w.printed===true);
  check(`${mode} self canonical`,el('link[rel="canonical"]').href===`https://interpiad.com/tools/${slug}/`);
+ const socialImage='https://interpiad.com/tools/images/'+slug+'-og.jpg';
+ check(mode+' form-specific OG image',el('meta[property="og:image"]').content===socialImage);
+ check(mode+' secure social image',el('meta[property="og:image:secure_url"]').content===socialImage);
+ check(mode+' OG size and MIME',el('meta[property="og:image:width"]').content==='1200'&&el('meta[property="og:image:height"]').content==='630'&&el('meta[property="og:image:type"]').content==='image/jpeg');
+ check(mode+' social image descriptions',el('meta[property="og:image:alt"]').content.length>15&&el('meta[name="twitter:image:alt"]').content===el('meta[property="og:image:alt"]').content);
+ check(mode+' large Twitter card',el('meta[name="twitter:card"]').content==='summary_large_image'&&el('meta[name="twitter:image"]').content===socialImage);
+ for(const variant of ['preview','og']){
+  const bytes=fs.readFileSync('public/tools/images/'+slug+'-'+variant+'.jpg');
+  check(mode+' '+variant+' JPEG exists',bytes.length>1000&&bytes[0]===255&&bytes[1]===216&&bytes[2]===255);
+ }
+
  check(`${mode} one h1`,d.querySelectorAll('h1').length===1);
  check(`${mode} public contact`,el('#form-contact').textContent.includes('010-2490-0555'));
  check(`${mode} custom price`,el('#business-options').textContent.includes('11,000원')&&el('#business-options').textContent.includes('300건'));
@@ -88,6 +99,16 @@ for(const file of ['public/index.html','public/tools/index.html']){
  check(`${file} footer free forms link`,link&&link.textContent==='무료업무서식');
  if(file==='public/tools/index.html'){
   check('tools three cards',dom.window.document.querySelectorAll('.tools-card').length===3);
+  const previews=[...dom.window.document.querySelectorAll('.tools-card .tools-preview img')];
+  check('tools three distinct previews',previews.length===3&&new Set(previews.map(img=>img.src)).size===3);
+  for(const img of previews){
+   check('tools preview dimensions and alt',Number(img.width)>0&&Number(img.height)>0&&img.alt.length>15);
+   check('tools preview lazy decoding',img.getAttribute('loading')==='lazy'&&img.getAttribute('decoding')==='async');
+   const slug=img.getAttribute('src').split('/').pop().replace('-preview.jpg','');
+   check('tools preview links to correct form',img.closest('a').getAttribute('href')==='/tools/'+slug+'/');
+   check('tools preview source exists',fs.existsSync('public'+img.getAttribute('src')));
+  }
+
   for(const slug of ['manual-invoice','manual-invoice-vertical','simple-receipt'])check('tools card '+slug,!!dom.window.document.querySelector('.tools-card a[href="/tools/'+slug+'/"]'));
  }
  dom.window.close();

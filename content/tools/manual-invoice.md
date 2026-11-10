@@ -4,6 +4,13 @@ description: "회원가입 없이 무료 거래명세표를 작성하세요. 최
 date: 2026-11-10T11:50:00+09:00
 weight: 1
 form: "invoice"
+previewImage: "tools/images/manual-invoice-preview.jpg"
+previewWidth: 1123
+previewHeight: 790
+previewAlt: "품목 15줄과 공급자용·공급받는자용 두 부를 좌우로 나눈 A4 가로 거래명세표 빈 양식"
+previewCaption: "A4 가로 · 좌우 2부 · 15품목"
+ogImage: "tools/images/manual-invoice-og.jpg"
+ogImageAlt: "거래명세표 A4 가로: A4 가로 · 좌우 2부 · 15품목, 실제 빈 양식 미리보기"
 shortTitle: "거래명세표 A4 가로"
 guideTitle: "한 번 입력하면 거래명세표 두 부가 완성됩니다"
 intro: "왼쪽 양식에 업체정보와 품목을 입력하면 오른쪽에도 똑같이 채워집니다. 최대 15개 품목의 금액을 계산하고, A4 가로 한 장에 두 부를 인쇄할 수 있습니다."
