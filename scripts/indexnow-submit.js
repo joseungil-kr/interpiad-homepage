@@ -51,6 +51,10 @@ function submit(urlList) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           console.log(`제출 완료 (${urlList.length}개 URL):`);
           urlList.forEach((u) => console.log(`  - ${u}`));
+          console.log("접수 응답이며 검색 색인 또는 노출 완료를 뜻하지 않습니다.");
+        } else {
+          console.error(`IndexNow 접수 실패: HTTP ${res.statusCode}`);
+          process.exitCode = 1;
         }
       });
     }
@@ -61,12 +65,22 @@ function submit(urlList) {
     process.exit(1);
   });
 
+  req.setTimeout(30000, () => req.destroy(new Error("IndexNow 요청 시간 초과")));
+
   req.write(body);
   req.end();
 }
 
 const argUrls = process.argv.slice(2);
-const urlList = argUrls.length > 0 ? argUrls : getUrlsFromSitemap();
+const urlList = [...new Set(argUrls.length > 0 ? argUrls : getUrlsFromSitemap())];
+
+if (urlList.length > 10000 || urlList.some((value) => {
+  try { const url = new URL(value); return url.protocol !== "https:" || url.host !== HOST; }
+  catch { return true; }
+})) {
+  console.error("제출 URL은 interpiad.com HTTPS 주소이며 10,000개 이하여야 합니다.");
+  process.exit(1);
+}
 
 if (urlList.length === 0) {
   console.error("제출할 URL이 없습니다.");

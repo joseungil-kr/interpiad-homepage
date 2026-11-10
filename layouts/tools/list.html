@@ -1,0 +1,9 @@
+{{ define "main" }}
+<section class="section" style="padding:120px 24px 64px"><div class="wrap" style="max-width:1040px">
+<p>설치·회원가입 없이 바로 사용하는 업무 도구</p><h1>{{ .Title }}</h1>
+<div style="max-width:800px;line-height:1.9">{{ .Content }}</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin:32px 0">
+{{ range .RegularPages.ByWeight }}<article style="padding:28px;border:1px solid #d6dce2;border-radius:16px"><h2><a href="{{ .RelPermalink }}">{{ .Params.shortTitle }}</a></h2><p>{{ .Description }}</p><a class="btn btn--brass" href="{{ .RelPermalink }}">무료 양식 작성하기</a></article>{{ end }}
+</div><p>기업 맞춤형 상담: <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a> · <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a></p>
+</div></section>
+{{ end }}

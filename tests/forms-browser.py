@@ -1,0 +1,95 @@
+"""Run after Hugo build and a local HTTP server. Requires Playwright + Chromium.
+FORM_TEST_BASE may point to production for the same read-only UI verification.
+Never use real company/customer data in these tests.
+"""
+import json, os, pathlib, re, urllib.request, xml.etree.ElementTree as ET
+from playwright.sync_api import sync_playwright
+
+BASE = os.environ.get('FORM_TEST_BASE', 'http://127.0.0.1:8765').rstrip('/')
+OUT = pathlib.Path(os.environ.get('FORM_TEST_OUT', '/tmp/interpiad-forms-qa'))
+OUT.mkdir(parents=True, exist_ok=True)
+checks = []
+def check(name, condition):
+    assert condition, name
+    checks.append(name)
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(executable_path='/usr/bin/chromium', args=['--no-sandbox'])
+    for slug, mode in [('manual-invoice', 'invoice'), ('simple-receipt', 'receipt')]:
+        page = browser.new_page(viewport={'width': 1440, 'height': 1100})
+        errors, sent = [], []
+        page.on('pageerror', lambda err: errors.append(str(err)))
+        page.on('request', lambda req: sent.append((req.method, req.url)))
+        response = page.goto(f'{BASE}/tools/{slug}/')
+        page.wait_for_selector('.print-sheet')
+        check(f'{mode}: HTTP 200', response.status == 200)
+        check(f'{mode}: one h1', page.locator('h1').count() == 1)
+        check(f'{mode}: self canonical', page.locator('link[rel=canonical]').get_attribute('href') == f'https://interpiad.com/tools/{slug}/')
+        check(f'{mode}: two copies and 15 rows each', page.locator('.slip').count() == 2 and page.locator('.item-table tbody tr').count() == 30)
+        for key, value in {'supplier': '출력 테스트', 'supplierNo': '000-00-00000', 'buyer': '문서 확인', 'buyerContact': '검수', 'item-0-name': '테스트 품목', 'item-0-qty': '3', 'item-0-price': '10,000'}.items():
+            page.locator(f'[data-field="{key}"]').fill(value)
+        check(f'{mode}: exact mirroring', page.locator('[data-mirror=supplier]').inner_text() == '출력 테스트' and page.locator('[data-mirror=buyerContact]').inner_text() == '검수')
+        check(f'{mode}: calculation 30,000', page.locator('[data-calc=supply]').first.inner_text() == '30,000')
+        page.locator('[data-field=item-14-qty]').fill('2')
+        page.locator('[data-field=item-14-price]').fill('500')
+        check(f'{mode}: last row included', page.locator('[data-calc=supply]').first.inner_text() == '31,000')
+        if mode == 'invoice':
+            page.locator('#vat-toggle').click()
+            page.locator('[data-field=previous]').fill('5000')
+            page.locator('[data-field=paid]').fill('10000')
+            check('invoice: tax 3,100', page.locator('[data-calc=tax]').first.inner_text() == '3,100')
+            check('invoice: current total 34,100', page.locator('[data-calc=invoiceTotal]').first.inner_text() == '34,100')
+            check('invoice: balance 29,100', page.locator('[data-calc=balance]').first.inner_text() == '29,100')
+            page.locator('[data-field=paid]').fill('50000')
+            check('invoice: overpayment warning', '초과' in page.locator('#feedback').inner_text())
+            page.locator('[data-field=paid]').fill('10000')
+            page.locator('#vat-toggle').click()
+            check('invoice: toggle off', page.locator('[data-calc=tax]').first.inner_text() == '0')
+        page.locator('[data-field=supplier]').fill('<img src=x onerror=alert(1)>')
+        check(f'{mode}: input safely mirrored as text', page.locator('[data-mirror=supplier] img').count() == 0)
+        page.locator('[data-field=supplier]').fill('출력 테스트')
+        check(f'{mode}: no data transmission', all(method == 'GET' for method, url in sent) and not any('출력' in url or '검수' in url for method, url in sent))
+        check(f'{mode}: no storage', page.evaluate('localStorage.length === 0 && sessionStorage.length === 0'))
+        schemas = [json.loads(s) for s in page.locator('script[type="application/ld+json"]').all_text_contents()]
+        app = next(s for s in schemas if s['@type'] == 'WebApplication')
+        faq = next(s for s in schemas if s['@type'] == 'FAQPage')
+        check(f'{mode}: free app schema', app['offers']['price'] == '0' and app['isAccessibleForFree'])
+        check(f'{mode}: FAQ schema matches visible', [q['name'] for q in faq['mainEntity']] == page.locator('.guide-faq summary').all_text_contents())
+        check(f'{mode}: contact and offer', '010-2490-0555' in page.locator('#form-contact').inner_text() and '11,000원' in page.locator('#business-options').inner_text() and '300건' in page.locator('#business-options').inner_text())
+        page.screenshot(path=str(OUT / f'{mode}-desktop.png'), full_page=True)
+        page.emulate_media(media='print')
+        check(f'{mode}: print hides marketing', page.locator('.seo-guide').is_hidden() and page.locator('.brandbar').is_hidden())
+        page.pdf(path=str(OUT / f'{mode}.pdf'), prefer_css_page_size=True, print_background=True)
+        page.emulate_media(media='screen')
+        with page.expect_popup() as new:
+            page.locator('#blank-pdf').click()
+        blank = new.value
+        blank.wait_for_selector('.print-sheet')
+        check(f'{mode}: blank window does not alter original', page.locator('[data-field=supplier]').input_value() == '출력 테스트' and blank.locator('[data-field=supplier]').input_value() == '')
+        check(f'{mode}: blank values and date', blank.locator('[data-field=writtenDate]').input_value() == '' and blank.locator('[data-calc=supply]').first.inner_text() == '')
+        blank.close()
+        page.on('dialog', lambda dialog: dialog.accept())
+        page.locator('#clear-form').click()
+        check(f'{mode}: clear resets input and totals', page.locator('[data-field=supplier]').input_value() == '' and page.locator('[data-calc=supply]').first.inner_text() == '0')
+        page.evaluate('window.print = () => { window.__printRequested = true; }')
+        page.locator('#print-form').click()
+        check(f'{mode}: print button', page.evaluate('window.__printRequested === true'))
+        page.set_viewport_size({'width': 390, 'height': 844})
+        check(f'{mode}: mobile no body overflow', page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
+        check(f'{mode}: form scrollable on mobile', page.locator('#print-root').evaluate('(el) => el.scrollWidth > el.clientWidth'))
+        page.screenshot(path=str(OUT / f'{mode}-mobile.png'), full_page=True)
+        check(f'{mode}: no JS errors', not errors)
+        page.close()
+    browser.close()
+
+ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+sitemap = ET.fromstring(urllib.request.urlopen(BASE + '/sitemap.xml').read())
+rss = ET.fromstring(urllib.request.urlopen(BASE + '/index.xml').read())
+for slug in ['manual-invoice', 'simple-receipt']:
+    url = f'https://interpiad.com/tools/{slug}/'
+    check(f'{slug}: in sitemap', url in [e.text for e in sitemap.findall('sm:url/sm:loc', ns)])
+    check(f'{slug}: in RSS', url in [e.text for e in rss.findall('channel/item/link')])
+    item = next(e for e in rss.findall('channel/item') if e.findtext('link') == url)
+    check(f'{slug}: RSS has guide and contact', '11,000원' in item.findtext('description') and '010-2490-0555' in item.findtext('description'))
+(OUT / 'checks.json').write_text(json.dumps(checks, ensure_ascii=False, indent=2))
+print(json.dumps({'passed':len(checks), 'checks':checks, 'artifacts':str(OUT)}, ensure_ascii=False))

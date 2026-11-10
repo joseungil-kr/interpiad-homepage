@@ -1,0 +1,3 @@
+<h3 id="faq">자주 묻는 질문</h3><div class="guide-faq">
+{{ range .Page.Params.faq }}<details><summary>{{ .question }}</summary><p>{{ .answer }}</p></details>{{ end }}
+</div>
