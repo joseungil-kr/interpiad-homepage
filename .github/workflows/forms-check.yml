@@ -49,6 +49,7 @@ jobs:
           hugo --minify
           NODE_PATH=/tmp/form-tests/node_modules node tests/forms-dom.cjs
           python tests/forms-browser.py
+          python tests/forms-responsive.py
       - name: Verify published production forms
         if: github.ref == 'refs/heads/master' && github.event_name == 'workflow_dispatch'
         run: |

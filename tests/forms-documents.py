@@ -77,6 +77,7 @@ with sync_playwright() as p:
    for width in [390,320]:
     page.set_viewport_size({'width':width,'height':844});page.screenshot(path=str(OUT/(slug+f'-mobile-{width}.png')),full_page=True);check(slug+f' mobile {width} no body overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
     page.screenshot(path=str(OUT/(slug+f'-mobile-{width}.png')),full_page=True)
+   page.set_viewport_size({'width':1440,'height':1000})
    with page.expect_popup() as new:page.locator('#blank-pdf').click()
    blank=new.value;blank.wait_for_selector('.paper-form');check(slug+' blank popup preserves source',page.locator('[data-field="'+key+'"]').input_value()=='출력 테스트' and blank.locator('[data-field="'+key+'"]').input_value()=='');blank.close()
    page.on('dialog',lambda d:d.dismiss());page.locator('#clear-form').click();check(slug+' cancel clear keeps data',page.locator('[data-field="'+key+'"]').input_value()=='출력 테스트')
