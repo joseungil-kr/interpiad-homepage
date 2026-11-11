@@ -26,3 +26,7 @@
 `hugo --minify` 후 기존 DOM/브라우저 회귀검사와 `tests/forms-documents.py`를 실행한다. 새 검사는 15행 계산·부가세·계약금·숫자/날짜 오류·XSS·입력 후 네트워크 요청 부재·storage 부재·빈 창·초기화·인쇄·A4 PDF·모바일을 검사하며 실제 PDF/PNG/JSON을 아티팩트로 남긴다. 긴 입력은 실제 인쇄 CSS를 적용한 숨김 문서의 크기를 측정해 A4 초과 시 인쇄 버튼을 차단하고 경고한다.
 
 로컬 실행 환경의 Chromium은 socket() Operation not permitted로 시작하지 못했으므로, 기존 GitHub Actions의 독립 실행 환경에서 실제 인쇄 결과를 생성해 내려받아 검사한다. 운영 배포 이후에는 공개 JS/CSS/모듈을 저장소 내용과 바이트 단위 대조하고 실제 URL에서 새 브라우저 검사를 반복한다. Actions의 성공 응답만으로 시각 검증을 대체하지 않는다.
+
+## 사전 배포 검증 결과
+
+2026-11-11 브랜치 커밋 `371e5b75e68f5621c2f10a10a9f2a15ff82b1a9d`, Actions run https://github.com/joseungil-kr/interpiad-homepage/actions/runs/43009738918 에서 새 양식 52개 검사와 기존 브라우저 회귀 173개 검사가 통과했다. PDF와 PNG 아티팩트를 내려받아 견적서 15행/비고, 근로계약서 양측 서명란을 직접 확인했다. 빈 양식과 입력한 양식 모두 A4 세로 한 페이지였다. 320px/390px 화면 넘침과 긴 입력 차단도 검사했다. 생성된 빈 양식 미리보기는 794×1119, OG 이미지는 1200×630 JPEG이다. 최종 배포 SHA/공개 검증 결과는 해당 커밋의 Actions 및 공개 URL 확인 기록과 함께 제시한다.

@@ -1,7 +1,7 @@
 """Independent browser/PDF checks for quotation and fixed-term employment forms.
 Uses synthetic test labels only. FORM_TEST_BASE supports production read-only verification.
 """
-import json, os, pathlib, re
+import json, os, pathlib, re, urllib.request, xml.etree.ElementTree as ET
 from playwright.sync_api import sync_playwright
 from pypdf import PdfReader
 from PIL import Image, ImageDraw, ImageFont
@@ -86,10 +86,18 @@ with sync_playwright() as p:
    fill(page,'remarks' if slug=='quotation' else 'additionalTerms','긴 내용\n'*70)
    page.locator('#print-form').click();check(slug+' long print blocked with warning',not page.evaluate('window.__printed') and 'A4' in page.locator('#feedback').inner_text())
    check(slug+' no JS errors',not errors)
+   check(slug+' social image metadata',page.locator('meta[property="og:image"]').get_attribute('content')=='https://interpiad.com/tools/images/'+slug+'-og.jpg')
+   if not GENERATE:
+    social=page.request.get(BASE+'/tools/images/'+slug+'-og.jpg');check(slug+' social image served',social.status==200 and social.body().startswith(bytes([255,216,255])))
    check(slug+' canonical',page.locator('link[rel=canonical]').get_attribute('href')=='https://interpiad.com/tools/'+slug+'/')
    print('overflow diagnostics',slug,page.evaluate('Array.from(document.querySelectorAll("body *")).filter(e=>!e.closest("#print-root")&&e.getBoundingClientRect().right>innerWidth+1).map(e=>({tag:e.tagName,cls:e.className,right:e.getBoundingClientRect().right,width:e.getBoundingClientRect().width}))'))
    page.close()
  finally:
   b.close();(OUT/'document-checks.json').write_text(json.dumps({'checks':checks,'failures':failures},ensure_ascii=False,indent=2));print(json.dumps({'checks':len(checks),'failures':failures,'passed':len(checks)-len(failures)},ensure_ascii=False))
 
+for path in ['/sitemap.xml','/index.xml','/tools/index.xml']:
+ text=urllib.request.urlopen(BASE+path).read().decode()
+ for slug in ['quotation','employment-contract']:check(slug+' present in '+path,'https://interpiad.com/tools/'+slug+'/' in text)
+(OUT/'document-checks.json').write_text(json.dumps({'checks':checks,'failures':failures},ensure_ascii=False,indent=2))
+print(json.dumps({'total_checks':len(checks),'failures':failures},ensure_ascii=False))
 assert not failures, failures

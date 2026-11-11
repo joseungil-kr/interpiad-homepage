@@ -24,7 +24,7 @@ function synchronize(){
  fields.forEach(el=>{
   el.removeAttribute('aria-invalid');
   if(el.type==='checkbox')return;
-  el.nextElementSibling.textContent=el.tagName==='SELECT'?(el.value?el.selectedOptions[0].textContent:''):el.value;
+  el.nextElementSibling.textContent=el.tagName==='SELECT'?(el.value?el.selectedOptions[0].textContent:''):(el.inputMode==='numeric'&&el.value!==''&&/^(?:\d+|\d{1,3}(?:,\d{3})+)$/.test(el.value)&&Number.isSafeInteger(numeric(el.value))?won(numeric(el.value)):el.value);
   if(el.inputMode==='numeric'&&el.value!==''&&(!/^(?:\d+|\d{1,3}(?:,\d{3})+)$/.test(el.value)||!Number.isSafeInteger(numeric(el.value)))){
    el.setAttribute('aria-invalid','true');errors.push(el.getAttribute('aria-label')+'에는 0 이상의 정수를 적어 주세요.');
   }
