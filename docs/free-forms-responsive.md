@@ -24,3 +24,11 @@ No third-party code or dependencies were copied. The repository's existing form 
 These are Chromium viewport simulations, not physical Galaxy S24, A34 or Fold6 tests. They do not verify native Samsung keyboard or Samsung Internet behavior. Existing document/browser/DOM checks also remain enabled.
 
 Public HTTP access from the build environment returned HTTP 403 in previous verification; this route is not retried or bypassed. Live verification uses the user's ordinary authorized browser separately. A successful CI or Cloudflare deployment status is not, by itself, proof of live rendering.
+
+## Recorded evidence
+
+- Commit d9bd75af5f48bd8d4448fd7225e08d983b5b614a: https://github.com/joseungil-kr/interpiad-homepage/actions/runs/43016126607
+- Responsive checks: 497 passed, 0 failed. Existing document checks: 60; browser checks: 176; DOM checks: 191. Artifact 13852452965 was downloaded and its JSON/PDF files inspected independently.
+- Five mobile-viewport PDFs each contain one A4 page. Landscape invoice: 841.92 × 594.96 pt; other forms: 594.96 × 841.92 pt. The first three forms retain both document copies.
+- Initial new-test failures were traced to intentionally blank print mode suppressing totals and a nonexistent quotation tax DOM selector. Tests now use normal interactive URLs and verify the quotation grand total after VAT. No assertion was removed to conceal overflow.
+- Independent ordinary Chrome preview checks reported all five tools at 384/768px without document/editor horizontal overflow, with long-value input and calculations. Physical Samsung devices and physical printer output remain unverified.
