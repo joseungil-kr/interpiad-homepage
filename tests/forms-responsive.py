@@ -77,7 +77,7 @@ def run_form(browser, slug):
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.on('request', lambda request: requests.append({'method': request.method, 'url': request.url}))
     try:
-        response = page.goto(f'{BASE}/tools/{slug}/?blank=1')
+        response = page.goto(f'{BASE}/tools/{slug}/')
         check(slug + ' HTTP 200', response is not None and response.status == 200)
         page.wait_for_selector('#responsive-editor')
         page.wait_for_load_state('networkidle')
@@ -146,8 +146,9 @@ def run_form(browser, slug):
                 check(slug + ' source total 30000', page.locator('#print-root [data-calc=supply]').first.inner_text() == '30,000')
                 if slug != 'simple-receipt':
                     editor(page, 'vatMode').select_option('exclusive' if slug == 'quotation' else 'tax')
-                    check(slug + ' VAT source 3000', page.locator('#print-root [data-calc=tax]').first.inner_text() == '3,000')
-                    check(slug + ' VAT editor output 3000', '3,000' in page.locator('[data-editor-total=tax]').inner_text())
+                    total_key, expected_tax = ('grand', '33,000') if slug == 'quotation' else ('tax', '3,000')
+                    check(slug + ' VAT source calculation', page.locator(f'#print-root [data-calc={total_key}]').first.inner_text() == expected_tax)
+                    check(slug + ' VAT editor calculation', expected_tax in page.locator(f'[data-editor-total={total_key}]').inner_text())
                     if slug != 'quotation':
                         check(slug + ' original VAT button toggled', page.locator('#vat-toggle').get_attribute('aria-pressed') == 'true')
                 for output in page.locator('[data-editor-total]').all():
