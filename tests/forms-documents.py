@@ -83,7 +83,7 @@ with sync_playwright() as p:
    page.evaluate('window.confirm=()=>true');page.locator('#clear-form').click();check(slug+' clear resets data',page.locator('[data-field="'+key+'"]').input_value()=='')
    page.evaluate('window.print=()=>window.__printed=true');page.locator('#print-form').click();check(slug+' print button invokes',page.evaluate('window.__printed===true'))
    page.evaluate('window.__printed=false')
-   fill(page,'remarks' if slug=='quotation' else 'additionalTerms','긴 내용\n'*70)
+   fill(page,'remarks' if slug=='quotation' else 'additionalTerms','긴 내용\n'*12)
    page.locator('#print-form').click();check(slug+' long print blocked with warning',not page.evaluate('window.__printed') and 'A4' in page.locator('#feedback').inner_text())
    check(slug+' no JS errors',not errors)
    check(slug+' social image metadata',page.locator('meta[property="og:image"]').get_attribute('content')=='https://interpiad.com/tools/images/'+slug+'-og.jpg')

@@ -86,7 +86,8 @@ function validatePrintLayout(){
   const paper=doc.querySelector('.paper-form'),r=paper.getBoundingClientRect();
   const bottom=Math.max(r.bottom,...[...paper.querySelectorAll('*')].filter(e=>e.getClientRects().length).map(e=>e.getBoundingClientRect().bottom));
   const widthOverflow=[...paper.querySelectorAll('.print-value,output')].some(e=>e.scrollWidth>e.clientWidth+2&&e.clientWidth>0);
-  if(bottom>1121||widthOverflow){errors.push('입력한 내용이 A4 한 장의 인쇄 영역을 넘습니다. 긴 품명·주소·비고 또는 숫자를 줄이거나 별도 문서로 나누어 주세요.');document.body.classList.add('form-invalid');feedback.textContent=errors.join(' ');}
+  const sectionOverflow=[...paper.querySelectorAll('.quotation-remarks,.quotation-total')].some(e=>e.scrollHeight>e.clientHeight+2);
+  if(bottom>1121||widthOverflow||sectionOverflow){errors.push('입력한 내용이 A4 한 장의 인쇄 영역을 넘습니다. 긴 품명·주소·비고 또는 숫자를 줄이거나 별도 문서로 나누어 주세요.');document.body.classList.add('form-invalid');feedback.textContent=errors.join(' ');}
  }finally{frame.remove();}
 }
 window.addEventListener('beforeprint',()=>{synchronize();validatePrintLayout();});
