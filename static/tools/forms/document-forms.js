@@ -64,9 +64,32 @@ root.addEventListener('input',synchronize);root.addEventListener('change',synchr
 const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 if(!blank&&get('writtenDate'))get('writtenDate').value=today;
 synchronize();
-document.getElementById('print-form').addEventListener('click',()=>{synchronize();if(errors.length){getInvalid()?.focus();feedback.scrollIntoView({block:'center'});return;}window.print();});
+document.getElementById('print-form').addEventListener('click',()=>{synchronize();validatePrintLayout();if(errors.length){getInvalid()?.focus();feedback.scrollIntoView({block:'center'});return;}window.print();});
 const getInvalid=()=>root.querySelector('[aria-invalid=true]');
-window.addEventListener('beforeprint',synchronize);
+// Measure the same CSS print rules without sending data or hiding overflow.
+function validatePrintLayout(){
+ if(errors.length)return;
+ const frame=document.createElement('iframe');
+ frame.title='인쇄 크기 확인';frame.setAttribute('aria-hidden','true');
+ frame.style.cssText='position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;visibility:hidden;pointer-events:none';
+ document.body.append(frame);
+ try{
+  const doc=frame.contentDocument;const style=doc.createElement('style');
+  style.textContent=[...document.styleSheets].flatMap(sheet=>[...sheet.cssRules]).map(rule=>{
+   if(rule.type===CSSRule.MEDIA_RULE){
+    if(rule.conditionText==='print')return [...rule.cssRules].map(r=>r.cssText).join('\n');
+    if(rule.conditionText.includes('screen'))return '';
+   }
+   return rule.cssText;
+  }).join('\n');
+  doc.head.append(style);doc.body.append(doc.importNode(root,true));
+  const paper=doc.querySelector('.paper-form'),r=paper.getBoundingClientRect();
+  const bottom=Math.max(r.bottom,...[...paper.querySelectorAll('*')].filter(e=>e.getClientRects().length).map(e=>e.getBoundingClientRect().bottom));
+  const widthOverflow=[...paper.querySelectorAll('.print-value,output')].some(e=>e.scrollWidth>e.clientWidth+2&&e.clientWidth>0);
+  if(bottom>1121||widthOverflow){errors.push('입력한 내용이 A4 한 장의 인쇄 영역을 넘습니다. 긴 품명·주소·비고 또는 숫자를 줄이거나 별도 문서로 나누어 주세요.');document.body.classList.add('form-invalid');feedback.textContent=errors.join(' ');}
+ }finally{frame.remove();}
+}
+window.addEventListener('beforeprint',()=>{synchronize();validatePrintLayout();});
 document.getElementById('clear-form').addEventListener('click',()=>{
  if(!confirm('작성한 내용을 모두 지울까요? 보관하려면 취소한 뒤 PDF로 먼저 저장해 주세요.'))return;
  fields.forEach(el=>{if(el.type==='checkbox')el.checked=false;else if(el.tagName==='SELECT')el.selectedIndex=0;else el.value='';});

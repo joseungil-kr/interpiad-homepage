@@ -1,7 +1,7 @@
 ---
 title: "무료 견적서 양식, 온라인 작성과 A4 인쇄·PDF 저장"
 description: "회원가입 없이 견적서 15품목을 작성하세요. 품목별 금액과 한글 합계, 부가세, 계약금·잔금을 계산하고 A4 세로로 인쇄하거나 PDF로 저장할 수 있습니다."
-date: 2026-11-12T05:00:00+09:00
+date: 2026-11-11T20:00:00+09:00
 weight: 4
 form: "quotation"
 previewImage: "tools/images/quotation-preview.jpg"

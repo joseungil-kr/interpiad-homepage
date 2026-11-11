@@ -51,3 +51,4 @@
  .contract .insurance .print-value{display:none}
  body.form-invalid #print-root:before{content:'입력값 또는 내용 길이를 확인하세요. 오류가 있는 문서입니다.';display:block;color:#b42318;text-align:center}
 }
+@media screen and (max-width:360px){.brandbar{flex-wrap:wrap}.brandbar nav{flex-direction:row;flex-wrap:wrap}.toolbar-info,.toolbar-nav,.seo-guide,.guide-inner{min-width:0;max-width:100%}.seo-guide{overflow-wrap:anywhere}}

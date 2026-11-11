@@ -21,7 +21,7 @@ with sync_playwright() as p:
    page.on('pageerror',lambda error:errors.append(str(error)))
    page.on('request',lambda req:requests.append((req.method,req.url)))
    check(slug+' HTTP 200',page.goto(BASE+'/tools/'+slug+'/?blank=1').status==200)
-   page.wait_for_selector('.paper-form');page.emulate_media(media='print')
+   page.wait_for_selector('.paper-form');page.wait_for_load_state('networkidle');baseline_requests=len(requests);page.emulate_media(media='print')
    page.pdf(path=str(OUT/(slug+'-blank.pdf')),prefer_css_page_size=True)
    page.locator('.paper-form').screenshot(path=str(OUT/(slug+'-blank.png')))
    if GENERATE:
@@ -64,7 +64,7 @@ with sync_playwright() as p:
    key='buyer' if slug=='quotation' else 'worker'
    fill(page,key,'<img src=x onerror=alert(1)>');check(slug+' safe text rendering',page.locator('.paper-form img').count()==0);fill(page,key,'출력 테스트')
    check(slug+' no saved private data',page.evaluate('localStorage.length===0&&sessionStorage.length===0'))
-   check(slug+' no input transmission',all(method=='GET' for method,url in requests) and all('테스트' not in url and '2500000' not in url for method,url in requests))
+   check(slug+' no input transmission',len(requests)==baseline_requests)
    page.screenshot(path=str(OUT/(slug+'-desktop.png')),full_page=True)
    page.emulate_media(media='print');page.pdf(path=str(OUT/(slug+'-filled.pdf')),prefer_css_page_size=True)
    page.locator('.paper-form').screenshot(path=str(OUT/(slug+'-filled.png')))
@@ -74,14 +74,16 @@ with sync_playwright() as p:
    w,h=float(pdf.pages[0].mediabox.width),float(pdf.pages[0].mediabox.height);check(slug+' A4 portrait',abs(w-595)<3 and abs(h-842)<3)
    page.emulate_media(media='screen')
    for width in [390,320]:
-    page.set_viewport_size({'width':width,'height':844});check(slug+f' mobile {width} no body overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
+    page.set_viewport_size({'width':width,'height':844});page.screenshot(path=str(OUT/(slug+f'-mobile-{width}.png')),full_page=True);check(slug+f' mobile {width} no body overflow',page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'))
     page.screenshot(path=str(OUT/(slug+f'-mobile-{width}.png')),full_page=True)
    with page.expect_popup() as new:page.locator('#blank-pdf').click()
    blank=new.value;blank.wait_for_selector('.paper-form');check(slug+' blank popup preserves source',page.locator('[data-field="'+key+'"]').input_value()=='출력 테스트' and blank.locator('[data-field="'+key+'"]').input_value()=='');blank.close()
    page.on('dialog',lambda d:d.dismiss());page.locator('#clear-form').click();check(slug+' cancel clear keeps data',page.locator('[data-field="'+key+'"]').input_value()=='출력 테스트')
-   page.remove_listener('dialog',page._impl_obj) if False else None
    page.evaluate('window.confirm=()=>true');page.locator('#clear-form').click();check(slug+' clear resets data',page.locator('[data-field="'+key+'"]').input_value()=='')
    page.evaluate('window.print=()=>window.__printed=true');page.locator('#print-form').click();check(slug+' print button invokes',page.evaluate('window.__printed===true'))
+   page.evaluate('window.__printed=false')
+   fill(page,'remarks' if slug=='quotation' else 'additionalTerms','긴 내용\n'*70)
+   page.locator('#print-form').click();check(slug+' long print blocked with warning',not page.evaluate('window.__printed') and 'A4' in page.locator('#feedback').inner_text())
    check(slug+' no JS errors',not errors)
    check(slug+' canonical',page.locator('link[rel=canonical]').get_attribute('href')=='https://interpiad.com/tools/'+slug+'/')
    page.close()
