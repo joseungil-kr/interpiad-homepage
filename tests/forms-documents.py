@@ -54,7 +54,7 @@ with sync_playwright() as p:
     fill(page,'item-0-qty','');check('quotation incomplete row warning','모두' in page.locator('#feedback').inner_text());fill(page,'item-0-qty','3')
     token='마지막품목';signature='출력마지막문장'
    else:
-    for k,v in {'employer':'사업주 테스트','worker':'근로자 테스트','startDate':'2026-11-01','endDate':'2027-10-31','workplace':'서울시 테스트로 123 사무실','duties':'서식 작성 및 출력 검수 업무','workdays':'월~금, 매일 09:00~18:00','startTime':'09:00','endTime':'18:00','breakStart':'12:00','breakEnd':'13:00','dailyHours':'8','weeklyHours':'40','salary':'2500000','bonus':'없음','allowances':'식대 월 200,000원','payCalculation':'월 기본급 및 해당 월 수당 합산','payDay':'25','holidayPayDay':'전일 지급','payMethod':'근로자 명의 계좌로 지급','weeklyHoliday':'일','otherHolidays':'관계 법령에 따름','insuranceException':'없음','company':'사업체 테스트','companyAddress':'서울시 테스트로 123 사무실','representative':'대표 테스트','workerName':'근로자 테스트','workerAddress':'서울시 테스트로 456','additionalTerms':'별도 합의사항 확인 완료'}.items():fill(page,k,v)
+    for k,v in {'employer':'사업주 테스트','worker':'근로자 테스트','startDate':'2026-11-01','endDate':'2027-10-31','workplace':'서울시 테스트로 123 사무실','duties':'서식 작성 및 출력 검수 업무','workdays':'월~금, 매일 09:00~18:00','startTime':'09:00','endTime':'18:00','breakStart':'12:00','breakEnd':'13:00','dailyHours':'8','weeklyHours':'40','salary':'2500000','bonus':'없음','allowances':'식대 월 200,000원','payCalculation':'월 기본급 및 해당 월 수당 합산','payDay':'25','holidayPayDay':'전일 지급','payMethod':'근로자 명의 계좌로 지급','weeklyHoliday':'일','otherHolidays':'관계 법령에 따름','insuranceException':'없음','company':'사업체 테스트','companyAddress':'서울시 테스트로 123 사무실','representative':'대표 서명확인','workerName':'근로자 테스트','workerAddress':'서울시 테스트로 456','additionalTerms':'별도 합의사항 확인 완료'}.items():fill(page,k,v)
     page.select_option('[data-field=payType]','월급');page.check('[data-field=insurance-0]')
     fill(page,'startDate','2026-02-30');check('contract invalid date','날짜' in page.locator('#feedback').inner_text());fill(page,'startDate','2026-11-01')
     fill(page,'endDate','2025-01-01');check('contract date order','빠를' in page.locator('#feedback').inner_text());fill(page,'endDate','2027-10-31')
@@ -70,6 +70,7 @@ with sync_playwright() as p:
    page.locator('.paper-form').screenshot(path=str(OUT/(slug+'-filled.png')))
    pdf=PdfReader(OUT/(slug+'-filled.pdf'));check(slug+' filled one page',len(pdf.pages)==1)
    text=re.sub(r'\s+','',pdf.pages[0].extract_text());check(slug+' last content retained',token in text and signature in text)
+   if slug=='employment-contract':check('contract business signature retained','대표서명확인' in text)
    check(slug+' no site chrome in print','기업맞춤형' not in text)
    w,h=float(pdf.pages[0].mediabox.width),float(pdf.pages[0].mediabox.height);check(slug+' A4 portrait',abs(w-595)<3 and abs(h-842)<3)
    page.emulate_media(media='screen')
@@ -89,6 +90,6 @@ with sync_playwright() as p:
    print('overflow diagnostics',slug,page.evaluate('Array.from(document.querySelectorAll("body *")).filter(e=>!e.closest("#print-root")&&e.getBoundingClientRect().right>innerWidth+1).map(e=>({tag:e.tagName,cls:e.className,right:e.getBoundingClientRect().right,width:e.getBoundingClientRect().width}))'))
    page.close()
  finally:
-  b.close();(OUT/'document-checks.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2));print(json.dumps({'checks':len(checks),'failures':failures,'passed':len(checks)-len(failures)},ensure_ascii=False))
+  b.close();(OUT/'document-checks.json').write_text(json.dumps({'checks':checks,'failures':failures},ensure_ascii=False,indent=2));print(json.dumps({'checks':len(checks),'failures':failures,'passed':len(checks)-len(failures)},ensure_ascii=False))
 
 assert not failures, failures

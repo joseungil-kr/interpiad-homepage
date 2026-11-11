@@ -8,11 +8,11 @@
 .paper-form .entry{display:inline-block;vertical-align:middle}
 .paper-form table{border-collapse:collapse;table-layout:fixed;width:100%}
 .paper-form .calculated{white-space:nowrap;font-variant-numeric:tabular-nums}
-.contract{padding:17mm 18mm;font-size:9pt;line-height:1.5}
+.contract{padding:13mm 18mm;font-size:9pt;line-height:1.5}
 .contract h2{text-align:center;font-size:15pt;margin:0 0 7mm}
 .contract p{margin:1.1mm 0}
 .contract-intro{margin-bottom:4mm!important}
-.contract-section{margin:2.5mm 0;break-inside:avoid}
+.contract-section{margin:1.3mm 0;break-inside:avoid}
 .contract-section h3{font-size:9pt;margin:0 0 1mm;font-weight:700}
 .contract-section>p,.contract-section>.entry,.insurance{margin-left:3mm}
 .contract .entry{border-bottom:.2mm solid #666;line-height:1.25}
@@ -29,8 +29,8 @@
 .contract .insurance label{white-space:nowrap}
 .contract input[type=checkbox]{accent-color:#0b7669}
 .contract-date{text-align:center;margin-top:4mm!important}
-.signatures{display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:3mm;font-size:8.5pt}
-.signatures .wide{width:100%}
+.signatures{display:block;margin-top:3mm;font-size:8.5pt}
+.signatures .wide{width:130mm}
 .signatures .name{width:30mm}
 .signature-mark{white-space:nowrap}
 .document-options{max-width:850px;padding:12px 20px;margin:auto;font-size:14px;color:#425453}
@@ -52,3 +52,5 @@
  body.form-invalid #print-root:before{content:'입력값 또는 내용 길이를 확인하세요. 오류가 있는 문서입니다.';display:block;color:#b42318;text-align:center}
 }
 @media screen and (max-width:360px){.brandbar{flex-wrap:wrap}.brandbar nav{flex-direction:row;flex-wrap:wrap}.toolbar-info,.toolbar-nav,.seo-guide,.guide-inner{min-width:0;max-width:100%}.seo-guide{overflow-wrap:anywhere}}
+
+#print-root{position:relative}

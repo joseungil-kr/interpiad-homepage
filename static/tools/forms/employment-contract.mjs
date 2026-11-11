@@ -17,5 +17,11 @@ ${section(8,'근로계약서 교부',`<p>사업주는 근로계약을 체결하�
 ${section(9,'근로계약·취업규칙 등의 성실한 이행의무',`<p>사업주와 근로자는 근로계약, 취업규칙, 단체협약을 지키고 성실하게 이행하여야 한다.</p>`)}
 ${section(10,'기타',`<p>이 계약에 정함이 없는 사항은 근로기준법령에 따른다.</p>${text('additionalTerms','기타 합의사항',160)}`)}
 <p class="contract-date">계약 작성일 ${input('writtenDate','계약 작성일 YYYY-MM-DD','date',10)}</p>
-<div class="signatures"><div><strong>(사업주)</strong><p>사업체명 ${input('company','사업체명','wide',40)}</p><p>전화 ${input('companyPhone','사업주 전화','wide',25)}</p><p>주소 ${input('companyAddress','사업체 주소','wide',100)}</p><p>대표자 ${input('representative','대표자','name',30)} <span class="signature-mark">(서명 또는 인)</span></p></div><div><strong>(근로자)</strong><p>주소 ${input('workerAddress','근로자 주소','wide',100)}</p><p>연락처 ${input('workerPhone','근로자 연락처','wide',25)}</p><p>성명 ${input('workerName','서명란 근로자 성명','name',30)} <span class="signature-mark">(서명)</span></p></div></div>
+<div class="signatures">
+<p><strong>(사업주)</strong> 사업체명 ${input('company','사업체명','name',40)} 전화 ${input('companyPhone','사업주 전화','name',25)}</p>
+<p>주소 ${input('companyAddress','사업체 주소','wide',100)}</p>
+<p>대표자 ${input('representative','대표자','name',30)} <span class="signature-mark">(서명 또는 인)</span></p>
+<p><strong>(근로자)</strong> 주소 ${input('workerAddress','근로자 주소','wide',100)}</p>
+<p>연락처 ${input('workerPhone','근로자 연락처','name',25)}</p>
+<p>성명 ${input('workerName','서명란 근로자 성명','name',30)} <span class="signature-mark">(서명)</span></p></div>
 </article>`;}
