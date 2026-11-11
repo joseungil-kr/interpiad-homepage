@@ -8,9 +8,9 @@ from PIL import Image, ImageDraw, ImageFont
 BASE=os.environ.get('FORM_TEST_BASE','http://127.0.0.1:8765').rstrip('/')
 OUT=pathlib.Path(os.environ.get('FORM_TEST_OUT','/tmp/interpiad-forms-qa'));OUT.mkdir(parents=True,exist_ok=True)
 GENERATE=os.environ.get('FORM_GENERATE_PREVIEWS')=='1'
-checks=[]
+checks=[];failures=[]
 def check(name,condition):
- if not condition: raise AssertionError(name)
+ if not condition: failures.append(name)
  checks.append(name)
 def fill(page,key,value):page.locator('[data-field="'+key+'"]').fill(value)
 with sync_playwright() as p:
@@ -86,6 +86,9 @@ with sync_playwright() as p:
    page.locator('#print-form').click();check(slug+' long print blocked with warning',not page.evaluate('window.__printed') and 'A4' in page.locator('#feedback').inner_text())
    check(slug+' no JS errors',not errors)
    check(slug+' canonical',page.locator('link[rel=canonical]').get_attribute('href')=='https://interpiad.com/tools/'+slug+'/')
+   print('overflow diagnostics',slug,page.evaluate('Array.from(document.querySelectorAll("body *")).filter(e=>!e.closest("#print-root")&&e.getBoundingClientRect().right>innerWidth+1).map(e=>({tag:e.tagName,cls:e.className,right:e.getBoundingClientRect().right,width:e.getBoundingClientRect().width}))'))
    page.close()
  finally:
-  b.close();(OUT/'document-checks.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2));print(json.dumps({'passed':len(checks),'checks':checks},ensure_ascii=False))
+  b.close();(OUT/'document-checks.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2));print(json.dumps({'checks':len(checks),'failures':failures,'passed':len(checks)-len(failures)},ensure_ascii=False))
+
+assert not failures, failures

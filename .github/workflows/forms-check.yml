@@ -49,6 +49,11 @@ jobs:
           hugo --minify
           NODE_PATH=/tmp/form-tests/node_modules node tests/forms-dom.cjs
           python tests/forms-browser.py
+      - name: Verify published production forms
+        if: github.ref == 'refs/heads/master'
+        run: |
+          python scripts/wait-form-deployment.py
+          FORM_TEST_BASE=https://interpiad.com FORM_TEST_OUT=/tmp/interpiad-forms-qa/production python tests/forms-documents.py
       - name: Save screenshots and PDF evidence
         if: always()
         uses: actions/upload-artifact@v4
