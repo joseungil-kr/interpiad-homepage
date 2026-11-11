@@ -111,7 +111,7 @@ with sync_playwright() as p:
     check('tools: descriptive alternative text', bool(hero.get_attribute('alt')))
     check('tools: image has intrinsic dimensions', hero.get_attribute('width') == '1672' and hero.get_attribute('height') == '941')
     check('tools: image loaded', hero.evaluate('(img) => img.complete && img.naturalWidth === 1672'))
-    check('tools: exactly three form cards', tools_page.locator('.tools-card').count() == 3)
+    check('tools: exactly five form cards', tools_page.locator('.tools-card').count() == 5)
     for slug in ['manual-invoice', 'manual-invoice-vertical', 'simple-receipt']:
         preview = tools_page.locator(f'.tools-preview a[href="/tools/{slug}/"] img')
         preview.scroll_into_view_if_needed()
@@ -120,12 +120,12 @@ with sync_playwright() as p:
         check(f'tools: {slug} thumbnail accessible', len(preview.get_attribute('alt')) > 15)
         check(f'tools: {slug} whole form retained', preview.evaluate('(img) => getComputedStyle(img).objectFit === "contain" && Math.abs(img.getBoundingClientRect().width / img.getBoundingClientRect().height - img.naturalWidth / img.naturalHeight) < .01'))
 
-    check('tools: distinct accessible form links', tools_page.locator('.tools-card .btn .sr-only').count() == 3)
+    check('tools: distinct accessible form links', tools_page.locator('.tools-card .btn .sr-only').count() == 5)
     check('tools: hero used for social image', 'business-forms-desk.jpg' in tools_page.locator('meta[property="og:image"]').get_attribute('content'))
     for width in [1440, 768, 390, 320]:
         tools_page.set_viewport_size({'width': width, 'height': 1000})
         check(f'tools: no overflow at {width}px', tools_page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
-        check(f'tools: previews fit at {width}px', tools_page.locator('.tools-preview img').evaluate_all('(images) => images.length === 3 && images.every(img => {const r=img.getBoundingClientRect(); const p=img.parentElement.getBoundingClientRect(); return r.width > 100 && r.height > 100 && r.width <= p.width && r.height <= p.height;})'))
+        check(f'tools: previews fit at {width}px', tools_page.locator('.tools-preview img').evaluate_all('(images) => images.length === 5 && images.every(img => {const r=img.getBoundingClientRect(); const p=img.parentElement.getBoundingClientRect(); return r.width > 100 && r.height > 100 && r.width <= p.width && r.height <= p.height;})'))
 
         check(f'tools: image visible at {width}px', hero.is_visible() and hero.bounding_box()['width'] > 200)
         tools_page.screenshot(path=str(OUT / f'tools-{width}.png'), full_page=True)

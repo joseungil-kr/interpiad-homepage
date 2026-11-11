@@ -36,7 +36,11 @@
   {{ $questions := slice }}{{ range .Params.faq }}{{ $questions = $questions | append (dict "@type" "Question" "name" .question "acceptedAnswer" (dict "@type" "Answer" "text" .answer)) }}{{ end }}
   <script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "FAQPage" "mainEntity" $questions) | jsonify | safeJS }}</script>
   <script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" (slice (dict "@type" "ListItem" "position" 1 "name" "인터피아드" "item" .Site.BaseURL) (dict "@type" "ListItem" "position" 2 "name" "무료 업무 서식" "item" ("tools/" | absURL)) (dict "@type" "ListItem" "position" 3 "name" .Title "item" .Permalink))) | jsonify | safeJS }}</script>
-  <script type="module" src="{{ "tools/forms/forms.js" | relURL }}"></script>
+  {{ if in (slice "quotation" "employment-contract") .Params.form }}
+  <link rel="stylesheet" href="{{ "tools/forms/document-forms.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "tools/forms/quotation.css" | relURL }}">
+  <script type="module" src="{{ "tools/forms/document-forms.js" | relURL }}"></script>
+  {{ else }}<script type="module" src="{{ "tools/forms/forms.js" | relURL }}"></script>{{ end }}
 </head>
 <body data-form="{{ .Params.form }}">
 <a class="form-skip" href="#print-root">서식 입력으로 바로가기</a>
@@ -44,17 +48,19 @@
 <header class="toolbar">
  <div class="toolbar-info"><p class="eyebrow">설치·회원가입 없이 무료 사용</p><h1>{{ .Title }}</h1><p>{{ .Params.intro }}</p></div>
  <nav class="toolbar-nav" aria-label="서식 작업">
-  <a href="/tools/">무료 서식 3종</a>
+  <a href="/tools/">무료 서식 5종</a>
   <a href="/tools/manual-invoice/"{{ if eq .Params.form "invoice" }} aria-current="page"{{ end }}>거래명세표 A4 가로</a>
   <a href="/tools/manual-invoice-vertical/"{{ if eq .Params.form "invoice-vertical" }} aria-current="page"{{ end }}>거래명세표 A4 세로</a>
   <a href="/tools/simple-receipt/"{{ if eq .Params.form "receipt" }} aria-current="page"{{ end }}>간이영수증</a>
+  <a href="/tools/quotation/"{{ if eq .Params.form "quotation" }} aria-current="page"{{ end }}>견적서</a>
+  <a href="/tools/employment-contract/"{{ if eq .Params.form "employment-contract" }} aria-current="page"{{ end }}>근로계약서</a>
   <a id="blank-pdf" href="{{ .RelPermalink }}?blank=1&amp;print=1" target="_blank" rel="noopener noreferrer">빈 양식 인쇄·PDF</a>
   <button id="clear-form" type="button" class="minor">작성 내용 지우기</button>
   <button id="print-form" type="button" class="primary">출력하기 / PDF 저장</button>
  </nav>
 </header>
 <p class="print-hint">A4 · <b>{{ if ne .Params.form "invoice" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. <br>휴대폰에서는 양식을 좌우로 밀면 전체를 볼 수 있습니다. 입력 내용은 현재 화면에만 남으니, 창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.</p>
-<main id="print-root" tabindex="-1" aria-label="{{ .Params.shortTitle }} 2부 입력 및 인쇄 양식"></main>
+<main id="print-root" tabindex="-1" aria-label="{{ .Params.shortTitle }} 입력 및 인쇄 양식"></main>
 <div id="feedback" role="status" aria-live="polite"></div>
 <noscript><p>양식을 표시하려면 브라우저 설정에서 자바스크립트를 켜 주세요. 이용 방법과 문의 연락처는 아래에서 확인할 수 있습니다.</p></noscript>
 <section class="seo-guide" aria-labelledby="guide-title"><div class="guide-inner">

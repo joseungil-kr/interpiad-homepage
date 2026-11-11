@@ -1,0 +1,69 @@
+/* A4 quotation based on the supplied black-and-white 15-row paper form. */
+.paper-form.quotation{padding:8mm;font-size:9pt;line-height:1.25;min-height:296mm}
+.quotation caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.quotation th,.quotation td{border:.3mm solid #111;padding:.6mm 1mm;vertical-align:middle;min-width:0;font-weight:400}
+.quotation table{border-color:#111}
+.quotation input:not([type=checkbox]){height:5mm;padding:.5mm .7mm;font-size:inherit;line-height:1.2}
+.quotation .numeric,.quotation .numeric-input{text-align:right}
+.quotation output{font-variant-numeric:tabular-nums;white-space:nowrap}
+.quotation-topline{height:7mm;font-size:8.5pt}
+.quotation-topline label{display:flex;width:48mm;gap:2mm;align-items:center;border-bottom:.25mm solid #111;white-space:nowrap}
+.quotation-topline input{flex:1;min-width:0}
+.quotation-heading{height:18mm;margin:0;text-align:center;font-size:27pt;line-height:18mm;font-weight:700;letter-spacing:5mm;text-indent:5mm}
+.quotation-parties{display:grid;grid-template-columns:40% 57%;gap:3%;min-height:37mm;align-items:end}
+.quotation-recipient{display:flex;flex-direction:column;justify-content:space-between;height:34mm;padding:0 2mm 0 0}
+.quotation-date{display:flex;gap:2mm;align-items:center;white-space:nowrap}
+.quotation-date input{flex:1}
+.quotation-buyer{display:flex;align-items:end;gap:2mm;border-bottom:.4mm solid #111;padding-bottom:1.5mm}
+.quotation-buyer input{flex:1;font-size:15pt!important;height:9mm!important;font-weight:700}
+.quotation-buyer>span:last-child{white-space:nowrap;font-size:9pt;padding-bottom:1mm}
+.quotation-recipient p{margin:0 0 1mm;font-size:8.5pt}
+.quotation-supplier{height:35mm;font-size:8pt}
+.quotation-supplier tr{height:7mm}
+.quotation-supplier th{padding:.5mm;white-space:nowrap;text-align:center}
+.quotation-supplier td{padding:.3mm}
+.quotation-supplier .vertical-label{writing-mode:vertical-rl;text-orientation:upright;letter-spacing:3mm}
+.quotation-total{height:16mm;display:grid;grid-template-columns:24% 46% 30%;align-items:center;border-top:.4mm solid #111;border-bottom:.4mm solid #111;gap:0;padding:1mm}
+.quotation-total>div{text-align:center;letter-spacing:.4mm}
+.quotation-total small{display:block;font-size:8pt;letter-spacing:0;margin-top:1.5mm}
+.quotation-korean{font-size:12pt;text-align:center;overflow-wrap:anywhere}
+.quotation-grand{font-size:11pt;text-align:right;white-space:nowrap}
+.quotation-items{font-size:9pt}
+.quotation-items thead tr{height:8mm}
+.quotation-items tbody tr{height:7.6mm}
+.quotation-items tbody th{text-align:center}
+.quotation-items td{padding:.3mm .6mm}
+.quotation-items tfoot tr{height:7mm}
+.quotation-items tfoot th{text-align:right;padding-right:2mm}
+.quotation-items thead th{border-top:0;letter-spacing:1mm;text-align:center}
+.quotation-items input:not([type=checkbox]){height:6mm;font-size:8.5pt}
+.quotation-items td:last-child{font-size:8.5pt;white-space:nowrap}
+.quotation-tax-control{padding:2mm 0;font-size:8.5pt}
+.quotation-tax-control label{display:flex;gap:3mm;align-items:center}
+.quotation-tax-control select{width:65mm;min-height:6mm}
+.quotation-summary{height:10mm;font-size:9pt}
+.quotation-summary th{width:11%;font-weight:700;white-space:nowrap}
+.quotation-summary td{width:22.333%;text-align:right;white-space:nowrap;padding:.5mm 1mm}
+.quotation-paid input:not([type=checkbox]){display:inline-block;width:calc(100% - 4mm);vertical-align:middle}
+.quotation-remarks{height:32mm;border-left:.3mm solid #111;border-right:.3mm solid #111;padding:1mm}
+.quotation-remarks>label{display:block;font-size:9pt;margin-bottom:1mm}
+.quotation-remarks textarea{height:25mm;padding:.5mm;font-size:8.5pt;line-height:1.4}
+.quotation-contacts{height:19mm;font-size:8pt}
+.quotation-contacts tr{height:9.5mm}
+.quotation-contacts th{text-align:center;white-space:nowrap}
+.quotation-contacts td{padding:.3mm}
+.quotation-contacts input{font-size:8pt!important}
+.quotation-footer{text-align:center;padding:3mm 0 0;font-size:8pt;color:#555}
+@media print{
+ .paper-form.quotation{height:296mm;min-height:0;break-inside:avoid;page-break-inside:avoid}
+ .quotation-tax-control{display:none!important}
+ .quotation .print-value{padding:.5mm .7mm;line-height:1.25;font-size:inherit;max-width:100%}
+ .quotation-topline .print-value,.quotation-date .print-value{flex:1}
+ .quotation-buyer .print-value{flex:1;font-size:15pt;font-weight:700;min-height:9mm}
+ .quotation-items .print-value{font-size:8.5pt;line-height:1.15}
+ .quotation-items .numeric .print-value{text-align:right}
+ .quotation-paid .print-value{display:inline-block;width:calc(100% - 4mm);vertical-align:middle;text-align:right}
+ .quotation-remarks .print-value{font-size:8.5pt;line-height:1.4;min-height:25mm}
+ .quotation-contacts .print-value{font-size:8pt}
+ .quotation-footer{color:#111}
+}

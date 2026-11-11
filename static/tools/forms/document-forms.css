@@ -1,0 +1,53 @@
+/* Same green editing controls as the existing tools; paper follows the supplied monochrome forms. */
+.paper-form{width:210mm;min-height:296mm;box-sizing:border-box;margin:0 auto 20px;background:white;box-shadow:0 6px 22px #15353626;color:#111;font-family:Arial,'Noto Sans CJK KR','Malgun Gothic',sans-serif;font-variant-numeric:tabular-nums}
+.paper-form *{box-sizing:border-box}
+.paper-form input:not([type=checkbox]),.paper-form textarea,.paper-form select{width:100%;min-width:0;border:0;border-radius:0;background:#e9f5f3;color:#194b48;font:inherit;padding:1mm;outline-offset:0;resize:none;display:block}
+.paper-form input:focus-visible,.paper-form textarea:focus-visible,.paper-form select:focus-visible{outline:2px solid #0b7669}
+.paper-form [aria-invalid=true]{outline:2px solid #b42318!important}
+.paper-form .print-value{display:none;white-space:pre-wrap;overflow-wrap:anywhere;min-height:1em}
+.paper-form .entry{display:inline-block;vertical-align:middle}
+.paper-form table{border-collapse:collapse;table-layout:fixed;width:100%}
+.paper-form .calculated{white-space:nowrap;font-variant-numeric:tabular-nums}
+.contract{padding:17mm 18mm;font-size:9pt;line-height:1.5}
+.contract h2{text-align:center;font-size:15pt;margin:0 0 7mm}
+.contract p{margin:1.1mm 0}
+.contract-intro{margin-bottom:4mm!important}
+.contract-section{margin:2.5mm 0;break-inside:avoid}
+.contract-section h3{font-size:9pt;margin:0 0 1mm;font-weight:700}
+.contract-section>p,.contract-section>.entry,.insurance{margin-left:3mm}
+.contract .entry{border-bottom:.2mm solid #666;line-height:1.25}
+.contract .wide{width:95mm;max-width:100%}
+.contract .name{width:33mm}
+.contract .date{width:31mm}
+.contract .time{width:15mm}
+.contract .day{width:13mm}
+.contract .money{width:30mm}
+.contract .pay-type{width:18mm}
+.contract .block{display:block;min-height:8mm}
+.contract textarea{height:9mm;font-size:8.5pt}
+.contract .insurance{display:flex;gap:8mm}
+.contract .insurance label{white-space:nowrap}
+.contract input[type=checkbox]{accent-color:#0b7669}
+.contract-date{text-align:center;margin-top:4mm!important}
+.signatures{display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:3mm;font-size:8.5pt}
+.signatures .wide{width:100%}
+.signatures .name{width:30mm}
+.signature-mark{white-space:nowrap}
+.document-options{max-width:850px;padding:12px 20px;margin:auto;font-size:14px;color:#425453}
+@media screen and (max-width:650px){.toolbar{padding:15px}.toolbar-nav{gap:6px}.toolbar-nav a,.toolbar-nav button{padding:10px;font-size:12px}.paper-form{margin-left:0}}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ html,body{margin:0!important;padding:0!important;background:#fff!important}
+ body> :not(#print-root){display:none!important}
+ #print-root{padding:0!important;margin:0!important;overflow:visible!important}
+ .paper-form{margin:0!important;box-shadow:none!important;min-height:0;overflow:visible!important}
+ .paper-form input:not([type=checkbox]),.paper-form textarea,.paper-form select{display:none!important}
+ .paper-form .print-value{display:block;color:#111}
+ .paper-form .entry .print-value{padding:.6mm 1mm}
+ .paper-form input[type=checkbox]{appearance:none;width:2.5mm;height:2.5mm;border:.25mm solid #111;vertical-align:middle;position:relative;margin:0 1mm 0 0}
+ .paper-form input[type=checkbox]:checked::after{content:'✓';position:absolute;left:0;top:-1mm;font-size:9pt}
+ .contract .entry{min-height:4.5mm}
+ .contract .block{min-height:9mm}
+ .contract .insurance .print-value{display:none}
+ body.form-invalid #print-root:before{content:'입력값 또는 내용 길이를 확인하세요. 오류가 있는 문서입니다.';display:block;color:#b42318;text-align:center}
+}
