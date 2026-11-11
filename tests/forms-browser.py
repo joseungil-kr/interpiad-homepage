@@ -100,6 +100,7 @@ with sync_playwright() as p:
         page.locator('#print-form').click()
         check(f'{mode}: print button', page.evaluate('window.__printRequested === true'))
         page.set_viewport_size({'width': 390, 'height': 844})
+        page.wait_for_timeout(150)  # allow ResizeObserver/requestAnimationFrame fitting
         check(f'{mode}: mobile no body overflow', page.evaluate('document.documentElement.scrollWidth <= window.innerWidth + 1'))
         check(f'{mode}: original paper stays visible on mobile', page.locator('#responsive-editor').count() == 0 and page.locator('#print-root').is_visible())
         check(f'{mode}: original paper root has no horizontal scroll', page.locator('#print-root').evaluate('(el) => el.scrollWidth <= el.clientWidth + 1'))
