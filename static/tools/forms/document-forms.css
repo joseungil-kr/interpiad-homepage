@@ -8,9 +8,9 @@
 .paper-form .entry{display:inline-block;vertical-align:middle}
 .paper-form table{border-collapse:collapse;table-layout:fixed;width:100%}
 .paper-form .calculated{white-space:nowrap;font-variant-numeric:tabular-nums}
-.contract{padding:13mm 18mm;font-size:9pt;line-height:1.5}
+.contract{padding:13mm 18mm;font-size:9pt;line-height:1.4}
 .contract h2{text-align:center;font-size:15pt;margin:0 0 7mm}
-.contract p{margin:1.1mm 0}
+.contract p{margin:.7mm 0}
 .contract-intro{margin-bottom:4mm!important}
 .contract-section{margin:1.3mm 0;break-inside:avoid}
 .contract-section h3{font-size:9pt;margin:0 0 1mm;font-weight:700}
@@ -54,3 +54,5 @@
 @media screen and (max-width:360px){.brandbar{flex-wrap:wrap}.brandbar nav{flex-direction:row;flex-wrap:wrap}.toolbar-info,.toolbar-nav,.seo-guide,.guide-inner{min-width:0;max-width:100%}.seo-guide{overflow-wrap:anywhere}}
 
 #print-root{position:relative}
+
+@media print{.paper-form.contract{min-height:296mm}}
