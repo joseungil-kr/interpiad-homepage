@@ -61,7 +61,7 @@
   <button id="print-form" type="button" class="primary">출력하기 / PDF 저장</button>
  </nav>
 </header>
-<p class="print-hint">A4 · <b>{{ if ne .Params.form "invoice" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. <br>휴대폰과 태블릿에서는 항목별 입력 화면을 사용하며, 출력할 때는 A4 양식을 유지합니다. 입력 내용은 현재 화면에만 남으니, 창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.</p>
+<p class="print-hint">A4 · <b>{{ if ne .Params.form "invoice" }}세로{{ else }}가로{{ end }}</b> · 배율 100% · 머리글/바닥글 끄기 · 여백 없음. <br>휴대폰에서는 양식 전체를 화면 폭에 맞춰 보여 줍니다. 입력할 때는 손가락으로 확대·축소할 수 있으며, 인쇄는 원래 A4 크기를 유지합니다. 입력 내용은 현재 화면에만 남으니, 창을 닫거나 새로고침하기 전에 PDF로 저장해 주세요.</p>
 <main id="print-root" tabindex="-1" aria-label="{{ .Params.shortTitle }} 입력 및 인쇄 양식"></main>
 <div id="feedback" role="status" aria-live="polite"></div>
 <noscript><p>양식을 표시하려면 브라우저 설정에서 자바스크립트를 켜 주세요. 이용 방법과 문의 연락처는 아래에서 확인할 수 있습니다.</p></noscript>

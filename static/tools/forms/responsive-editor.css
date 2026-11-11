@@ -1,38 +1,12 @@
-.responsive-editor{display:none}
-@media screen and (max-width:1199px){
- body.responsive-form-ready #print-root{display:none}
- body.responsive-form-ready .responsive-editor{display:block;width:100%;max-width:1000px;margin:0 auto;padding:18px 16px 30px;box-sizing:border-box;color:#173d3b}
- .responsive-editor *{box-sizing:border-box;min-width:0}
- .responsive-editor h2{margin:0 0 8px;font-size:22px;line-height:1.35}
- .editor-intro{font-size:15px;line-height:1.6;margin:0 0 18px;overflow-wrap:anywhere}
- .editor-groups{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
- .editor-card{margin:0;padding:16px;border:1px solid #b8d2ca;border-radius:12px;background:#fff;min-inline-size:0}
- .editor-card legend{padding:0 8px;font-size:17px;font-weight:750;color:#07594f;max-width:100%;white-space:normal;overflow-wrap:anywhere}
- .editor-fields{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
- .editor-field{display:flex;flex-direction:column;gap:6px;max-width:100%}
- .editor-label{font-size:14px;font-weight:700;line-height:1.45;white-space:normal;overflow-wrap:anywhere}
- .editor-field textarea,.editor-field select{display:block;width:100%;max-width:100%;min-width:0;min-height:46px;margin:0;border:1px solid #acc8be;border-radius:7px;padding:10px 12px;background:#f4faf7;color:#153e36;font:400 16px/1.45 system-ui,-apple-system,'Malgun Gothic',sans-serif;box-shadow:none}
- .editor-field textarea{resize:none;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;overflow-y:hidden}
- .editor-field textarea:focus-visible,.editor-field select:focus-visible,.editor-checkbox input:focus-visible,.editor-print:focus-visible,.editor-contract-review summary:focus-visible{outline:3px solid #0b7669;outline-offset:2px}
- .editor-field [aria-invalid=true]{border-color:#b42318;background:#fff2f0}
- .editor-checkbox{flex-direction:row;align-items:center;justify-content:space-between;min-height:46px}
- .editor-checkbox input{width:24px;height:24px;margin:0 4px;accent-color:#0b7669}
- .editor-totals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px;margin:0 0 20px;border:1px solid #b8d2ca;border-radius:12px;background:#deefe9}
- .editor-totals>div,.editor-row-total>div{display:flex;flex-direction:column;gap:5px;overflow-wrap:anywhere;white-space:normal}
- .editor-totals span,.editor-row-total span{font-size:13px;color:#425b54}
- .editor-totals output{font-size:18px;font-weight:750;overflow-wrap:anywhere;word-break:break-word;white-space:normal}
- .editor-row-total{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid #d6e4df}
- .editor-row-total output{font-size:16px;font-weight:700;overflow-wrap:anywhere}
- .editor-contract-review{margin-top:20px;border:1px solid #b8d2ca;border-radius:12px;background:#fff;padding:16px}
- .editor-contract-review summary{font-size:16px;font-weight:750;cursor:pointer;overflow-wrap:anywhere;line-height:1.5}
- .editor-contract-text{font:14px/1.75 system-ui,-apple-system,'Malgun Gothic',sans-serif;overflow-wrap:anywhere;white-space:normal;max-width:100%}
- .editor-contract-text h2{font-size:20px;margin:18px 0 10px}.editor-contract-text h3{font-size:15px;margin:15px 0 5px}.editor-contract-text p{margin:6px 0}
- .editor-contract-value{color:#07594f;font-weight:650;white-space:pre-wrap;overflow-wrap:anywhere}
- .editor-print{display:block;width:100%;margin:22px 0 0;padding:14px;border:0;border-radius:9px;background:#0b7669;color:white;min-height:48px;font:700 16px/1.4 system-ui,sans-serif;cursor:pointer}
+/* Screen-only proportional fitting. CSS zoom changes layout dimensions too,
+   avoiding a hidden/clipped full-size sheet or an oversized transformed box. */
+@media screen{
+ #print-root{padding:6px 8px 28px;overflow:visible;min-width:0;max-width:100%}
+ #print-root>.print-sheet,#print-root>.paper-form{zoom:var(--paper-fit-scale,1);margin-left:auto;margin-right:auto}
  .brandbar{flex-wrap:wrap;min-width:0;max-width:100%}.brandbar nav{flex-wrap:wrap;min-width:0}
  .toolbar,.toolbar-info,.toolbar-nav,.seo-guide,.guide-inner{min-width:0;max-width:100%}
- .seo-guide{overflow-wrap:anywhere}
- #feedback{overflow-wrap:anywhere;padding:10px 16px}
+ .seo-guide,#feedback{overflow-wrap:anywhere}
 }
-@media screen and (min-width:720px) and (max-width:1199px){.editor-groups{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.editor-totals{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media print{.responsive-editor{display:none!important}}
+@media print{
+ #print-root>.print-sheet,#print-root>.paper-form{zoom:1!important}
+}
