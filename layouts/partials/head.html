@@ -1,5 +1,6 @@
 {{ with .Site.Home.OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">{{ end }}
 <meta charset="utf-8">
+<meta name="google-adsense-account" content="ca-pub-4296739080031121">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ if .IsHome }}{{ .Title }}{{ else }}{{ .Title }} | 인터피아드{{ end }}</title>
 {{- $desc := .Params.description | default .Params.summary | default .Params.intro -}}
