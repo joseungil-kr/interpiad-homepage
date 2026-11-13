@@ -34,6 +34,11 @@ with sync_playwright() as pw:
     raw=sheet.body()
     ck("design sheet XML",ET.fromstring(raw).tag.endswith("svg"))
     ck("design sheet palette",b"#0B756A" in raw and b"#C69D60" in raw)
+    design=browser.new_page(viewport={"width":1700,"height":1150})
+    render=design.goto(BASE+"/tools/images/tool-thumbnail-design-sheet.svg",wait_until="load")
+    ck("design sheet renders in browser",render.status==200,render.status)
+    design.screenshot(path=str(OUT/"tool-icon-design-sheet.png"),full_page=True)
+    design.close()
     page.screenshot(path=str(OUT/"free-tools-desktop.png"),full_page=True)
     for width in (1440,1080,1024,768,390,320):
         page.set_viewport_size({"width":width,"height":900})
