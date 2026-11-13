@@ -21,9 +21,10 @@ jobs:
           off=Path('/tmp/ga-off'); on=Path('/tmp/ga-on')
           assert not any('data-ga4-id=' in p.read_text() for p in off.rglob('*.html'))
           assert (on/'index.html').read_text().count('data-ga4-id="G-8GRC26GF2B"')==1
+          assert (on/'tools/index.html').read_text().count('data-ga4-id="G-8GRC26GF2B"')==1
           for p in (on/'tools').rglob('*.html'):
-            assert 'data-ga4-id=' not in p.read_text(),str(p)
-          assert 'data-ga4-id=' not in (on/'pdf-compress/index.html').read_text()
+            if p != on/'tools/index.html': assert 'data-ga4-id=' not in p.read_text(),str(p)
+          assert 'data-ga4-id=' not in (on/'tools/pdf-compress/index.html').read_text()
           for f in off.rglob('*'):
             if f.is_file():
               t=on/f.relative_to(off)

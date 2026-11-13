@@ -1,5 +1,5 @@
 {{- $id := .Site.Params.ga4id | default "" -}}
-{{- $privateTool := or (eq .Section "tools") (eq .Type "pdfcompress") (eq .RelPermalink "/pdf-compress/") -}}
+{{- $privateTool := or (and .IsPage (eq .Section "tools")) (eq .Type "pdfcompress") -}}
 {{- if and (not $privateTool) (eq hugo.Environment "production") (findRE "^G-[A-Z0-9]+$" $id) -}}
 <script defer src="/js/ga4-init.js" data-ga4-id="{{ $id }}"></script>
 {{- end -}}
