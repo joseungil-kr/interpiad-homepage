@@ -2,7 +2,7 @@ name: Free form browser and PDF checks
 
 on:
   push:
-    branches: [master, 'feat/interpiad-free-forms-*']
+    branches: [master, 'feat/interpiad-free-forms-*', 'feat/interpiad-free-tools-*']
     paths:
       - 'content/tools/**'
       - 'layouts/tools/**'
