@@ -6,7 +6,7 @@
     <div class="tools-hero-copy">
       <p class="tools-eyebrow">INTERPIAD · 무료 웹 도구</p>
       <h1>무료 업무도구</h1>
-      <p class="tools-lead">설치나 회원가입 없이 웹에서 바로 사용하는 업무도구입니다. PDF 파일 크기 줄이기부터 시작해 필요한 기능을 차례로 추가하겠습니다.</p>
+      <p class="tools-lead">회원가입 없이 웹에서 바로 사용하는 무료 업무도구입니다. 현재 PDF 용량 줄이기를 제공합니다.</p>
       <ul class="tools-benefits" aria-label="무료 업무도구 특징"><li>무료 사용</li><li>브라우저에서 실행</li><li>프로그램 설치 없음</li></ul>
     </div>
   </header>
@@ -14,7 +14,6 @@
     <a href="/tools/apps/" aria-current="page">무료 업무도구</a>
     <a href="/tools/">무료 업무서식</a>
   </nav>
-  <div class="tools-intro toolapps-intro">{{ .Content }}</div>
   {{ $apps := where site.RegularPages "Params.toolCategory" "apps" }}
   <div class="tools-grid">
     {{ range $apps.ByWeight }}
@@ -32,6 +31,7 @@
     </article>
     {{ end }}
   </div>
+  <div class="tools-intro toolapps-intro">{{ .Content }}</div>
   <p class="tools-consult">업무 자동화·맞춤형 웹도구 상담: <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a> · <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a></p>
 </div></section>
 {{ end }}
