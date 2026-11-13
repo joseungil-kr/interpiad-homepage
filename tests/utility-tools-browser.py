@@ -120,3 +120,7 @@ with sync_playwright() as pw:
     check("No same-origin POST uploads",not [r for r in requests if r[0].startswith(BASE) and r[1] not in ("GET","HEAD","OPTIONS")])
     ctx.close();browser.close()
 print(json.dumps({"checks":len(checks),"passed":len(checks),"failed":0},ensure_ascii=False))
+
+# Scoped follow-up regression probes; other test families remain unchanged.
+import runpy
+runpy.run_path('tests/utility-targeted-regressions.py')
