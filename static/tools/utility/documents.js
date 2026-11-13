@@ -68,4 +68,58 @@ function imagePage(root){
  fields(root,'<label class="it-field">JPG·PNG·WebP 사진 선택 (최대 15장)<input id="images" type="file" multiple accept="image/jpeg,image/png,image/webp"></label><p class="it-hint">파일 선택 순서대로 A4 세로 페이지에 원본 비율을 유지해 배치합니다. 사진 속 글자는 이미지 그대로 포함됩니다.</p><div class="it-actions"><button id="run" type="button">PDF 만들고 다운로드</button></div>');
  el(root,'run').onclick=()=>imagePDF(root);
 }
-export function mount(root,key){if(key==='pdf-merge-split')mergePage(root);else if(key==='image-to-pdf')imagePage(root);else throw Error('지원하지 않는 문서 도구입니다.');}
+function parseCSV(text,delimiter){
+ const rows=[];let row=[],cell='',quotes=false;
+ for(let i=0;i<text.length;i++){const c=text[i];if(quotes){if(c==='"'&&text[i+1]==='"'){cell+='"';i++;}else if(c==='"')quotes=false;else cell+=c;}else{if(c==='"'&&cell==='')quotes=true;else if(c===delimiter){row.push(cell);cell='';}else if(c==='\n'){row.push(cell);rows.push(row);row=[];cell='';}else if(c==='\r'){if(text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell='';}else cell+=c;}}
+ if(quotes)throw Error('CSV 따옴표가 올바르게 닫히지 않았습니다.');
+ if(row.length||cell!==''){row.push(cell);rows.push(row);}
+ return rows;
+}
+function xmlValues(document,name){return [...document.getElementsByTagName(name)];}
+async function parseXLSX(file){
+ if(typeof JSZip==='undefined')throw Error('XLSX 읽기 라이브러리를 불러오지 못했습니다.');
+ const zip=await JSZip.loadAsync(file);
+ const ss=zip.file('xl/sharedStrings.xml');let strings=[];
+ if(ss){const txt=await ss.async('string');if(txt.length>15000000)throw Error('XLSX 공유 문자열이 너무 큽니다.');const doc=new DOMParser().parseFromString(txt,'application/xml');strings=xmlValues(doc,'si').map(n=>xmlValues(n,'t').map(t=>t.textContent).join(''));}
+ const path=Object.keys(zip.files).find(n=>/^xl\/worksheets\/sheet[0-9]+\.xml$/.test(n));
+ if(!path)throw Error('XLSX 첫 번째 워크시트를 읽지 못했습니다.');
+ const xml=await zip.file(path).async('string');if(xml.length>25000000)throw Error('워크시트가 너무 큽니다.');
+ const doc=new DOMParser().parseFromString(xml,'application/xml');if(doc.getElementsByTagName('parsererror').length)throw Error('XLSX 시트 XML을 읽을 수 없습니다.');
+ const rows=[];for(const row of xmlValues(doc,'row')){
+  const values=[];for(const c of xmlValues(row,'c')){const name=c.getAttribute('r')||'',letters=name.match(/^[A-Z]+/);if(!letters)continue;let ix=0;for(const char of letters[0])ix=ix*26+char.charCodeAt(0)-64;ix--;if(ix>2000)throw Error('열 수가 너무 많습니다.');let value='';const v=xmlValues(c,'v')[0];if(c.getAttribute('t')==='s')value=strings[Number(v?.textContent)]||'';else if(c.getAttribute('t')==='inlineStr')value=xmlValues(c,'t').map(n=>n.textContent).join('');else value=v?.textContent||'';values[ix]=value;}
+  if(values.length)rows.push(Array.from({length:values.length},(_,i)=>values[i]||''));
+  if(rows.length>50000)throw Error('한 번에 최대 5만 행까지 처리합니다.');
+ }
+ return rows;
+}
+function encodeCSV(rows){
+ const clean=v=>{const s=String(v??'');return /^[\s]*[=+\-@]/.test(s)?"'"+s:s;};
+ return '\uFEFF'+rows.map(row=>row.map(v=>{const s=clean(v);return /[,"\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\r\n');
+}
+async function duplicates(root){
+ try{
+  const f=el(root,'table-file').files[0];fileLimit(f,15*1024*1024);
+  const xlsx=/\.xlsx$/i.test(f.name),csv=/\.csv$/i.test(f.name);
+  if(!xlsx&&!csv)throw Error('CSV 또는 XLSX 파일을 선택해 주세요.');
+  msg(root,'파일을 분석 중입니다…');
+  let rows;
+  if(xlsx)rows=await parseXLSX(f);else{
+   const text=(await f.text()).replace(/^\uFEFF/,'');
+   const header=(text.split(/\r\n|\n|\r/,1)[0]||'');
+   const delimiter=header.includes('\t')?'\t':header.split(';').length>header.split(',').length?';':',';
+   rows=parseCSV(text,delimiter);
+  }
+  if(rows.length>50000)throw Error('한 번에 최대 5만 행까지 처리합니다.');
+  if(!rows.length)throw Error('파일에 데이터가 없습니다.');
+  const seen=new Set(),unique=[],first=el(root,'has-header').checked;
+  if(first)unique.push(rows.shift());
+  for(const r of rows){const key=JSON.stringify(r.map(v=>String(v).trim()));if(!seen.has(key)){seen.add(key);unique.push(r);}}
+  const removed=rows.length-(unique.length-(first?1:0));
+  save(new Blob([encodeCSV(unique)],{type:'text/csv;charset=utf-8'}),'interpiad-deduplicated.csv');
+  msg(root,removed+'개 중복행 제거 · '+unique.length+'개 행을 CSV로 저장했습니다. XLSX 입력 시 셀 서식과 다른 시트는 저장되지 않습니다.');
+ }catch(e){msg(root,e.message,true);}
+}
+function duplicatesPage(root){
+ fields(root,'<label class="it-field">CSV 또는 XLSX 선택 (15MB 이하)<input id="table-file" type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label><label class="it-field"><input id="has-header" type="checkbox" checked> 첫 줄을 머리글로 보존</label><p class="it-hint">첫 번째 시트를 읽어 모든 칸이 완전히 같은 행을 제거합니다. XLSX도 결과는 UTF-8 CSV로 저장되며 서식·수식은 보존되지 않습니다. CSV 수식 주입 방지를 위해 = + - @로 시작하는 값은 텍스트로 보호합니다.</p><div class="it-actions"><button id="run" type="button">중복 제거 CSV 저장</button></div>');el(root,'run').onclick=()=>duplicates(root);
+}
+export function mount(root,key){if(key==='pdf-merge-split')mergePage(root);else if(key==='image-to-pdf')imagePage(root);else if(key==='duplicates')duplicatesPage(root);else throw Error('지원하지 않는 문서 도구입니다.');}
