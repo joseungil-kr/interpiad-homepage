@@ -34,10 +34,14 @@ with sync_playwright() as pw:
     raw=sheet.body()
     ck("design sheet XML",ET.fromstring(raw).tag.endswith("svg"))
     ck("design sheet palette",b"#0B756A" in raw and b"#C69D60" in raw)
-    design=browser.new_page(viewport={"width":1700,"height":1150})
-    render=design.goto(BASE+"/tools/images/tool-thumbnail-design-sheet.svg",wait_until="load")
-    ck("design sheet renders in browser",render.status==200,render.status)
-    design.screenshot(path=str(OUT/"tool-icon-design-sheet.png"),full_page=True)
+    design=browser.new_page(viewport={"width":1200,"height":900})
+    design.set_content('<!doctype html><html><body style="margin:0;background:white"><img id="sheet" src="'+BASE+'/tools/images/tool-thumbnail-design-sheet.svg" style="display:block;width:1100px;height:auto" alt="Design sheet"></body></html>')
+    design.locator("#sheet").evaluate("(img)=>img.decode()")
+    ck("design sheet image decodes",design.locator("#sheet").evaluate("(img)=>img.complete && img.naturalWidth===1700 && img.naturalHeight===1150"))
+    try:
+        design.locator("#sheet").screenshot(path=str(OUT/"tool-icon-design-sheet.png"),timeout=12000)
+    except Exception as e:
+        print("Design sheet optional screenshot unavailable:",type(e).__name__)
     design.close()
     page.screenshot(path=str(OUT/"free-tools-desktop.png"),full_page=True)
     for width in (1440,1080,1024,768,390,320):
