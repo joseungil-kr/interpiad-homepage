@@ -1,6 +1,6 @@
 (() => {
  const id=document.currentScript?.dataset.ga4Id;
- if (!/^G-[A-Z0-9]+$/.test(id||'') || !['interpiad.com','www.interpiad.com'].includes(location.hostname) || /^\/(tools|pdf-compress)(\/|$)/.test(location.pathname)) return;
+ if (!/^G-[A-Z0-9]+$/.test(id||'') || !['interpiad.com','www.interpiad.com'].includes(location.hostname) || (/^\/tools\/.+/.test(location.pathname) || /^\/pdf-compress(\/|$)/.test(location.pathname))) return;
  window.dataLayer=window.dataLayer||[];
  function gtag(){window.dataLayer.push(arguments);}
  gtag('js',new Date());
