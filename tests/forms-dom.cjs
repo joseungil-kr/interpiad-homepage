@@ -96,7 +96,9 @@ for (const [slug, mode] of [['manual-invoice','invoice'],['manual-invoice-vertic
 for(const file of ['public/index.html','public/tools/index.html']){
  const dom=new JSDOM(fs.readFileSync(file,'utf8'));
  const link=dom.window.document.querySelector('.site-footer a[href="/tools/"]');
- check(`${file} footer free forms link`,link&&link.textContent==='무료업무서식');
+ check(`${file} footer free forms link`,link&&link.textContent==='무료 업무서식');
+  const toolsLink=dom.window.document.querySelector('.site-footer a[href="/tools/apps/"]');
+  check(`${file} footer free tools link`,toolsLink&&toolsLink.textContent==='무료 업무도구');
  if(file==='public/tools/index.html'){
   check('tools five cards',dom.window.document.querySelectorAll('.tools-card').length===5);
   check('tools CSS content version prevents stale layout',/tools-index\.css\?v=[0-9a-f]{64}$/.test(dom.window.document.querySelector('link[href*=\"tools-index.css\"]').href));
