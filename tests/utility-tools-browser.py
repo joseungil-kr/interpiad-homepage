@@ -124,3 +124,7 @@ print(json.dumps({"checks":len(checks),"passed":len(checks),"failed":0},ensure_a
 # Scoped follow-up regression probes; other test families remain unchanged.
 import runpy
 runpy.run_path('tests/utility-targeted-regressions.py')
+
+# CSV/XLSX synthetic input -> browser dedup -> CSV download round-trip
+import runpy as _csv_runpy
+_csv_runpy.run_path('tests/csv-dedup-roundtrip.py')
