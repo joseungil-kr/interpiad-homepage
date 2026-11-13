@@ -56,6 +56,8 @@ with sync_playwright() as p:
     check('mobile width no overflow',page.evaluate("document.documentElement.scrollWidth <= innerWidth+1"))
     page.screenshot(path=str(OUT/'pdf-compress-mobile.png'),full_page=True)
     check('input initially disabled',page.locator('#compress-button').is_disabled())
+    check('file details initially hidden',page.locator('#file-info').is_hidden())
+    check('cancel control initially hidden',page.locator('#cancel-button').is_hidden())
     # Wrong file type: no compression or upload
     page.evaluate("""() => {
       const f=new File(['invalid'], 'not-pdf.pdf',{type:'application/pdf'});
