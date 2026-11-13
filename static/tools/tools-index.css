@@ -27,3 +27,5 @@
 .tools-preview figcaption{margin-top:10px;color:#5d6567;font-size:12px;line-height:1.6;word-break:keep-all}
 @media(min-width:1100px){.tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tools-card{padding:24px}.tools-card h2{font-size:22px}}
 @media(max-width:380px){.tools-preview a{height:270px;padding:10px}.tools-preview figcaption{font-size:11px}}
+
+.tools-pdf-link{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:24px;margin:26px 0;border-radius:14px;background:#eaf4f1;border:1px solid #c8e2db}.tools-pdf-link h2{font-size:23px;margin:4px 0}.tools-pdf-link p{margin:4px 0;color:#425d59}.tools-pdf-link .btn{flex-shrink:0}@media(max-width:640px){.tools-pdf-link{flex-direction:column;align-items:stretch;padding:18px}.tools-pdf-link .btn{text-align:center}}

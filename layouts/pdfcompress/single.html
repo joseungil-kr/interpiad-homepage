@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<title>{{ .Title }} | 인터피아드</title>
+<meta name="description" content="{{ .Description }}">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:type" content="website"><meta property="og:site_name" content="인터피아드">
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ .Description }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ "tools/images/business-forms-desk.jpg" | absURL }}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="{{ "tools/pdf-compress/app.css" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/pdf-compress/app.css") }}">
+<script src="{{ "tools/pdf-compress/vendor/pdf-lib.min.js" | relURL }}" defer></script>
+<script src="{{ "tools/pdf-compress/vendor/utils.js" | relURL }}" defer></script>
+<script src="{{ "tools/pdf-compress/vendor/analyzer.js" | relURL }}" defer></script>
+<script src="{{ "tools/pdf-compress/vendor/image-compress.js" | relURL }}" defer></script>
+<script src="{{ "tools/pdf-compress/app.js" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/pdf-compress/app.js") }}" defer></script>
+<script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "WebApplication" "name" .Title "url" .Permalink "description" .Description "inLanguage" "ko-KR" "applicationCategory" "UtilitiesApplication" "operatingSystem" "Any" "isAccessibleForFree" true "offers" (dict "@type" "Offer" "price" "0" "priceCurrency" "KRW") "provider" (dict "@type" "Organization" "name" "인터피아드" "url" .Site.BaseURL)) | jsonify | safeJS }}</script>
+<script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" (slice (dict "@type" "ListItem" "position" 1 "name" "인터피아드" "item" .Site.BaseURL) (dict "@type" "ListItem" "position" 2 "name" "무료 업무 서식" "item" ("tools/" | absURL)) (dict "@type" "ListItem" "position" 3 "name" "PDF 용량 줄이기" "item" .Permalink))) | jsonify | safeJS }}</script>
+</head>
+<body>
+<a class="skip" href="#compress-app">PDF 압축 영역으로 이동</a>
+<header class="site-head"><div class="shell head-row">
+<a class="brand" href="/" aria-label="인터피아드 홈"><img src="/images/logo/logo.png" width="155" height="39" alt="인터피아드"></a>
+<nav aria-label="도구 메뉴"><a href="/tools/">무료 업무서식</a><a href="/">인터피아드 홈</a></nav>
+</div></header>
+<main>
+<section class="intro shell" aria-labelledby="page-title">
+<div class="eyebrow"><span class="dot"></span> INTERPIAD FREE TOOLS</div>
+<h1 id="page-title">PDF 용량 줄이기</h1>
+<p class="lede">설치·회원가입 없이 PDF를 선택해 용량을 줄이세요.<br>압축은 <strong>방문자 브라우저에서만 처리</strong>하며 파일을 인터피아드 서버로 업로드하지 않습니다.</p>
+<div class="trust"><span>✓ 무료 사용</span><span>✓ 서버 업로드 없음</span><span>✓ 글자·표 유지 방식</span></div>
+</section>
+<section id="compress-app" class="shell" aria-labelledby="tool-title">
+<div class="tool-card">
+<h2 id="tool-title">PDF 파일 압축</h2>
+<p class="muted">PDF 1개를 선택하세요. PC 최대 40MB, 휴대폰 최대 12MB(시험 제한)입니다.</p>
+<label id="drop-zone" for="pdf-file" class="drop-zone" tabindex="0">
+<span class="file-icon" aria-hidden="true">PDF</span><strong>파일 선택 또는 여기에 끌어놓기</strong>
+<span class="muted">원본 파일은 기기에서만 읽습니다.</span>
+</label>
+<input id="pdf-file" type="file" accept=".pdf,application/pdf" class="visually-hidden">
+<div id="file-info" class="file-info" hidden>
+<div><div class="muted">선택한 파일</div><strong id="file-name"></strong><div id="file-size" class="muted"></div></div>
+<button id="remove-file" class="button-quiet" type="button">다른 파일 선택</button>
+</div>
+<fieldset class="levels" aria-describedby="levels-note">
+<legend>압축 수준</legend>
+<label class="level"><input type="radio" name="level" value="quality"><span><strong>품질 우선</strong><small>이미지 품질을 높게 유지하며 용량 절감</small></span></label>
+<label class="level"><input type="radio" name="level" value="balanced" checked><span><strong>균형 압축 · 권장</strong><small>일반 업무 문서에 적합한 압축 수준</small></span></label>
+<label class="level"><input type="radio" name="level" value="small"><span><strong>용량 우선</strong><small>이미지 화질이 다소 낮아질 수 있음</small></span></label>
+</fieldset>
+<p id="levels-note" class="helper">문서의 텍스트·벡터와 페이지 구성은 유지하고 내부 이미지를 재압축합니다. 이미 최적화된 PDF는 줄어들지 않을 수 있습니다.</p>
+<div class="actions"><button id="compress-button" type="button" class="button-primary" disabled>PDF 압축하기</button><button id="cancel-button" type="button" class="button-quiet" hidden>작업 취소</button></div>
+<div id="progress-area" class="progress-area" hidden>
+<div class="progress-top"><strong id="progress-label">파일 확인 중…</strong><output id="progress-number" for="progress">0%</output></div>
+<progress id="progress" max="100" value="0"></progress>
+</div>
+<div id="result" class="result" hidden aria-live="polite">
+<h3 id="result-title">압축 결과</h3>
+<div class="numbers"><div><small>원본</small><strong id="before-size">–</strong></div><div><small>결과</small><strong id="after-size">–</strong></div><div><small>변화</small><strong id="saved-percent">–</strong></div></div>
+<p id="result-note"></p>
+<a id="download-button" class="button-primary download" href="#" download hidden>압축한 PDF 다운로드</a>
+</div>
+<p id="feedback" role="status" aria-live="polite"></p>
+<noscript><p class="error">압축 기능을 사용하려면 브라우저에서 JavaScript 실행이 필요합니다.</p></noscript>
+</div>
+</section>
+<section class="guide shell">
+<h2>이용 방법</h2>
+<ol><li><strong>PDF 선택</strong> — 기기에서 파일을 선택하거나 끌어놓습니다.</li>
+<li><strong>압축 수준 선택</strong> — 일반적인 문서는 ‘균형 압축’부터 시도하세요.</li>
+<li><strong>압축 및 저장</strong> — 결과가 더 작아졌다면 다운로드 버튼으로 파일을 저장합니다.</li></ol>
+<h2>어떤 PDF가 잘 줄어드나요?</h2>
+<p>스캔 이미지나 사진이 많이 들어간 PDF에서 효과가 날 수 있습니다. 글자만 있거나 이미 압축된 PDF는 용량이 거의 줄지 않을 수 있습니다. <strong>압축률을 보장하거나 원본을 자동으로 삭제하지 않습니다.</strong></p>
+<h2>글자와 표가 이미지로 바뀌나요?</h2>
+<p>이 도구는 페이지 전체를 사진으로 변환하지 않습니다. 기존 PDF의 글자·벡터 구성은 유지하고 내부 이미지를 압축하는 방식입니다. 이미지 화질은 선택한 수준에 따라 변할 수 있으므로 결과 문서를 확인한 뒤 사용하세요.</p>
+<h2>보안과 지원 범위</h2>
+<p>파일은 별도 서버에 업로드하지 않고 현재 브라우저 메모리에서 처리합니다. 자동 저장, 회원가입, 외부 파일 전송 기능은 없습니다. 파일을 선택한 후 압축을 시작하기 전까지도 서버에 전송하지 않습니다.</p>
+<p>암호가 걸린 PDF, 전자서명이 포함된 PDF, 심하게 손상된 PDF는 처리하지 않습니다. PDF/A 등 장기보존 규격 문서나 공식 제출용 서명 문서는 원본 유지 또는 전용 도구를 권장합니다. 휴대폰 성능과 브라우저 상태에 따라 메모리 부족이 발생할 수 있습니다.</p>
+<h2>PDF 파일이 줄어들지 않는다면?</h2>
+<p>이미 압축된 이미지, 특수한 이미지 형식, 글자 위주의 문서는 압축 효과가 없을 수 있습니다. 크기가 더 커진 결과 파일은 내려받도록 권하지 않고 원본을 그대로 유지합니다.</p>
+<div class="related"><div><strong>업무 문서도 온라인에서 작성하세요</strong><p>견적서·거래명세표·간이영수증 등 무료 업무서식 5종을 이용할 수 있습니다.</p></div><a href="/tools/">무료서식 보러 가기</a></div>
+</section>
+</main>
+<footer class="site-footer"><div class="shell"><span>© 인터피아드 · 무료 PDF 도구</span><a href="/tools/">무료 업무서식</a><a href="/">홈으로</a></div></footer>
+</body>
+</html>
