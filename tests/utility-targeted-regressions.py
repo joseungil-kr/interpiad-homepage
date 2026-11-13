@@ -9,7 +9,7 @@ import os
 import pathlib
 from playwright.sync_api import sync_playwright
 
-STAGE = "baseline"
+STAGE = "verify"
 ORIGINAL_HEAD = "3ffd600b1dd4bff51d4b2b9ed4756c1af69d31ac"
 BASE = os.getenv("PDF_COMPRESS_BASE", "http://127.0.0.1:8765").rstrip("/")
 OUT = pathlib.Path(os.getenv("PDF_COMPRESS_TEST_OUT", "/tmp/interpiad-pdf-compress-test"))
