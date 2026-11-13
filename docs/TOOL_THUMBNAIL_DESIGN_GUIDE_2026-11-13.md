@@ -10,7 +10,7 @@
 - 디자인시트: [tool-thumbnail-design-sheet.svg](../static/tools/images/tool-thumbnail-design-sheet.svg)
 - 첫 아이콘: [pdf-compress-thumbnail.svg](../static/tools/images/pdf-compress-thumbnail.svg)
 - 공개 위치: /tools/images/tool-thumbnail-design-sheet.svg, /tools/images/pdf-compress-thumbnail.svg
-- 적용 카드: `/tools/apps/`의 `PDF 용량 줄이기`
+- 적용 카드: `/tools/apps/`의 **25종 전체 도구**(기존 PDF 압축 아이콘 1개 + 신규 SVG 24개)
 - 웹 카드의 제목·상세 설명·버튼은 HTML로 출력한다. 썸네일 안에 긴 한글 문구나 버튼을 넣지 않는다.
 - 썸네일은 실무 기능을 상징하는 벡터 그림으로 제작한다. 실제 서식의 빈 양식 캡처와 혼용하지 않는다.
 
@@ -50,7 +50,11 @@
 5. SVG를 1개 파일로 저장하고 Hugo의 카드 메타데이터와 이미지 alt를 추가한다.
 6. 기존 아이콘·서식 미리보기·파일 이름은 건드리지 않고 스냅샷 QA 후 반영한다.
 
-## 5. 사이트 배치 및 검수
+## 5. 25종 썸네일 추가 규칙
+
+2026-11-13 추가: 앱별 SVG 24개를 static/tools/images/{tool-key}-thumbnail.svg 경로에 등록했습니다. 기존 PDF 아이콘의 바탕색, 윤곽선, 원형 보조면, 금색 포인트와 1200×900 규격을 재사용하되 개별 도구마다 다른 기하학적 실루엣을 표시합니다. HTML 카드의 제목·설명은 SVG에 복제하지 않습니다.
+
+## 6. 사이트 배치 및 검수
 
 - 무료 업무도구 목록: `/tools/apps/` (`content/tools/apps/_index.md`, `layouts/toolapps/list.html`).
 - 무료 업무서식 목록: **기존** `/tools/` (`content/tools/_index.md`, `layouts/tools/list.html`).

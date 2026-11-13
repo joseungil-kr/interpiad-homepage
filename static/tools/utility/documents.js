@@ -93,7 +93,7 @@ async function parseXLSX(file){
  return rows;
 }
 function encodeCSV(rows){
- const clean=v=>{const s=String(v??'');return /^[\s]*[=+\-@]/.test(s)?"'"+s:s;};
+ const clean=v=>{const s=String(v??'');if(/^-?\d+(?:\.\d+)?$/.test(s.trim()))return s;return /^[\s]*[=+\-@]/.test(s)?"'"+s:s;};
  return '\uFEFF'+rows.map(row=>row.map(v=>{const s=clean(v);return /[,"\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\r\n');
 }
 async function duplicates(root){

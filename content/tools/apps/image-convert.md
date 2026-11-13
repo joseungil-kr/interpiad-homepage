@@ -14,7 +14,7 @@ cardDescription: "사진 형식을 JPG·PNG·WebP로 바꿉니다."
 previewImage: "tools/images/image-convert-thumbnail.svg"
 previewWidth: 1200
 previewHeight: 900
-previewAlt: "JPG·PNG·WebP 이미지 변환를 나타내는 무료도구 일러스트"
+previewAlt: "JPG·PNG·WebP 이미지 변환 기능을 나타내는 무료도구 일러스트"
 previewCaption: "무료 · 브라우저에서 실행"
 guideTitle: "이미지 확장자와 형식 차이"
 weight: 4
