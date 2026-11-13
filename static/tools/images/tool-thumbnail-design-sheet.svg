@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1150" viewBox="0 0 1700 1150" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1250" viewBox="0 0 1700 1250" role="img" aria-labelledby="t d">
 <title id="t">Interpiad Free Tools 썸네일 디자인시트</title>
 <desc id="d">4대3 비율, 색상 규격, 아이콘 안전영역과 재사용할 도구 아이콘의 예시</desc>
 <rect width="1700" height="1150" fill="#FFFFFF"/>
@@ -61,5 +61,6 @@
 <text x="906" y="989" font-size="20" font-weight="700" font-family="Arial,Helvetica,sans-serif" fill="#0B756A">CONSISTENCY</text>
 <text x="906" y="1025" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">Keep colors, framing, stroke rhythm,</text>
 <text x="906" y="1060" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">and document-safe icon placement.</text>
-<text x="73" y="1130" font-size="16" font-family="Arial,Helvetica,sans-serif" fill="#566F68">DESIGN ASSET · /static/tools/images/ · Reference: docs/TOOL_THUMBNAIL_DESIGN_GUIDE_2026-11-13.md</text>
+<path d="M65 1185H1634" stroke="#DCEDE8" stroke-width="2"/>
+<text x="73" y="1222" font-size="16" font-family="Arial,Helvetica,sans-serif" fill="#566F68">DESIGN ASSET · /static/tools/images/ · Reference: docs/TOOL_THUMBNAIL_DESIGN_GUIDE_2026-11-13.md</text>
 </svg>
