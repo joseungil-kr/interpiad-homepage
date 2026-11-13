@@ -53,3 +53,14 @@
 
 * 글과 이미지가 생성되면 Hugo 로컬 빌드 검증 후 `git add`, `git commit`, `git push origin master`로 Cloudflare Pages 배포를 완료한다.
 * 배포 직후 `scripts/telegram_notify.py`를 실행하여 사장님 텔레그램(`@interpiad_bot`)으로 10편의 제목과 링크를 즉시 보고한다.
+
+---
+
+## 5. 무료 업무도구·서식 메뉴와 아이콘 디자인
+
+**웹 도구의 메뉴, 카드, 썸네일을 추가하거나 수정하기 전에 다음 두 문서를 반드시 읽는다.**
+
+- `docs/TOOLS_MENU_UPDATE_2026-11-13.md` (실제 경로·수정 범위·QA)
+- `docs/TOOL_THUMBNAIL_DESIGN_GUIDE_2026-11-13.md` (디자인시트·아이콘 제작 규격)
+
+공개 URL을 보존한다. PDF 압축은 `/tools/apps/` 목록에서 연결하고 서식 5종은 `/tools/`에 유지한다. 아이콘은 `static/tools/images/`에 SVG로 보관한다. **기존 업무서식의 실제 양식 미리보기는 아이콘으로 교체하지 않는다.**

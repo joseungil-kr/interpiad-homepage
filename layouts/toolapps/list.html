@@ -1,0 +1,37 @@
+{{ define "main" }}
+{{ $toolsCSSVersion := crypto.SHA256 (readFile "static/tools/tools-index.css") }}
+<link rel="stylesheet" href="{{ "tools/tools-index.css" | relURL }}?v={{ $toolsCSSVersion }}">
+<section class="tools-section toolapps-section"><div class="wrap tools-wrap">
+  <header class="tools-hero">
+    <div class="tools-hero-copy">
+      <p class="tools-eyebrow">INTERPIAD · 무료 웹 도구</p>
+      <h1>무료 업무도구</h1>
+      <p class="tools-lead">설치나 회원가입 없이 웹에서 바로 사용하는 업무도구입니다. PDF 파일 크기 줄이기부터 시작해 필요한 기능을 차례로 추가하겠습니다.</p>
+      <ul class="tools-benefits" aria-label="무료 업무도구 특징"><li>무료 사용</li><li>브라우저에서 실행</li><li>프로그램 설치 없음</li></ul>
+    </div>
+  </header>
+  <nav class="tools-category-nav" aria-label="무료 서비스 종류">
+    <a href="/tools/apps/" aria-current="page">무료 업무도구</a>
+    <a href="/tools/">무료 업무서식</a>
+  </nav>
+  <div class="tools-intro toolapps-intro">{{ .Content }}</div>
+  {{ $apps := where site.RegularPages "Params.toolCategory" "apps" }}
+  <div class="tools-grid">
+    {{ range $apps.ByWeight }}
+    <article class="tools-card">
+      <figure class="tools-preview tools-preview--icon">
+        <a href="{{ .RelPermalink }}" aria-label="{{ .Params.shortTitle }} 사용하기">
+          <img src="{{ .Params.previewImage | relURL }}" width="{{ .Params.previewWidth }}" height="{{ .Params.previewHeight }}" alt="{{ .Params.previewAlt }}" loading="lazy" decoding="async">
+        </a>
+        <figcaption>{{ .Params.previewCaption }}</figcaption>
+      </figure>
+      <p class="tools-card-label">무료 웹 도구 · 파일 압축</p>
+      <h2><a href="{{ .RelPermalink }}">{{ .Params.shortTitle }}</a></h2>
+      <p>{{ .Params.cardDescription | default .Description }}</p>
+      <a class="btn btn--brass" href="{{ .RelPermalink }}">무료 도구 사용하기<span class="sr-only">: {{ .Params.shortTitle }}</span></a>
+    </article>
+    {{ end }}
+  </div>
+  <p class="tools-consult">업무 자동화·맞춤형 웹도구 상담: <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a> · <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a></p>
+</div></section>
+{{ end }}

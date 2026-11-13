@@ -6,6 +6,11 @@ on:
     paths:
       - 'content/tools/**'
       - 'layouts/tools/**'
+      - 'layouts/partials/header.html'
+      - 'layouts/partials/footer.html'
+      - 'assets/css/style.css'
+      - 'content/tools/apps/**'
+      - 'layouts/toolapps/**'
       - 'layouts/shortcodes/form-*'
       - 'static/tools/**'
       - 'tests/forms-*'

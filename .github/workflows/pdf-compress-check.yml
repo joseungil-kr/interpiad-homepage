@@ -5,10 +5,18 @@ on:
     branches: [master, 'feat/interpiad-pdf-compress-*']
     paths:
       - 'content/pdf-compress.md'
+      - 'content/tools/apps/**'
+      - 'layouts/toolapps/**'
+      - 'layouts/partials/header.html'
+      - 'layouts/partials/footer.html'
+      - 'assets/css/style.css'
+      - 'static/tools/images/**'
+      - 'docs/TOOL_THUMBNAIL_DESIGN_GUIDE_2026-11-13.md'
       - 'layouts/pdfcompress/**'
       - 'layouts/tools/list.html'
       - 'static/tools/pdf-compress/**'
       - 'static/tools/tools-index.css'
+      - 'tests/tools-menu-browser.py'
       - 'tests/pdf-compress-browser.py'
       - '.github/workflows/pdf-compress-check.yml'
   workflow_dispatch:
@@ -42,6 +50,7 @@ jobs:
           python -m http.server 8765 --directory public >/tmp/pdf-compress-server.log 2>&1 &
           for attempt in $(seq 1 15); do curl -fsS http://127.0.0.1:8765/tools/pdf-compress/ >/dev/null && break; sleep 1; done
           python tests/pdf-compress-browser.py
+          python tests/tools-menu-browser.py
       - name: Archive visual and PDF evidence
         if: always()
         uses: actions/upload-artifact@v4

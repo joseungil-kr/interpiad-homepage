@@ -22,13 +22,13 @@
 <script src="{{ "tools/pdf-compress/vendor/image-compress.js" | relURL }}" defer></script>
 <script src="{{ "tools/pdf-compress/app.js" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/pdf-compress/app.js") }}" defer></script>
 <script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "WebApplication" "name" .Title "url" .Permalink "description" .Description "inLanguage" "ko-KR" "applicationCategory" "UtilitiesApplication" "operatingSystem" "Any" "isAccessibleForFree" true "offers" (dict "@type" "Offer" "price" "0" "priceCurrency" "KRW") "provider" (dict "@type" "Organization" "name" "인터피아드" "url" .Site.BaseURL)) | jsonify | safeJS }}</script>
-<script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" (slice (dict "@type" "ListItem" "position" 1 "name" "인터피아드" "item" .Site.BaseURL) (dict "@type" "ListItem" "position" 2 "name" "무료 업무 서식" "item" ("tools/" | absURL)) (dict "@type" "ListItem" "position" 3 "name" "PDF 용량 줄이기" "item" .Permalink))) | jsonify | safeJS }}</script>
+<script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" (slice (dict "@type" "ListItem" "position" 1 "name" "인터피아드" "item" .Site.BaseURL) (dict "@type" "ListItem" "position" 2 "name" "무료 업무도구" "item" ("tools/apps/" | absURL)) (dict "@type" "ListItem" "position" 3 "name" "PDF 용량 줄이기" "item" .Permalink))) | jsonify | safeJS }}</script>
 </head>
 <body>
 <a class="skip" href="#compress-app">PDF 압축 영역으로 이동</a>
 <header class="site-head"><div class="shell head-row">
 <a class="brand" href="/" aria-label="인터피아드 홈"><img src="/images/logo/logo.png" width="155" height="39" alt="인터피아드"></a>
-<nav aria-label="도구 메뉴"><a href="/tools/">무료 업무서식</a><a href="/">인터피아드 홈</a></nav>
+<nav aria-label="도구 메뉴"><a href="/tools/apps/" aria-current="page">무료 업무도구</a><a href="/tools/">무료 업무서식</a><a href="/">인터피아드 홈</a></nav>
 </div></header>
 <main>
 <section class="intro shell" aria-labelledby="page-title">
