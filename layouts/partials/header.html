@@ -27,7 +27,7 @@
         </li>
         <li><a href="{{ "blog/" | relURL }}">블로그</a></li>
         <li><a href="{{ "tools/apps/" | relURL }}"{{ if or (eq .RelPermalink "/tools/apps/") (eq .Params.toolCategory "apps") }} aria-current="page"{{ end }}>무료 업무도구</a></li>
-        <li><a href="{{ "tools/" | relURL }}"{{ if and (eq .Section "tools") (ne .RelPermalink "/tools/apps/") }} aria-current="page"{{ end }}>무료 업무서식</a></li>
+        <li><a href="{{ "tools/" | relURL }}"{{ if and (eq .Section "tools") (ne .RelPermalink "/tools/apps/") (ne .Params.toolCategory "apps") }} aria-current="page"{{ end }}>무료 업무서식</a></li>
         <li><a href="{{ "lecture/" | relURL }}"{{ if eq .Section "lecture" }} aria-current="page"{{ end }}>강의·교육</a></li>
         <li><a href="{{ "/" | relURL }}#whyus">강점</a></li>
         <li><a href="{{ "/" | relURL }}#contact">문의하기</a></li>

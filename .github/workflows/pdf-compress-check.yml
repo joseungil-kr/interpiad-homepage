@@ -16,6 +16,9 @@ on:
       - 'layouts/tools/list.html'
       - 'static/tools/pdf-compress/**'
       - 'static/tools/tools-index.css'
+      - 'static/tools/utility/**'
+      - 'layouts/utility/**'
+      - 'tests/utility-tools-browser.py'
       - 'tests/tools-menu-browser.py'
       - 'tests/pdf-compress-browser.py'
       - '.github/workflows/pdf-compress-check.yml'
@@ -37,6 +40,9 @@ jobs:
       - name: Build Hugo and validate JavaScript
         run: |
           node --check static/tools/pdf-compress/app.js
+          for js in static/tools/utility/*.js; do node --input-type=module --check < "$js"; done
+          node --check static/tools/utility/catalog.js
+          test "$(find content/tools/apps -maxdepth 1 -name '*.md' ! -name '_index.md' | wc -l)" -eq 24
           hugo --minify
           test -s public/tools/pdf-compress/index.html
           test -s public/tools/pdf-compress/vendor/pdf-lib.min.js
@@ -51,6 +57,7 @@ jobs:
           for attempt in $(seq 1 15); do curl -fsS http://127.0.0.1:8765/tools/pdf-compress/ >/dev/null && break; sleep 1; done
           python tests/pdf-compress-browser.py
           python tests/tools-menu-browser.py
+          python tests/utility-tools-browser.py
       - name: Archive visual and PDF evidence
         if: always()
         uses: actions/upload-artifact@v4

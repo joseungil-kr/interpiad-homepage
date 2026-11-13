@@ -20,13 +20,13 @@ with sync_playwright() as pw:
     response=page.goto(BASE+"/tools/apps/",wait_until="networkidle")
     ck("tools listing HTTP 200",response.status==200,response.status)
     ck("tools title",page.locator("h1").inner_text()=="무료 업무도구")
-    ck("tools single card",page.locator(".tools-grid .tools-card").count()==1)
+    ck("tools cards include PDF and first batch",page.locator(".tools-grid .tools-card").count()==25)
     ck("tools card PDF target",page.locator(".tools-grid .tools-card a[href='/tools/pdf-compress/']").count()==3)
     icon=page.locator(".tools-preview--icon img")
-    ck("thumbnail count",icon.count()==1)
-    ck("thumbnail has meaningful alt","PDF" in icon.get_attribute("alt"))
+    ck("thumbnail count",icon.count()==25)
+    ck("thumbnail has meaningful alt","PDF" in icon.first.get_attribute("alt"))
     ck("thumbnail loaded with 1200x900 geometry",
-       icon.evaluate("(e)=>e.complete && e.naturalWidth===1200 && e.naturalHeight===900"))
+       icon.first.evaluate("(e)=>e.complete && e.naturalWidth===1200 && e.naturalHeight===900"))
     ck("tools category selected",page.locator(".tools-category-nav a[aria-current='page']").inner_text()=="무료 업무도구")
     ck("forms category link",page.locator(".tools-category-nav a[href='/tools/']").count()==1)
     sheet=page.request.get(BASE+"/tools/images/tool-thumbnail-design-sheet.svg")
@@ -49,7 +49,7 @@ with sync_playwright() as pw:
         page.wait_for_timeout(160)
         ck(f"tool list {width} no overflow",page.evaluate("document.documentElement.scrollWidth<=innerWidth+1"))
         ck(f"tool list {width} thumbnail contained",
-           icon.evaluate("(e)=>{const r=e.getBoundingClientRect(),p=e.parentElement.getBoundingClientRect();return r.width>0&&r.left>=p.left-2&&r.right<=p.right+2;}"))
+           icon.first.evaluate("(e)=>{const r=e.getBoundingClientRect(),p=e.parentElement.getBoundingClientRect();return r.width>0&&r.left>=p.left-2&&r.right<=p.right+2;}"))
         if width==390:
             page.screenshot(path=str(OUT/"free-tools-mobile.png"),full_page=True)
     forms=browser.new_page(viewport={"width":1440,"height":1000})

@@ -1,12 +1,14 @@
 {{ define "main" }}
 {{ $toolsCSSVersion := crypto.SHA256 (readFile "static/tools/tools-index.css") }}
+<link rel="stylesheet" href="{{ "tools/utility/catalog.css" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/utility/catalog.css") }}">
+<script src="{{ "tools/utility/catalog.js" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/utility/catalog.js") }}" defer></script>
 <link rel="stylesheet" href="{{ "tools/tools-index.css" | relURL }}?v={{ $toolsCSSVersion }}">
 <section class="tools-section toolapps-section"><div class="wrap tools-wrap">
   <header class="tools-hero">
     <div class="tools-hero-copy">
       <p class="tools-eyebrow">INTERPIAD · 무료 웹 도구</p>
       <h1>무료 업무도구</h1>
-      <p class="tools-lead">회원가입 없이 웹에서 바로 사용하는 무료 업무도구입니다. 현재 PDF 용량 줄이기를 제공합니다.</p>
+      <p class="tools-lead">회원가입 없이 웹에서 바로 사용하는 무료 업무도구입니다. PDF·이미지·계산·마케팅 등 필요한 일을 브라우저에서 바로 처리하세요. 사용자 파일은 기본적으로 서버로 전송하지 않습니다.</p>
       <ul class="tools-benefits" aria-label="무료 업무도구 특징"><li>무료 사용</li><li>브라우저에서 실행</li><li>프로그램 설치 없음</li></ul>
     </div>
   </header>
@@ -15,16 +17,17 @@
     <a href="/tools/">무료 업무서식</a>
   </nav>
   {{ $apps := where site.RegularPages "Params.toolCategory" "apps" }}
-  <div class="tools-grid">
+  <div class="it-search-panel"><label>도구 이름 검색<input id="it-catalog-query" type="search" placeholder="예: 이미지, 부가세, QR" autocomplete="off"></label><label>분류별 보기<select id="it-catalog-group"><option value="">전체 도구</option><option>이미지·PDF</option><option>계산·변환</option><option>마케팅·사업</option><option>일상·생산성</option></select></label><p id="it-catalog-count" aria-live="polite"></p></div>
+  <div class="tools-grid" id="it-catalog">
     {{ range $apps.ByWeight }}
-    <article class="tools-card">
+    <article class="tools-card" data-group="{{ .Params.toolGroup | default "이미지·PDF" }}">
       <figure class="tools-preview tools-preview--icon">
         <a href="{{ .RelPermalink }}" aria-label="{{ .Params.shortTitle }} 사용하기">
           <img src="{{ .Params.previewImage | relURL }}" width="{{ .Params.previewWidth }}" height="{{ .Params.previewHeight }}" alt="{{ .Params.previewAlt }}" loading="lazy" decoding="async">
         </a>
         <figcaption>{{ .Params.previewCaption }}</figcaption>
       </figure>
-      <p class="tools-card-label">무료 웹 도구 · 파일 압축</p>
+      <p class="tools-card-label">무료 웹 도구 · {{ .Params.categoryLabel | default "이미지·PDF" }}</p>
       <h2><a href="{{ .RelPermalink }}">{{ .Params.shortTitle }}</a></h2>
       <p>{{ .Params.cardDescription | default .Description }}</p>
       <a class="btn btn--brass" href="{{ .RelPermalink }}">무료 도구 사용하기<span class="sr-only">: {{ .Params.shortTitle }}</span></a>
