@@ -24,7 +24,7 @@ with sync_playwright() as pw:
     ck("tools card PDF target",page.locator(".tools-grid .tools-card a[href='/tools/pdf-compress/']").count()==3)
     icon=page.locator(".tools-preview--icon img")
     ck("thumbnail count",icon.count()>=10)
-    ck("thumbnail has meaningful alt","PDF" in icon.get_attribute("alt"))
+    ck("thumbnail has meaningful alt","PDF" in icon.first.get_attribute("alt"))
     ck("thumbnail loaded with 1200x900 geometry",
        icon.first.evaluate("(e)=>e.complete && e.naturalWidth===1200 && e.naturalHeight===900"))
     ck("tools category selected",page.locator(".tools-category-nav a[aria-current='page']").inner_text()=="무료 업무도구")

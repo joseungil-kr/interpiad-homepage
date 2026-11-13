@@ -28,4 +28,31 @@ function unitConvert(root){
  el(root,'kind').onchange=refresh;refresh();
  el(root,'run').onclick=()=>{const v=number(root,'value'),s=sets[el(root,'kind').value];if(!Number.isFinite(v)){msg(root,'숫자를 입력해 주세요.',true);return;}const inBase=v*s[Number(el(root,'from').value)][1],n=inBase/s[Number(el(root,'to').value)][1];let t=fmt(v)+' '+s[Number(el(root,'from').value)][0]+' = '+fmt(n)+' '+s[Number(el(root,'to').value)][0];if(el(root,'kind').value==='area'){const h=number(root,'height');if(h>=0&&Number.isFinite(h))t+=' · 높이 '+fmt(h)+'m일 때 부피 '+fmt(inBase*h)+'m³';}out(root,t);msg(root,'');};
 }
-export function mount(root,key){({calculator,vat,margin,'unit-convert':unitConvert}[key]||(()=>{throw Error('도구가 아직 준비되지 않았습니다.');}))(root);}
+function discount(root){
+ fields(root,'<div class="it-fields">'+F('정가(원)','price','30000','min="0"')+F('할인율(%)','percent','20','min="0" max="100"')+'</div>'+btn);
+ el(root,'run').onclick=()=>{const p=number(root,'price'),v=number(root,'percent');if(p<0||v<0||v>100||!Number.isFinite(p)||!Number.isFinite(v)){msg(root,'정가와 0~100% 할인율을 입력해 주세요.',true);return;}out(root,'할인액 '+fmt(p*v/100)+'원 · 할인 판매가 '+fmt(p*(1-v/100))+'원');msg(root,'');};
+}
+function dday(root){
+ fields(root,'<div class="it-fields"><label class="it-field">시작일<input id="start" type="date"></label><label class="it-field">종료일<input id="end" type="date"></label></div>'+btn);
+ const today=new Date();el(root,'start').value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+ el(root,'end').value=el(root,'start').value;
+ el(root,'run').onclick=()=>{try{
+  const parse=id=>{const m=el(root,id).value.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)throw Error('날짜를 입력해 주세요.');return Date.UTC(Number(m[1]),Number(m[2])-1,Number(m[3]));};
+  const diff=Math.round((parse('end')-parse('start'))/86400000),included=diff>=0?diff+1:Math.abs(diff)+1;
+  out(root,'두 날짜 차이 '+Math.abs(diff)+'일 · '+(diff===0?'D-Day 오늘':diff>0?'D-'+diff:'D+'+(-diff))+' · 양 끝 날짜 포함 '+included+'일');msg(root,'');
+ }catch(e){msg(root,e.message,true);}};
+}
+function loan(root){
+ fields(root,'<div class="it-fields">'+F('대출 원금(원)','principal','10000000','min="0"')+F('연이율(%)','rate','4.5','min="0"')+F('상환 기간(개월)','months','36','min="1" max="600"')+'</div>'+btn);
+ el(root,'run').onclick=()=>{const p=number(root,'principal'),r=number(root,'rate')/1200,n=number(root,'months');if(![p,r,n].every(Number.isFinite)||p<=0||r<0||!Number.isInteger(n)||n<1||n>600){msg(root,'원금·연이율·1~600개월 기간을 확인해 주세요.',true);return;}const monthly=r===0?p/n:p*r/(1-Math.pow(1+r,-n));out(root,'원리금균등 월 납입액 '+fmt(monthly)+'원 · 총 납입액 '+fmt(monthly*n)+'원 · 총 이자 '+fmt(monthly*n-p)+'원');msg(root,'고정금리와 매월 동일 상환일 가정이며 실제 금융기관 금액과 다를 수 있습니다.');};
+}
+function utm(root){
+ fields(root,'<label class="it-field">원본 URL<input id="url" type="url" value="https://interpiad.com/" placeholder="https://example.com/page"></label><div class="it-fields"><label class="it-field">Source (출처)<input id="source" type="text" value="naver"></label><label class="it-field">Medium (매체)<input id="medium" type="text" value="social"></label><label class="it-field">Campaign (캠페인)<input id="campaign" type="text" value="autumn"></label><label class="it-field">Content (선택)<input id="content" type="text"></label></div>'+btn+'<label class="it-field">생성된 URL<textarea id="generated" rows="4" readonly></textarea></label><div class="it-actions"><button id="copy" class="it-secondary" type="button">URL 복사</button></div>');
+ el(root,'run').onclick=()=>{try{
+  const u=new URL(el(root,'url').value.trim());if(!/^https?:$/.test(u.protocol))throw Error('http 또는 https 주소만 입력해 주세요.');
+  for(const id of ['source','medium','campaign','content']){const value=el(root,id).value.trim();if(id!=='content'&&!value)throw Error('Source, Medium, Campaign을 입력해 주세요.');if(value)u.searchParams.set('utm_'+id,value);else u.searchParams.delete('utm_'+id);}
+  el(root,'generated').value=u.toString();msg(root,'링크가 생성됐습니다.');
+ }catch(e){msg(root,e.message,true);}};
+ el(root,'copy').onclick=async()=>{try{if(!el(root,'generated').value)throw Error('먼저 URL을 생성해 주세요.');await navigator.clipboard.writeText(el(root,'generated').value);msg(root,'URL을 복사했습니다.');}catch(e){msg(root,'복사에 실패했습니다. URL을 직접 선택해 복사하세요.',true);}};
+}
+export function mount(root,key){({calculator,vat,margin,'unit-convert':unitConvert,'discount':discount,'dday':dday,'loan':loan,'utm':utm}[key]||(()=>{throw Error('도구가 아직 준비되지 않았습니다.');}))(root);}

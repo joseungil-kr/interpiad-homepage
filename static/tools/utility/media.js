@@ -52,7 +52,24 @@ async function resize(root){
  }
  msg(root,done+'개 이미지 처리가 완료됐습니다. 각 저장 링크를 눌러 내려받으세요.');
 }
+async function removeExif(root){
+ const file=el(root,'file').files[0];
+ try{
+  const res=await draw(file,0);const type=file.type;
+  const blob=await encode(res.canvas,type,type==='image/jpeg'?.95:.93);
+  const ext=type==='image/jpeg'?'.jpg':type==='image/png'?'.png':'.webp';
+  preview(root,blob);
+  const anchor=el(root,'download');if(anchor.dataset.url)URL.revokeObjectURL(anchor.dataset.url);
+  anchor.dataset.url=URL.createObjectURL(blob);anchor.href=anchor.dataset.url;anchor.download=safeName(file,'-clean'+ext);anchor.hidden=false;
+  msg(root,'메타데이터 없이 새 이미지로 저장할 준비가 됐습니다. 화질과 파일 크기는 달라질 수 있습니다. ('+asBytes(blob.size)+')');
+ }catch(e){msg(root,e.message,true);}
+}
 export function mount(root,key){
+ if(key==='exif-remove'){
+ fields(root,'<label class="it-field">사진 선택 (JPG·PNG·WebP, 최대 30MB)<input id="file" type="file" accept="image/png,image/jpeg,image/webp"></label><p class="it-hint">이미지를 새로 인코딩해 일반적인 EXIF 및 GPS 정보를 제외합니다. 원본 대비 파일 크기·색상·화질이 달라질 수 있습니다.</p><div class="it-actions"><button id="run" type="button">정보 제거한 사진 만들기</button><a id="download" class="it-download" hidden>사진 저장</a></div><img id="preview" class="it-preview" alt="메타데이터 제거한 이미지" hidden>');
+ el(root,'run').onclick=()=>removeExif(root);return;
+ }
+
  if(key==='image-resize'){
   fields(root,'<div class="it-fields"><label class="it-field">이미지 여러 장 (최대 20장 · 각 30MB)<input id="files" type="file" multiple accept="image/png,image/jpeg,image/webp"></label><label class="it-field">목표 가로 폭(px)<input id="width" type="number" value="1200" min="32" max="5000"></label></div><p class="it-hint">원본보다 큰 이미지는 확대하지 않습니다. 결과는 JPEG로 저장하며 투명 배경은 흰색으로 바뀝니다.</p><div class="it-actions"><button type="button" id="run">일괄 크기 변경</button></div><ol id="results" class="it-list"></ol>');
   el(root,'run').addEventListener('click',()=>resize(root));return;
