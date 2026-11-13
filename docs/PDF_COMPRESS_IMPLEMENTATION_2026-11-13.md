@@ -20,3 +20,7 @@ No Ghostscript, qpdf WASM, remote upload, database or PDF transmission.
 The compressor may re-encode image XObjects and remove PDF metadata.
 Encrypted, digitally signed, long-term archival (PDF/A), and specialty PDFs
 require additional verification. It does not guarantee any particular ratio.
+
+## Free tools menu and thumbnail (2026-11-13)
+
+The PDF processing URL remains `/tools/pdf-compress/`. The separate `/tools/apps/` listing shows it as a thumbnail card via `toolCategory: apps`. The existing `/tools/` page remains the five document forms. The reusable tool icon, visual standards, and URL/QA instructions are in `docs/TOOL_THUMBNAIL_DESIGN_GUIDE_2026-11-13.md` and `docs/TOOLS_MENU_UPDATE_2026-11-13.md`. No PDF engine, upload, or persistent storage change.

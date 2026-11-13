@@ -1250,3 +1250,22 @@ h1, h2, h3 {
   .lec-grid { grid-template-columns: 1fr; }
   .lec-hero__cta .btn, .lec-featured__cta .btn { width: 100%; }
 }
+
+/* Two footer destination links: free tools and free forms. */
+.site-footer__links{display:flex;flex-wrap:wrap;gap:16px}
+
+/* Expanded navigation: tablets use the existing accessible hamburger menu. */
+@media(min-width:721px) and (max-width:1080px){
+ .nav-toggle{display:flex}
+ .site-nav{position:fixed;top:var(--header-h);left:0;right:0;max-height:calc(100dvh - var(--header-h));overflow-y:auto;background:var(--paper);flex-direction:column;align-items:stretch;gap:0;padding:8px 24px 24px;box-shadow:var(--shadow-md);transform:translateY(-8px);opacity:0;pointer-events:none;transition:transform .2s var(--ease),opacity .2s var(--ease)}
+ .site-nav.is-open{transform:translateY(0);opacity:1;pointer-events:auto}
+ .site-nav ul{flex-direction:column;gap:0}
+ .site-nav ul li{border-bottom:1px solid rgba(20,33,61,.08)}
+ .site-nav ul li a{display:block;padding:14px 4px}
+ .site-nav__cta{margin-top:14px;text-align:center}
+ .nav-dropdown summary{padding:14px 4px}
+ .nav-dropdown__menu{position:static;transform:none;box-shadow:none;border:0;padding:0 0 6px 12px;min-width:0}
+ .nav-dropdown__menu a{padding:10px 4px}
+ .nav-dropdown__menu li:first-child a{border-radius:0}
+}
+@media(min-width:1081px) and (max-width:1260px){.site-nav{gap:18px}.site-nav ul{gap:18px}.site-nav a:not(.btn){font-size:14px}}

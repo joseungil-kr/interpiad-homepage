@@ -28,4 +28,15 @@
 @media(min-width:1100px){.tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tools-card{padding:24px}.tools-card h2{font-size:22px}}
 @media(max-width:380px){.tools-preview a{height:270px;padding:10px}.tools-preview figcaption{font-size:11px}}
 
-.tools-pdf-link{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:24px;margin:26px 0;border-radius:14px;background:#eaf4f1;border:1px solid #c8e2db}.tools-pdf-link h2{font-size:23px;margin:4px 0}.tools-pdf-link p{margin:4px 0;color:#425d59}.tools-pdf-link .btn{flex-shrink:0}@media(max-width:640px){.tools-pdf-link{flex-direction:column;align-items:stretch;padding:18px}.tools-pdf-link .btn{text-align:center}}
+/* Shared navigation between document forms and browser tools */
+.tools-category-nav{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 25px}
+.tools-category-nav a{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;border:1px solid #cbd9d5;border-radius:10px;text-decoration:none;font-weight:750;color:#24564f;background:#fff}
+.tools-category-nav a[aria-current="page"]{background:#0b756a;color:#fff;border-color:#0b756a}
+.tools-category-nav a:focus-visible{outline:3px solid #c69d60;outline-offset:3px}
+.toolapps-section .tools-hero{grid-template-columns:1fr;margin-bottom:28px}
+.toolapps-section .tools-hero-copy{max-width:800px}
+.toolapps-section .tools-card{background:#fffdfa}
+.tools-preview--icon a{background:#f5f3ed}
+.tools-preview--icon img{height:100%;width:100%;max-height:100%;max-width:100%;box-shadow:none;object-fit:contain}
+.toolapps-intro{max-width:800px}
+@media(max-width:760px){.tools-category-nav a{flex:1;min-width:140px;padding-inline:10px}.toolapps-section .tools-hero{margin-bottom:20px}}

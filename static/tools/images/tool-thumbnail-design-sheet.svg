@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1250" viewBox="0 0 1700 1250" role="img" aria-labelledby="t d">
+<title id="t">Interpiad Free Tools 썸네일 디자인시트</title>
+<desc id="d">4대3 비율, 색상 규격, 아이콘 안전영역과 재사용할 도구 아이콘의 예시</desc>
+<rect width="1700" height="1150" fill="#FFFFFF"/>
+<text x="72" y="83" font-size="22" font-weight="700" letter-spacing="2" font-family="Arial,Helvetica,sans-serif" fill="#0B756A">INTERPIAD / FREE TOOLS</text>
+<text x="72" y="148" font-size="53" font-weight="800" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">TOOL THUMBNAIL SYSTEM</text>
+<text x="73" y="189" font-size="22" font-family="Arial,Helvetica,sans-serif" fill="#566F68">Brand icon guide v1.0 · 1200 × 900 · 4:3 · 2026-11-13</text>
+<rect x="60" y="226" width="793" height="620" rx="28" fill="#F5F3ED" stroke="#CADCD5" stroke-width="2"/>
+<svg x="94" y="254" width="726" height="545" viewBox="0 0 1200 900"><defs>
+<linearGradient id="toolBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FBFAF7"/><stop offset="100%" stop-color="#E9F1EC"/></linearGradient>
+<linearGradient id="fileFace" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#F4F8F5"/></linearGradient>
+<filter id="softShadow" x="-25%" y="-25%" width="150%" height="160%"><feDropShadow dx="0" dy="20" stdDeviation="22" flood-color="#1E3436" flood-opacity=".10"/></filter>
+</defs>
+<rect x="0" y="0" width="1200" height="900" rx="64" fill="url(#toolBg)"/>
+<circle cx="596" cy="437" r="310" fill="#DCEDE8" opacity=".58"/>
+<circle cx="596" cy="437" r="375" fill="none" stroke="#CADCD5" stroke-width="2" opacity=".35"/>
+<path d="M140 735H1060" stroke="#CADCD5" stroke-width="3" stroke-linecap="round" opacity=".52"/>
+<g filter="url(#softShadow)">
+<g transform="translate(245 178)">
+<path d="M46 0H293L380 87V494Q380 520 355 520H46Q20 520 20 494V26Q20 0 46 0Z" fill="url(#fileFace)" stroke="#0B756A" stroke-width="17" stroke-linejoin="round"/>
+<path d="M293 3V70Q293 87 312 87H377" fill="#DCEDE8" stroke="#0B756A" stroke-width="13" stroke-linejoin="round"/>
+<rect x="64" y="156" width="248" height="15" rx="7" fill="#D5E4DF"/>
+<rect x="64" y="191" width="209" height="15" rx="7" fill="#D5E4DF"/>
+<rect x="64" y="226" width="232" height="15" rx="7" fill="#D5E4DF"/>
+<rect x="64" y="273" width="243" height="155" rx="18" fill="#E9F3EF"/>
+<path d="M94 390V316M150 390V345M206 390V300M262 390V330" stroke="#0B756A" stroke-width="17" stroke-linecap="round" opacity=".85"/>
+<rect x="64" y="66" width="129" height="59" rx="15" fill="#0B756A"/>
+<text x="128" y="105" text-anchor="middle" font-size="42" font-weight="800" font-family="Arial,Helvetica,sans-serif" fill="#FFFFFF">PDF</text>
+</g>
+<g transform="translate(782 308)">
+<path d="M35 0H196L257 60V325Q257 343 237 343H35Q16 343 16 325V19Q16 0 35 0Z" fill="#FFFFFF" stroke="#0B756A" stroke-width="13" stroke-linejoin="round"/>
+<path d="M196 3V46Q196 60 211 60H254" fill="#DCEDE8" stroke="#0B756A" stroke-width="10" stroke-linejoin="round"/>
+<rect x="47" y="102" width="100" height="46" rx="11" fill="#0B756A"/>
+<text x="97" y="135" text-anchor="middle" font-size="32" font-weight="800" font-family="Arial,Helvetica,sans-serif" fill="#FFFFFF">PDF</text>
+<rect x="47" y="174" width="163" height="11" rx="5" fill="#D5E4DF"/>
+<rect x="47" y="200" width="134" height="11" rx="5" fill="#D5E4DF"/>
+<rect x="47" y="226" width="154" height="11" rx="5" fill="#D5E4DF"/>
+<rect x="47" y="260" width="150" height="44" rx="11" fill="#E9F3EF"/>
+</g>
+</g>
+<g transform="translate(656 422)">
+<circle cx="47" cy="42" r="62" fill="#FFFFFF" stroke="#E0E8E2" stroke-width="4"/>
+<path d="M7 42H82M62 23L82 42L62 61" fill="none" stroke="#C69D60" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<circle cx="145" cy="185" r="16" fill="#C69D60" opacity=".65"/>
+<circle cx="1073" cy="695" r="22" fill="#C69D60" opacity=".50"/>
+<circle cx="1020" cy="137" r="9" fill="#0B756A" opacity=".45"/></svg>
+<text x="96" y="833" font-size="19" font-weight="700" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">01 / PDF compression · Master thumbnail</text>
+<text x="904" y="259" font-size="30" font-weight="800" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">CORE PALETTE</text>
+<g><rect x="906" y="298" width="174" height="61" rx="11" fill="#F5F3ED" stroke="#CADCD5"/><text x="906" y="376" font-size="18" font-family="Arial,Helvetica,sans-serif" fill="#1E3436" font-weight="700">Canvas</text><text x="906" y="396" font-size="15" font-family="monospace" fill="#566F68">#F5F3ED</text></g><g><rect x="1098" y="298" width="174" height="61" rx="11" fill="#0B756A" stroke="#CADCD5"/><text x="1098" y="376" font-size="18" font-family="Arial,Helvetica,sans-serif" fill="#1E3436" font-weight="700">Forest</text><text x="1098" y="396" font-size="15" font-family="monospace" fill="#566F68">#0B756A</text></g><g><rect x="1290" y="298" width="174" height="61" rx="11" fill="#DCEDE8" stroke="#CADCD5"/><text x="1290" y="376" font-size="18" font-family="Arial,Helvetica,sans-serif" fill="#1E3436" font-weight="700">Mint</text><text x="1290" y="396" font-size="15" font-family="monospace" fill="#566F68">#DCEDE8</text></g><g><rect x="906" y="408" width="174" height="61" rx="11" fill="#C69D60" stroke="#CADCD5"/><text x="906" y="486" font-size="18" font-family="Arial,Helvetica,sans-serif" fill="#1E3436" font-weight="700">Brass</text><text x="906" y="506" font-size="15" font-family="monospace" fill="#566F68">#C69D60</text></g><g><rect x="1098" y="408" width="174" height="61" rx="11" fill="#1E3436" stroke="#CADCD5"/><text x="1098" y="486" font-size="18" font-family="Arial,Helvetica,sans-serif" fill="#1E3436" font-weight="700">Ink</text><text x="1098" y="506" font-size="15" font-family="monospace" fill="#566F68">#1E3436</text></g><g><rect x="1290" y="408" width="174" height="61" rx="11" fill="#FFFFFF" stroke="#CADCD5"/><text x="1290" y="486" font-size="18" font-family="Arial,Helvetica,sans-serif" fill="#1E3436" font-weight="700">White</text><text x="1290" y="506" font-size="15" font-family="monospace" fill="#566F68">#FFFFFF</text></g>
+<text x="904" y="551" font-size="30" font-weight="800" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">LAYOUT RULES</text>
+<text x="904" y="595" font-size="21" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">01  Frame 4:3 · 1200 × 900 px</text>
+<text x="904" y="633" font-size="21" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">02  Central motif within 12% safe margin</text>
+<text x="904" y="671" font-size="21" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">03  Forest teal as primary outline</text>
+<text x="904" y="709" font-size="21" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">04  Brass accent for action or motion</text>
+<text x="904" y="747" font-size="21" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">05  No long words · no personal data</text>
+<text x="904" y="785" font-size="21" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">06  Soft vector shapes · no stock imagery</text>
+<path d="M65 889H1634" stroke="#DCEDE8" stroke-width="3"/>
+<text x="72" y="941" font-size="29" font-weight="800" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">FUTURE ICON DIRECTIONS</text>
+<g transform="translate(80 973)"><rect width="198" height="149" rx="17" fill="#F5F3ED" stroke="#CADCD5" stroke-width="2"/><circle cx="96" cy="74" r="39" fill="none" stroke="#0B756A" stroke-width="10"/><path d="M96 44V75L115 92M78 23H114" stroke="#C69D60" stroke-width="9" fill="none" stroke-linecap="round"/></g> <g transform="translate(310 973)"><rect width="198" height="149" rx="17" fill="#F5F3ED" stroke="#CADCD5" stroke-width="2"/><path d="M48 40H146V107H48Z" fill="none" stroke="#0B756A" stroke-width="9"/><path d="M70 48V69M95 48V57M120 48V69M70 80V105M95 91V105M120 80V105" stroke="#C69D60" stroke-width="7" /></g> <g transform="translate(540 973)"><rect width="198" height="149" rx="17" fill="#F5F3ED" stroke="#CADCD5" stroke-width="2"/><circle cx="76" cy="73" r="40" fill="none" stroke="#0B756A" stroke-width="9"/><circle cx="121" cy="77" r="30" fill="#E7F2ED" stroke="#C69D60" stroke-width="8"/><path d="M70 59h30M70 77h30M89 47c-8 13-8 37 0 49" stroke="#0B756A" stroke-width="5" fill="none"/></g>
+<text x="906" y="989" font-size="20" font-weight="700" font-family="Arial,Helvetica,sans-serif" fill="#0B756A">CONSISTENCY</text>
+<text x="906" y="1025" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">Keep colors, framing, stroke rhythm,</text>
+<text x="906" y="1060" font-size="20" font-family="Arial,Helvetica,sans-serif" fill="#1E3436">and document-safe icon placement.</text>
+<path d="M65 1185H1634" stroke="#DCEDE8" stroke-width="2"/>
+<text x="73" y="1222" font-size="16" font-family="Arial,Helvetica,sans-serif" fill="#566F68">DESIGN ASSET · /static/tools/images/ · Reference: docs/TOOL_THUMBNAIL_DESIGN_GUIDE_2026-11-13.md</text>
+</svg>
