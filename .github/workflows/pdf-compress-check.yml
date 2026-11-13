@@ -2,7 +2,7 @@ name: PDF compressor browser smoke
 
 on:
   push:
-    branches: [master, 'feat/interpiad-pdf-compress-*']
+    branches: [master, 'feat/interpiad-pdf-compress-*', 'feat/interpiad-free-tools-*']
     paths:
       - 'content/pdf-compress.md'
       - 'content/tools/apps/**'
