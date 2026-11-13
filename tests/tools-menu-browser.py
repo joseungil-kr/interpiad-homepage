@@ -20,10 +20,10 @@ with sync_playwright() as pw:
     response=page.goto(BASE+"/tools/apps/",wait_until="networkidle")
     ck("tools listing HTTP 200",response.status==200,response.status)
     ck("tools title",page.locator("h1").inner_text()=="무료 업무도구")
-    ck("tools cards include PDF and first batch",page.locator(".tools-grid .tools-card").count()>=10)
+    ck("tools cards include PDF and first batch",page.locator(".tools-grid .tools-card").count()==25)
     ck("tools card PDF target",page.locator(".tools-grid .tools-card a[href='/tools/pdf-compress/']").count()==3)
     icon=page.locator(".tools-preview--icon img")
-    ck("thumbnail count",icon.count()>=10)
+    ck("thumbnail count",icon.count()==25)
     ck("thumbnail has meaningful alt","PDF" in icon.first.get_attribute("alt"))
     ck("thumbnail loaded with 1200x900 geometry",
        icon.first.evaluate("(e)=>e.complete && e.naturalWidth===1200 && e.naturalHeight===900"))
