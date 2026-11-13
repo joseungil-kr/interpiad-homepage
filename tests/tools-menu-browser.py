@@ -37,7 +37,7 @@ with sync_playwright() as pw:
     design=browser.new_page(viewport={"width":1200,"height":900})
     design.set_content('<!doctype html><html><body style="margin:0;background:white"><img id="sheet" src="'+BASE+'/tools/images/tool-thumbnail-design-sheet.svg" style="display:block;width:1100px;height:auto" alt="Design sheet"></body></html>')
     design.locator("#sheet").evaluate("(img)=>img.decode()")
-    ck("design sheet image decodes",design.locator("#sheet").evaluate("(img)=>img.complete && img.naturalWidth===1700 && img.naturalHeight===1150"))
+    ck("design sheet image decodes",design.locator("#sheet").evaluate("(img)=>img.complete && img.naturalWidth===1700 && img.naturalHeight===1250"))
     try:
         design.locator("#sheet").screenshot(path=str(OUT/"tool-icon-design-sheet.png"),timeout=12000)
     except Exception as e:
