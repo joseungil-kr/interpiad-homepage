@@ -1,0 +1,22 @@
+{{ define "main" }}
+{{ $css := crypto.SHA256 (readFile "static/tools/utility/app.css") }}
+<link rel="stylesheet" href="{{ "tools/utility/app.css" | relURL }}?v={{ $css }}">
+<section class="it-free-tool" aria-labelledby="it-heading">
+ <div class="it-container">
+  <nav class="it-breadcrumb" aria-label="현재 위치"><a href="/">인터피아드</a><span aria-hidden="true">/</span><a href="/tools/apps/">무료 업무도구</a><span aria-hidden="true">/</span><span>{{ .Params.shortTitle }}</span></nav>
+  <div class="it-hero"><p class="it-kicker">INTERPIAD · FREE WEB TOOLS</p><h1 id="it-heading">{{ .Title }}</h1><p>{{ .Description }}</p>
+   <div class="it-trust"><span>설치·가입 없음</span><span>무료 사용</span><span>{{ if .Params.remoteData }}입력값 로컬 처리 · 환율 API 조회{{ else }}내 기기에서 직접 처리{{ end }}</span></div>
+  </div>
+  <div class="it-layout">
+   <section class="it-workspace" aria-labelledby="it-workspace-heading"><h2 id="it-workspace-heading">바로 사용하기</h2><div id="utility-tool" data-tool="{{ .Params.toolKey }}"><p>도구를 불러오는 중입니다.</p></div><noscript>이 기능은 브라우저에서 JavaScript를 사용해야 합니다.</noscript></section>
+   <aside class="it-aside" aria-label="다른 무료 서비스"><h2>함께 쓰는 무료 서비스</h2><a href="/tools/apps/">다른 무료 업무도구 보기</a><a href="/tools/">거래명세표·견적서·영수증</a><p>입력한 파일은 별도 업로드 기능 없이 방문자 기기의 브라우저에서 처리합니다. {{ if .Params.remoteData }}환율 정보 조회에는 외부 공개 환율 API를 사용합니다.{{ end }}</p></aside>
+  </div>
+  <section class="it-guide"><h2>{{ .Params.guideTitle | default "도구 이용 안내" }}</h2>{{ .Content }}</section>
+  <nav class="it-bottom-nav" aria-label="도구 이동"><a href="/tools/apps/">← 무료 업무도구 목록</a><a href="/tools/">무료 업무서식 5종</a></nav>
+ </div>
+</section>
+{{ if in (slice "pdf-merge-split" "image-to-pdf") .Params.toolKey }}<script src="{{ "tools/pdf-compress/vendor/pdf-lib.min.js" | relURL }}" defer></script>{{ end }}
+{{ if eq .Params.toolKey "qr" }}<script src="{{ "tools/utility/vendor/qrcode.min.js" | relURL }}" defer></script>{{ end }}
+{{ if eq .Params.toolKey "duplicates" }}<script src="{{ "tools/utility/vendor/jszip.min.js" | relURL }}" defer></script>{{ end }}
+<script type="module" src="{{ "tools/utility/core.js" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/utility/core.js") }}"></script>
+{{ end }}
