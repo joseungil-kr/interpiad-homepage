@@ -13,3 +13,7 @@ __pycache__/
 *.sqlite-*
 .env
 qa-my-forms/
+
+node_modules/
+.wrangler/
+.dev.vars

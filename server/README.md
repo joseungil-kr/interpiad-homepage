@@ -1,6 +1,10 @@
-# 내 서식 관리 — 로컬 검수용 구현
+# 내 서식 관리 — Cloudflare Pages 배포 및 로컬 검수
 
-Node 24.22+ 내장 SQLite를 쓰는 독립 서버입니다. Hugo 정적 사이트와 같은 origin에서 `/api/*`, `/auth/*`를 처리합니다. 현재 Cloudflare Pages에 배포되지 않았으며 Pages Functions/D1 구현이 아닙니다. 운영 전 별도 Node 호스팅·HTTPS 프록시·영속 디스크·백업/복구·접근 제한을 정하거나 Cloudflare 실행 환경으로 이식해야 합니다. 공개 서비스용 rate limiting 및 저장 용량 정책은 운영 연결 전에 결정합니다.
+운영 진입점은 `functions/api/[[path]].js`, `functions/auth/[[path]].js`이며 `server/pages-api.mjs`가 Cloudflare Pages/D1에서 실행됩니다. `static/_routes.json`으로 인증·저장 API에만 함수를 적용하고 기존 정적 도구는 그대로 제공합니다. 기존 `server/my-forms.mjs`는 Node/SQLite 로컬 검수 서버입니다.
+
+운영에 D1 binding `MY_FORMS_DB`를 연결하고 `migrations/0001_my_forms.sql`을 적용해야 개인 저장이 활성화됩니다. 인터피아드 전용 빈 D1 데이터베이스를 사용하며 온기 DB를 연결하지 않습니다. `APP_ORIGIN` 기본값은 `https://interpiad.com`입니다. Pages preview origin은 운영 데이터 접근을 거부합니다. DB 또는 OAuth 키가 없으면 `auth-status`가 해당 제공자를 비활성으로 표시하며 서버는 가상 계정으로 대체하지 않습니다. 현재 배포 계정 로그인이 없어 원격 DB/키 설정은 미완료입니다.
+
+Pages 코드에는 `/api/test-login` 구현이 없으며 항상 404입니다. API 쓰기는 계정당 분당 60회, OAuth 시작/콜백은 IP 기반 일시 해시 버킷당 분당 30회로 제한합니다. 발행 수정은 D1의 단일 조건부 INSERT로 동시 수정 중 하나만 성공하며 새 문서와 첫 버전은 D1 batch 트랜잭션으로 함께 저장합니다. 목록은 snapshot/fields를 제외한 메타데이터만 반환합니다.
 
 ## 로컬 실행 (PowerShell)
 
@@ -31,7 +35,10 @@ node server/my-forms.mjs
 모든 목록·상세·수정·휴지통·복구·원본 출력은 서버 세션의 owner로 조회합니다. 문서 revision은 추가만 하며 거래처 변경과 연결하지 않습니다. 편집 경쟁은 version 409 응답으로 막습니다. 원본 열람은 scripts/network/forms를 금지하는 CSP sandbox에서 실행합니다. DB 파일은 public 폴더 밖에 둡니다. DB와 `.env`는 Git에서 제외했습니다.
 
 ```powershell
+npm ci --ignore-scripts
 node --test tests/my-forms.test.mjs
+node --test tests/pages-api.test.mjs
+node node_modules/wrangler/bin/wrangler.js pages functions build functions --outdir .wrangler/build
 python tests/my-forms-browser.py
 ```
 브라우저 검증에는 Python Playwright/Chromium과 pypdf가 필요합니다. 기존 회귀검사는 `FORM_TEST_BASE=http://127.0.0.1:8877`로 `tests/forms-browser.py`, `forms-documents.py`, `forms-responsive.py`를 실행합니다.

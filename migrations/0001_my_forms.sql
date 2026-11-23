@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS accounts(id TEXT PRIMARY KEY, provider TEXT NOT NULL, subject TEXT NOT NULL, UNIQUE(provider,subject));
+CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, owner TEXT NOT NULL REFERENCES accounts(id), csrf TEXT NOT NULL, expires INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS oauth(id TEXT PRIMARY KEY, provider TEXT NOT NULL, browser TEXT NOT NULL, expires INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS customers(id TEXT PRIMARY KEY, owner TEXT NOT NULL REFERENCES accounts(id), data TEXT NOT NULL, deleted INTEGER NOT NULL DEFAULT 0, version INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS documents(id TEXT PRIMARY KEY, owner TEXT NOT NULL REFERENCES accounts(id), kind TEXT NOT NULL, deleted INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS revisions(document TEXT NOT NULL REFERENCES documents(id), version INTEGER NOT NULL, data TEXT NOT NULL, created TEXT NOT NULL, PRIMARY KEY(document,version));
+CREATE TABLE IF NOT EXISTS request_limits(id TEXT PRIMARY KEY, count INTEGER NOT NULL, expires INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS customers_owner ON customers(owner,deleted);
+CREATE INDEX IF NOT EXISTS documents_owner ON documents(owner,deleted);
+CREATE INDEX IF NOT EXISTS sessions_expiry ON sessions(expires);
+CREATE INDEX IF NOT EXISTS oauth_expiry ON oauth(expires);
+CREATE INDEX IF NOT EXISTS limits_expiry ON request_limits(expires);

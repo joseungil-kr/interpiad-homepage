@@ -15,3 +15,5 @@ document.querySelector('#logout').onclick=run(async()=>{await api('/api/logout',
 document.querySelector('#reprint').onclick=()=>document.querySelector('#viewer iframe').contentWindow.print();
 document.querySelector('#close-viewer').onclick=()=>document.querySelector('#viewer').hidden=true;
 try{await api('/api/session');document.querySelector('#workspace').hidden=false;document.querySelector('#login').hidden=true;await load();}catch(e){status.textContent=e.message;}
+
+try{const {providers}=await api('/api/auth-status');for(const [name,ready] of Object.entries(providers)){const a=document.querySelector('#login .provider-'+name);if(a&&!ready){a.removeAttribute('href');a.setAttribute('aria-disabled','true');a.append(' · 연결 준비 중');}}}catch{}

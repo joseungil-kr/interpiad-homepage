@@ -1,0 +1,20 @@
+name: Personal forms API checks
+on:
+  push:
+    branches: [master, 'dev/my-forms-*']
+    paths: ['server/**', 'functions/**', 'migrations/**', 'tests/*api*', 'tests/my-forms.test.mjs', 'package*.json', '.github/workflows/my-forms-check.yml']
+  pull_request:
+    paths: ['server/**', 'functions/**', 'migrations/**', 'tests/*api*', 'tests/my-forms.test.mjs', 'package*.json', '.github/workflows/my-forms-check.yml']
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run test:node
+      - run: npm run test:pages
+      - run: npx wrangler pages functions build functions --outdir /tmp/my-forms-functions
