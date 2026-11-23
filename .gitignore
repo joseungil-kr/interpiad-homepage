@@ -8,3 +8,12 @@
 
 __pycache__/
 *.pyc
+
+*.sqlite
+*.sqlite-*
+.env
+qa-my-forms/
+
+node_modules/
+.wrangler/
+.dev.vars

@@ -11,6 +11,7 @@ on:
 
 jobs:
   indexnow:
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[no-indexnow]')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

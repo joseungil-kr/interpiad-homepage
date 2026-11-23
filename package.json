@@ -1,0 +1,12 @@
+{
+  "name": "interpiad-personal-forms",
+  "private": true,
+  "scripts": {
+    "test:pages": "node --test tests/pages-api.test.mjs",
+    "test:node": "node --test tests/my-forms.test.mjs"
+  },
+  "devDependencies": {
+    "miniflare": "5.20261119.0-beta",
+    "wrangler": "4.166.0"
+  }
+}
