@@ -43,6 +43,8 @@
   {{ else }}<script type="module" src="{{ "tools/forms/forms.js" | relURL }}"></script>{{ end }}
   <link rel="stylesheet" href="{{ "tools/forms/responsive-editor.css" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/forms/responsive-editor.css") }}">
   <script type="module" src="{{ "tools/forms/responsive-editor.js" | relURL }}?v={{ crypto.SHA256 (readFile "static/tools/forms/responsive-editor.js") }}"></script>
+<style>.personal-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.personal-tools span{flex-basis:100%}@media print{.personal-tools{display:none!important}}</style>
+<script type="module" src="/tools/my-forms/editor.js"></script>
 </head>
 <body data-form="{{ .Params.form }}">
 <a class="form-skip" href="#print-root">서식 입력으로 바로가기</a>

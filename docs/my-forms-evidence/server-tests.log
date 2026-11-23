@@ -1,0 +1,18 @@
+✔ mock auth is impossible in production or public hosts (2.1832ms)
+✔ all resources deny unauthenticated access (62.6856ms)
+✔ documents owner isolation, edits, trash, restore and conflicts (46.8822ms)
+✔ customers owner isolation, edits, trash, restore and conflicts (23.4398ms)
+✔ five form types, search, customer changes preserve past issues, validation and logout (22.6945ms)
+✔ google OAuth state, callback, provider identity and replay defense (10.4695ms)
+✔ naver OAuth state, callback, provider identity and replay defense (8.1756ms)
+✔ kakao OAuth state, callback, provider identity and replay defense (9.6557ms)
+✔ same email and subject across providers never merge; cancelled and failed exchanges do not login (12.4989ms)
+✔ expired sessions and OAuth states fail closed; missing provider config is explicit (11.838ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 340.5119

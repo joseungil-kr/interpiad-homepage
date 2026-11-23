@@ -8,3 +8,8 @@
 
 __pycache__/
 *.pyc
+
+*.sqlite
+*.sqlite-*
+.env
+qa-my-forms/
